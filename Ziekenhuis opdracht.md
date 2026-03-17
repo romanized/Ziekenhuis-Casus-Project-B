@@ -1,0 +1,9 @@
+Project B case description Na het afgelopen jaar behoorlijk wat in het ziekenhuis te zijn geweest, ben ik erachter gekomen dat het een enorm apparaat is dat continu draait om moeder en kind zo goed mogelijk te verzorgen.
+
+Tijdens een zwangerschap kom je enkele tot vele malen terug in het ziekenhuis voor verschillende afspraken. Dit is nodig om de juiste informatie te krijgen en te controleren of de baby goed groeit. Hiervoor moeten regelmatig afspraken worden ingepland, waarbij tegelijkertijd de juiste specialisten én de juiste ruimtes beschikbaar moeten zijn.
+
+Sommige afspraken kunnen standaard worden ingepland bij een bepaalde zwangerschapsperiode, zoals bijvoorbeeld een 20-wekenecho. Andere afspraken worden tussendoor ingepland omdat daar een specifieke medische aanleiding voor is. Jullie taak is om de planner te helpen bij het vinden van beschikbare momenten die zowel voor het ziekenhuis als voor de aanstaande ouders goed uitkomen.
+
+We willen software ontwikkelen waarmee afspraken efficiënt kunnen worden ingepland. Daarnaast moeten de ouders zelf kunnen inloggen om te zien wanneer ze welke afspraken hebben en wat het doel van die afspraak is. Als aanstaande ouder is alles nieuw; het is dan ontzettend prettig om zoveel mogelijk duidelijkheid te hebben en je alvast te kunnen voorbereiden door het lezen van gekoppelde informatiefolders.
+
+Als dit systeem een succes wordt, willen we dit uitrollen naar andere afdelingen en ziekenhuizen. Tijdens het ontwikkelen kunnen we echter uitgaan van een iets kleinere, overzichtelijke afdeling. Gebruiksvriendelijkheid is hierbij uiterst belangrijk.

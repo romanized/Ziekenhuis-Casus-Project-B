@@ -15,6 +15,30 @@
         }
         return null!;
     }
+    // rigster a user
+    public bool Register( string email, string password,string fullname,string date, string phoneNumber)
+    {
+        // Check of email exist
+        UserModel? existingUser = _access.GetByEmail(email);
+        if (existingUser != null)
+        {
+            return false; 
+        }
+
+        UserModel newUser = new UserModel
+        {
+            Email = email,
+            Password = password,
+            FullName = fullname,
+            BirthDate = date,
+            PhoneNumber = phoneNumber,
+            Specialty = null!,
+            Role = "ouder" // standaard rol
+        };
+
+        _access.Write(newUser);
+        return true; // created
+    }
 }
 
 

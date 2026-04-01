@@ -7,18 +7,21 @@
     public string Password { get; set; }
 
     public string FullName { get; set; }
+    public string BirthDate { get; set; }
+
     public string Specialty {get;set;}
     public string Role {get; set;}
     public string PhoneNumber {get;set;}
 
     public UserModel() { }
 
-    public UserModel(Int64 id, string email, string password, string fullName, string specialty, string role,string phoneNumber)
+    public UserModel(Int64 id, string email, string password, string fullName,string birthdate ,string specialty, string role,string phoneNumber)
     {
         Id = id;
         Email = email;
         Password = password;
         FullName = fullName;
+        BirthDate = birthdate;
         Specialty = specialty;
         Role = role;
         PhoneNumber = phoneNumber;

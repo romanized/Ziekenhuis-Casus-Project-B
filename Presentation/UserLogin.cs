@@ -1,9 +1,11 @@
+using System.Threading.Tasks;
+
 static class UserLogin
 {
     static private UserLogic userLogic = new UserLogic();
 
 
-    public static void Start()
+    public static async Task Start()
     {
         Console.WriteLine("Welcome to the login page");
         Console.WriteLine("Please enter your email address");
@@ -15,7 +17,11 @@ static class UserLogin
         {
             Console.WriteLine("Welcome back " + acc.FullName);
             Console.WriteLine("Your email number is " + acc.Email);
-            Console.WriteLine("Your are a  " + acc.Specialty);
+            if (acc.Role == "admin")
+            {
+                Console.WriteLine("You are admin");   
+            }
+            //Console.WriteLine("Your are a  " + acc.Specialty);
 
             Console.WriteLine("Press 0 to go back to Main menu");
             int? result =  int.Parse(Console.ReadLine()!);

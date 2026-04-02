@@ -15,8 +15,10 @@ static class UserRegister
         string birthdate = Console.ReadLine();
         Console.WriteLine("enter your Phonenumber");
         string phonenumber = Console.ReadLine();
+        Console.WriteLine("enter your Perangsy startdate");
+        string startdate = Console.ReadLine();
 
-        userLogic.Register(email!,password!,fullname!,birthdate!,phonenumber!);
+        userLogic.Register(email!,password!,fullname!,birthdate!,phonenumber!,startdate);
 
         
     }

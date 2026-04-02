@@ -16,7 +16,7 @@
         return null!;
     }
     // rigster a user
-    public bool Register( string email, string password,string fullname,string date, string phoneNumber)
+    public bool Register( string email, string password,string fullname,string date, string phoneNumber,string startdate)
     {
         // Check of email exist
         UserModel? existingUser = _access.GetByEmail(email);
@@ -33,7 +33,9 @@
             BirthDate = date,
             PhoneNumber = phoneNumber,
             Specialty = null!,
-            Role = "ouder" // standaard rol
+            Role = "ouder", // standaard rol
+            StartDate = startdate
+            
         };
 
         _access.Write(newUser);

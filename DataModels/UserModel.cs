@@ -12,10 +12,12 @@
     public string Specialty {get;set;}
     public string Role {get; set;}
     public string PhoneNumber {get;set;}
+    public string StartDate {get;set;}
+
 
     public UserModel() { }
 
-    public UserModel(Int64 id, string email, string password, string fullName,string birthdate ,string specialty, string role,string phoneNumber)
+    public UserModel(Int64 id, string email, string password, string fullName,string birthdate ,string specialty, string role,string phoneNumber,string startdate)
     {
         Id = id;
         Email = email;
@@ -25,6 +27,7 @@
         Specialty = specialty;
         Role = role;
         PhoneNumber = phoneNumber;
+        StartDate = startdate;  
     }
 
 

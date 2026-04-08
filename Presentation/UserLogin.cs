@@ -19,15 +19,20 @@ static class UserLogin
             Console.WriteLine("Your email number is " + acc.Email);
             if (acc.Role == "admin")
             {
-                Console.WriteLine("You are admin");   
+                Console.WriteLine("You are admin");
             }
             //Console.WriteLine("Your are a  " + acc.Specialty);
 
             Console.WriteLine("Press 0 to go back to Main menu");
-            int? result =  int.Parse(Console.ReadLine()!);
-            if(result == 0)
-            {         
+            Console.WriteLine("Press 1 to go to your appointments");
+            int? result = int.Parse(Console.ReadLine()!);
+            if (result == 0)
+            {
                 Menu.Start();
+            }
+            else if (result == 1)
+            {
+                ParentMenu.Start(acc);
             }
         }
         else

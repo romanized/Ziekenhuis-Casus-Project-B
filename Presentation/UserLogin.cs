@@ -2,7 +2,6 @@ static class UserLogin
 {
     static private UserLogic userLogic = new UserLogic();
 
-
     public static void Start()
     {
         Console.WriteLine("Welcome to the login page");
@@ -10,45 +9,29 @@ static class UserLogin
         string? email = Console.ReadLine();
         Console.WriteLine("Please enter your password");
         string? password = Console.ReadLine();
+
         UserModel acc = userLogic.CheckLogin(email!, password!);
-        if (acc != null)
-        {
-            Console.WriteLine("Welcome back " + acc.FullName);
-            Console.WriteLine("Your email number is " + acc.Email);
-            switch (acc.Role)
-            {
-                case "admin":
-                    Console.WriteLine("Welcome back Admin");
-                    break;
-                case "doctor":
-                    Console.WriteLine($"Welcome back doctor {acc.FullName}");
-                    break;
-                case "planner":
-                    Console.WriteLine($"Welcome back planner {acc.FullName}");
-                    break;
-                case "ouder":
-                    Console.WriteLine($"Welcome back {acc.FullName}");
-                    ParentMenu.Start(acc);
-                    break;
-                default:
-                    break;
-            }
-            Console.ForegroundColor = ConsoleColor.Red;;
-            Console.WriteLine("Press 0 to go to Logout");
-            Console.ResetColor();
-            int? result = int.Parse(Console.ReadLine()!);
-            if (result == 0)
-            {
-                Menu.Start();
-            }
-            else if (result == 1)
-            {
-                ParentMenu.Start(acc);
-            }
-        }
-        else
+        if (acc == null)
         {
             Console.WriteLine("No account found with that email and password");
+            return;
+        }
+
+        Console.WriteLine("Welcome back " + acc.FullName);
+        switch (acc.Role)
+        {
+            case "admin":
+                Console.WriteLine("Welcome back Admin");
+                break;
+            case "doctor":
+                Console.WriteLine($"Welcome doctor {acc.FullName}");
+                break;
+            case "planner":
+                Console.WriteLine($"Welcome planner {acc.FullName}");
+                break;
+            case "ouder":
+                ParentMenu.Start(acc);
+                break;
         }
     }
 }

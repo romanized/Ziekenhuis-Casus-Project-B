@@ -11,7 +11,7 @@ public class UserAccess
 
     public void Write(UserModel account)
     {
-        string sql = $"INSERT INTO {Table} (Email, Password, Fullname,Phone_Number,StartDate ) VALUES (@Email, @Password, @FullName ,@PhoneNumber,@StartDate)";
+        string sql = $"INSERT INTO {Table} (Email, Password, Fullname, Phone_Number, StartDate, Role, Specialty) VALUES (@Email, @Password, @FullName, @PhoneNumber, @StartDate, @Role, @Specialty)";
         _connection.Execute(sql, account);
     }
 

@@ -23,4 +23,27 @@ static class Menu
         }
 
     }
+
+    static public void Plan()
+    {
+        Console.WriteLine("Enter 1 to Plan");
+        Console.WriteLine("Enter 2 Logout");
+
+        string input = Console.ReadLine();
+        if (input == "1")
+        {
+            Planning.Start();
+        }
+        else if (input == "2")
+        {
+            return;
+            
+        }
+        else
+        {
+            Console.WriteLine("Invalid input");
+            Start();
+        }
+
+    }
 }

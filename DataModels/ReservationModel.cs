@@ -5,11 +5,12 @@ public class ReservationModel
     public Int64 Room_Id { get; set; }
     public Int64 Specialist_Id { get; set; }
     public Int64 Infofolder_Id { get; set; }
-    public DateTime Date { get; set; }
+    public string Date { get; set; }
     public string Type { get; set; }
     public string Status { get; set; }
     public string Sleutel1 { get; set; }
     public string Sleutel2 { get; set; }
+    public ReservationModel() { }
 
     public ReservationModel(
         Int64 id,
@@ -17,8 +18,9 @@ public class ReservationModel
         Int64 roomId,
         Int64 specialistId,
         Int64 infofolderId,
-        DateTime date,
+        string date,
         string type,
+        string doel,
         string status,
         string sleutel1,
         string sleutel2)

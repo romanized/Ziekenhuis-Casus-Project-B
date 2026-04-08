@@ -17,6 +17,14 @@ static class UserLogin
             Console.WriteLine("Your email number is " + acc.Email);
             switch (acc.Role)
             {
+<<<<<<< HEAD
+                Console.WriteLine("You are admin");
+            }
+            //Console.WriteLine("Your are a  " + acc.Specialty);
+
+            Console.WriteLine("Press 0 to go back to Main menu");
+            Console.WriteLine("Press 1 to go to your appointments");
+=======
                 case "admin":
                     Console.WriteLine("Welcome back Admin");
                     break;
@@ -35,10 +43,15 @@ static class UserLogin
             Console.ForegroundColor = ConsoleColor.Red;;
             Console.WriteLine("Press 0 to go to Logout");
             Console.ResetColor();
+>>>>>>> origin/main
             int? result = int.Parse(Console.ReadLine()!);
             if (result == 0)
             {
                 Menu.Start();
+            }
+            else if (result == 1)
+            {
+                ParentMenu.Start(acc);
             }
         }
         else

@@ -28,6 +28,7 @@ static class UserLogin
                     break;
                 case "ouder":
                     Console.WriteLine($"Welcome back {acc.FullName}");
+                    ParentMenu.Start(acc);
                     break;
                 default:
                     break;

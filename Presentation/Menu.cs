@@ -1,14 +1,25 @@
 static class Menu
 {
-    static public void Start()
+    public static void Start()
     {
-        Console.WriteLine("Enter 1 to login");
-        Console.WriteLine("Enter 2 to make account");
-
-        string input = Console.ReadLine();
-        do
+        bool check = true ;
+        while (check)
         {
-            
+            Console.WriteLine("\n=== Main Menu ===");
+            Console.WriteLine("Enter 1 to login");
+            Console.WriteLine("Enter 2 to make account");
+            Console.WriteLine("Enter Q to quit");
+
+            string? input = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                Console.WriteLine("Please enter a valid option.");
+                continue;
+            }
+
+            input = input.Trim().ToUpper();
+
             if (input == "1")
             {
                 UserLogin.Start();
@@ -16,19 +27,16 @@ static class Menu
             else if (input == "2")
             {
                 UserRegister.Start();
-                
             }
-            else if(input.ToUpper()  == "Q")
+            else if (input == "Q")
             {
-               break;
-                
+              
+                break;
             }
             else
             {
-                Console.WriteLine("Invalid input ");
+                Console.WriteLine("Invalid input.");
             }
         }
-        while ( input != "Q" );
-
     }
 }

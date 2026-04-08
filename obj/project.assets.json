@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {
+    "net9.0": {
       "Dapper/2.1.66": {
         "type": "package",
         "compile": {
@@ -79,10 +79,10 @@
           "lib/netstandard2.0/_._": {}
         },
         "build": {
-          "buildTransitive/net8.0/SQLitePCLRaw.lib.e_sqlite3.targets": {}
+          "buildTransitive/net9.0/SQLitePCLRaw.lib.e_sqlite3.targets": {}
         },
         "runtimeTargets": {
-          "runtimes/browser-wasm/nativeassets/net8.0/e_sqlite3.a": {
+          "runtimes/browser-wasm/nativeassets/net9.0/e_sqlite3.a": {
             "assetType": "native",
             "rid": "browser-wasm"
           },
@@ -359,35 +359,35 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net8.0": [
+    "net9.0": [
       "Dapper >= 2.1.66",
       "Microsoft.Data.Sqlite >= 9.0.2"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Justi\\.nuget\\packages\\": {}
+    "C:\\Users\\AHMAD\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Justi\\Desktop\\2de semester\\Ziekenhuis-Casus-Project-B\\Project.csproj",
+      "projectUniqueName": "C:\\Users\\AHMAD\\Desktop\\ProjectB\\Ziekenhuis-Casus-Project-B\\Project.csproj",
       "projectName": "Project",
-      "projectPath": "C:\\Users\\Justi\\Desktop\\2de semester\\Ziekenhuis-Casus-Project-B\\Project.csproj",
-      "packagesPath": "C:\\Users\\Justi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Justi\\Desktop\\2de semester\\Ziekenhuis-Casus-Project-B\\obj\\",
+      "projectPath": "C:\\Users\\AHMAD\\Desktop\\ProjectB\\Ziekenhuis-Casus-Project-B\\Project.csproj",
+      "packagesPath": "C:\\Users\\AHMAD\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\AHMAD\\Desktop\\ProjectB\\Ziekenhuis-Casus-Project-B\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Justi\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\AHMAD\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net8.0"
+        "net9.0"
       ],
       "sources": {
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
+        "net9.0": {
+          "targetAlias": "net9.0",
           "projectReferences": {}
         }
       },
@@ -400,11 +400,12 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
-      "net8.0": {
-        "targetAlias": "net8.0",
+      "net9.0": {
+        "targetAlias": "net9.0",
         "dependencies": {
           "Dapper": {
             "target": "Package",
@@ -431,7 +432,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.417/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

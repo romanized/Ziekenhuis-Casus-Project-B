@@ -9,7 +9,7 @@ public class RoomAccess
 
     public void Add(RoomModel room)
     {
-        string sql = $"INSERT INTO {Table} (RoomNumber, Type) VALUES (@RoomNumber, @Type)";
+        string sql = $"INSERT INTO {Table} (Name, Type, Location) VALUES (@Name, @Type, @Location)";
         _connection.Execute(sql, room);
     }
 
@@ -19,9 +19,9 @@ public class RoomAccess
         return _connection.Query<RoomModel>(sql).ToList();
     }
 
-    public RoomModel? GetByRoomNumber(string roomNumber)
+    public RoomModel? GetByName(string name)
     {
-        string sql = $"SELECT * FROM {Table} WHERE RoomNumber = @RoomNumber";
-        return _connection.QueryFirstOrDefault<RoomModel>(sql, new { RoomNumber = roomNumber });
+        string sql = $"SELECT * FROM {Table} WHERE Name = @Name";
+        return _connection.QueryFirstOrDefault<RoomModel>(sql, new { Name = name });
     }
 }

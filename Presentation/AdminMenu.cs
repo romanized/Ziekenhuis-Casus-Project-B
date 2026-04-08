@@ -35,26 +35,29 @@ static class AdminMenu
 
     private static void AddRoom()
     {
-        Console.Write("Enter room number: ");
-        string? roomNumber = Console.ReadLine();
+        Console.Write("Enter room name: ");
+        string? name = Console.ReadLine();
 
         Console.Write("Enter room type (e.g. consultation, operation): ");
         string? type = Console.ReadLine();
 
-        if (string.IsNullOrWhiteSpace(roomNumber) || string.IsNullOrWhiteSpace(type))
+        Console.Write("Enter room location (e.g. Floor 2, Building A): ");
+        string? location = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(type) || string.IsNullOrWhiteSpace(location))
         {
-            Console.WriteLine("Room number and type cannot be empty.");
+            Console.WriteLine("Name, type and location cannot be empty.");
             return;
         }
 
-        bool success = roomLogic.AddRoom(roomNumber, type);
+        bool success = roomLogic.AddRoom(name, type, location);
         if (success)
         {
-            Console.WriteLine($"Room '{roomNumber}' has been added successfully.");
+            Console.WriteLine($"Room '{name}' has been added successfully.");
         }
         else
         {
-            Console.WriteLine($"A room with number '{roomNumber}' already exists.");
+            Console.WriteLine($"A room named '{name}' already exists.");
         }
     }
 
@@ -70,7 +73,7 @@ static class AdminMenu
         Console.WriteLine("\n--- All Rooms ---");
         foreach (RoomModel room in rooms)
         {
-            Console.WriteLine($"ID: {room.Id} | Room Number: {room.RoomNumber} | Type: {room.Type}");
+            Console.WriteLine($"ID: {room.Id} | Name: {room.Name} | Type: {room.Type} | Location: {room.Location}");
         }
     }
 }

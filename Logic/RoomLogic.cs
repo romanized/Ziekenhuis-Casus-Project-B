@@ -2,9 +2,9 @@ public class RoomLogic
 {
     private RoomAccess _access = new();
 
-    public bool AddRoom(string roomNumber, string type)
+    public bool AddRoom(string name, string type, string location)
     {
-        RoomModel? existing = _access.GetByRoomNumber(roomNumber);
+        RoomModel? existing = _access.GetByName(name);
         if (existing != null)
         {
             return false; // Room already exists
@@ -12,8 +12,9 @@ public class RoomLogic
 
         RoomModel newRoom = new RoomModel
         {
-            RoomNumber = roomNumber,
-            Type = type
+            Name = name,
+            Type = type,
+            Location = location
         };
 
         _access.Add(newRoom);

@@ -1,11 +1,9 @@
-using System.Threading.Tasks;
-
 static class UserLogin
 {
     static private UserLogic userLogic = new UserLogic();
 
 
-    public static async Task Start()
+    public static void Start()
     {
         Console.WriteLine("Welcome to the login page");
         Console.WriteLine("Please enter your email address");
@@ -17,14 +15,35 @@ static class UserLogin
         {
             Console.WriteLine("Welcome back " + acc.FullName);
             Console.WriteLine("Your email number is " + acc.Email);
-            if (acc.Role == "admin")
+            switch (acc.Role)
             {
+<<<<<<< HEAD
                 Console.WriteLine("You are admin");
             }
             //Console.WriteLine("Your are a  " + acc.Specialty);
 
             Console.WriteLine("Press 0 to go back to Main menu");
             Console.WriteLine("Press 1 to go to your appointments");
+=======
+                case "admin":
+                    Console.WriteLine("Welcome back Admin");
+                    break;
+                case "doctor":
+                    Console.WriteLine($"Welcome back doctor {acc.FullName}");
+                    break;
+                case "planner":
+                    Console.WriteLine($"Welcome back planner {acc.FullName}");
+                    break;
+                case "ouder":
+                    Console.WriteLine($"Welcome back {acc.FullName}");
+                    break;
+                default:
+                    break;
+            }
+            Console.ForegroundColor = ConsoleColor.Red;;
+            Console.WriteLine("Press 0 to go to Logout");
+            Console.ResetColor();
+>>>>>>> origin/main
             int? result = int.Parse(Console.ReadLine()!);
             if (result == 0)
             {

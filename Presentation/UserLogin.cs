@@ -19,7 +19,8 @@ static class UserLogin
             {
                 case "admin":
                     Console.WriteLine("Welcome back Admin");
-                    break;
+                    AdminMenu.Start();
+                    return;
                 case "doctor":
                     Console.WriteLine($"Welcome back doctor {acc.FullName}");
                     break;

@@ -1,6 +1,7 @@
 static class AdminMenu
 {
     private static UserLogic userLogic = new UserLogic();
+    private static RoomAccess roomAccess = new RoomAccess();
 
     public static void Start(UserModel admin)
     {
@@ -10,6 +11,7 @@ static class AdminMenu
             Console.WriteLine("\n==== Admin Menu ====");
             Console.WriteLine("1. Add a new doctor");
             Console.WriteLine("2. Add a new planner");
+            Console.WriteLine("3. Add a new room");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("0. Log out");
             Console.ResetColor();
@@ -28,6 +30,9 @@ static class AdminMenu
                     break;
                 case "2":
                     CreateEmployee("planner");
+                    break;
+                case "3":
+                    CreateRoom();
                     break;
                 case "0":
                     running = false;
@@ -73,5 +78,32 @@ static class AdminMenu
         {
             Console.WriteLine("An account with this email already exists.");
         }
+    }
+
+    private static void CreateRoom()
+    {
+        Console.WriteLine("\n-- Add new room --");
+
+        Console.WriteLine("Enter room name:");
+        string? name = Console.ReadLine();
+        Console.WriteLine("Enter room type:");
+        string? type = Console.ReadLine();
+        Console.WriteLine("Enter room location:");
+        string? location = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            Console.WriteLine("Room name is required.");
+            return;
+        }
+
+        roomAccess.AddRoom(new RoomModel
+        {
+            Name = name,
+            Type = type ?? "",
+            Location = location ?? ""
+        });
+
+        Console.WriteLine($"Room '{name}' added successfully.");
     }
 }

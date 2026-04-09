@@ -8,7 +8,9 @@ static class Menu
             Console.WriteLine("\n=== Main Menu ===");
             Console.WriteLine("Enter 1 to login");
             Console.WriteLine("Enter 2 to make account");
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Enter Q to quit");
+            Console.ResetColor();
 
             string? input = Console.ReadLine();
 

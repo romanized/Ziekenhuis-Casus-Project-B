@@ -10,7 +10,9 @@ static class ParentMenu
             Console.WriteLine("\n==== Parent Main Menu ====");
             Console.WriteLine("1. View my next appointment");
             Console.WriteLine("2. View all my appointments");
+            Console.ForegroundColor = ConsoleColor.Red ;
             Console.WriteLine("0. Log out");
+            Console.ResetColor();
 
             string? input = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(input))

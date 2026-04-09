@@ -41,6 +41,30 @@
         _access.Write(newUser);
         return true; // created
     }
+
+    public bool CreateEmployee(string email, string password, string fullname, string role, string specialty)
+    {
+        UserModel? existing = _access.GetByEmail(email);
+        if (existing != null)
+        {
+            return false;
+        }
+
+        UserModel newEmployee = new UserModel
+        {
+            Email = email,
+            Password = password,
+            FullName = fullname,
+            BirthDate = "",
+            PhoneNumber = "",
+            StartDate = "",
+            Role = role,
+            Specialty = specialty
+        };
+
+        _access.Write(newEmployee);
+        return true;
+    }
 }
 
 

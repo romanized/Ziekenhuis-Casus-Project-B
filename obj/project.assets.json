@@ -365,24 +365,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\AHMAD\\.nuget\\packages\\": {}
+    "C:\\Users\\lol\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\AHMAD\\Desktop\\ProjectB\\Ziekenhuis-Casus-Project-B\\Project.csproj",
+      "projectUniqueName": "C:\\Users\\lol\\Documents\\GitHub\\Ziekenhuis-Casus-Project-B\\Project.csproj",
       "projectName": "Project",
-      "projectPath": "C:\\Users\\AHMAD\\Desktop\\ProjectB\\Ziekenhuis-Casus-Project-B\\Project.csproj",
-      "packagesPath": "C:\\Users\\AHMAD\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\AHMAD\\Desktop\\ProjectB\\Ziekenhuis-Casus-Project-B\\obj\\",
+      "projectPath": "C:\\Users\\lol\\Documents\\GitHub\\Ziekenhuis-Casus-Project-B\\Project.csproj",
+      "packagesPath": "C:\\Users\\lol\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\lol\\Documents\\GitHub\\Ziekenhuis-Casus-Project-B\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\AHMAD\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\lol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -401,7 +403,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net9.0": {
@@ -427,12 +429,30 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[9.0.14, 9.0.14]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[9.0.14, 9.0.14]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[9.0.14, 9.0.14]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[9.0.14, 9.0.14]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

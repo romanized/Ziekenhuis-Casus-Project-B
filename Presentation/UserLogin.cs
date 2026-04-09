@@ -23,7 +23,7 @@ static class UserLogin
             case "admin":
                 AdminMenu.Start(acc);
                 break;
-            case "doctor":
+            case "specialty":
                 Console.WriteLine($"Welcome doctor {acc.FullName}");
                 break;
             case "planner":

@@ -33,6 +33,9 @@ public class UserAccess
         _connection.Execute(sql, new { Id = account.Id });
     }
 
-
-
+    public List<UserModel> GetAllByRole(string role)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE Role = @Role ORDER BY Fullname";
+        return _connection.Query<UserModel>(sql, new { Role = role }).ToList();
+    }
 }

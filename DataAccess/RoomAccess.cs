@@ -10,4 +10,10 @@ public class RoomAccess
         string sql = "INSERT INTO Room (Name, Type, Location) VALUES (@Name, @Type, @Location)";
         _connection.Execute(sql, room);
     }
+
+    public List<RoomModel> GetAllRooms()
+    {
+        string sql = "SELECT ID as Id, Name, Type, Location FROM Room ORDER BY Name";
+        return _connection.Query<RoomModel>(sql).ToList();
+    }
 }

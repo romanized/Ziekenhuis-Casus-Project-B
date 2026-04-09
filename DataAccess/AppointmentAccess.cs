@@ -11,18 +11,18 @@ public class ReservationAccess
             SELECT
                 r.ID as Id,
                 r.User_ID as UserId,
-                r.Doctor_ID as DoctorId,
+                r.Specialist_ID as SpecialistId,
                 r.Room_ID as RoomId,
-                r.Date as Date,
-                r.Time as Time,
+                strftime('%Y-%m-%d', r.Date) as Date,
+                strftime('%H:%M', r.Date) as Time,
                 r.Status as Status,
-                room.Room_number as RoomNumber
+                room.Name as RoomNumber
             FROM Reservation r
             INNER JOIN Room room ON r.Room_ID = room.ID
             WHERE r.User_ID = @UserId
-              AND r.Status = 'active'
-              AND datetime(r.Date || ' ' || r.Time) >= datetime('now')
-            ORDER BY datetime(r.Date || ' ' || r.Time) ASC
+              AND r.Status = 'gepland'
+              AND datetime(r.Date) >= datetime('now')
+            ORDER BY datetime(r.Date) ASC
             LIMIT 1";
 
         return _connection.QueryFirstOrDefault<ReservationModel>(sql, new { UserId = userId });
@@ -34,16 +34,16 @@ public class ReservationAccess
             SELECT
                 r.ID as Id,
                 r.User_ID as UserId,
-                r.Doctor_ID as DoctorId,
+                r.Specialist_ID as SpecialistId,
                 r.Room_ID as RoomId,
-                r.Date as Date,
-                r.Time as Time,
+                strftime('%Y-%m-%d', r.Date) as Date,
+                strftime('%H:%M', r.Date) as Time,
                 r.Status as Status,
-                room.Room_number as RoomNumber
+                room.Name as RoomNumber
             FROM Reservation r
             INNER JOIN Room room ON r.Room_ID = room.ID
             WHERE r.User_ID = @UserId
-            ORDER BY datetime(r.Date || ' ' || r.Time) ASC";
+            ORDER BY datetime(r.Date) ASC";
 
         return _connection.Query<ReservationModel>(sql, new { UserId = userId }).ToList();
     }

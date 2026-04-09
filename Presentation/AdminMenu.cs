@@ -22,7 +22,7 @@ static class AdminMenu
             switch (input.Trim())
             {
                 case "1":
-                    CreateEmployee("doctor");
+                    CreateEmployee("specialty");
                     break;
                 case "2":
                     CreateEmployee("planner");
@@ -48,9 +48,9 @@ static class AdminMenu
         Console.WriteLine("Enter full name:");
         string? fullname = Console.ReadLine();
 
-        // only doctors have a specialty
+        // only doctors (role "specialty") have a specialty field
         string specialty = "";
-        if (role == "doctor")
+        if (role == "specialty")
         {
             Console.WriteLine("Enter specialty:");
             specialty = Console.ReadLine() ?? "";

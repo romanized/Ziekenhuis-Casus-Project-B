@@ -24,7 +24,7 @@ static class UserLogin
                 AdminMenu.Start(acc);
                 break;
             case "specialty":
-                Console.WriteLine($"Welcome doctor {acc.FullName}");
+                DoctorMenu.Start(acc);
                 break;
             case "planner":
                 Console.WriteLine($"Welcome planner {acc.FullName}");

@@ -1,18 +1,18 @@
-static class ParentMenu
+static class DoctorMenu
 {
-    private static ReservationAccess reservationAccess = new ReservationAccess();
+    private static DoctorAccess doctorAccess = new DoctorAccess();
 
-    public static void Start(UserModel user)
+    public static void Start(UserModel doctor)
     {
         bool running = true;
         while (running)
         {
-            Console.WriteLine("\n==== Parent Main Menu ====");
+            Console.WriteLine("\n==== Doctor Main Menu ====");
+            Console.WriteLine($"Logged in as: Dr. {doctor.FullName}" +
+                              (string.IsNullOrWhiteSpace(doctor.Specialty) ? "" : $" ({doctor.Specialty})"));
             Console.WriteLine("1. View my next appointment");
             Console.WriteLine("2. View all my appointments");
-            Console.ForegroundColor = ConsoleColor.Red ;
             Console.WriteLine("0. Log out");
-            Console.ResetColor();
 
             string? input = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(input))
@@ -24,10 +24,10 @@ static class ParentMenu
             switch (input.Trim())
             {
                 case "1":
-                    ShowNextAppointment(user);
+                    ShowNextAppointment(doctor);
                     break;
                 case "2":
-                    ShowAllAppointments(user);
+                    ShowAllAppointments(doctor);
                     break;
                 case "0":
                     running = false;
@@ -39,9 +39,9 @@ static class ParentMenu
         }
     }
 
-    private static void ShowNextAppointment(UserModel user)
+    private static void ShowNextAppointment(UserModel doctor)
     {
-        ReservationModel? next = reservationAccess.GetNextActiveReservationByUserId(user.Id);
+        ReservationModel? next = doctorAccess.GetNextActiveReservationByDoctorId(doctor.Id);
         Console.WriteLine("\n-- Next appointment --");
         if (next == null)
         {
@@ -53,9 +53,9 @@ static class ParentMenu
         Console.WriteLine("Room: " + next.RoomNumber);
     }
 
-    private static void ShowAllAppointments(UserModel user)
+    private static void ShowAllAppointments(UserModel doctor)
     {
-        List<ReservationModel> list = reservationAccess.GetAllReservationsByUserId(user.Id);
+        List<ReservationModel> list = doctorAccess.GetAllReservationsByDoctorId(doctor.Id);
         Console.WriteLine("\n-- All appointments --");
         if (list.Count == 0)
         {

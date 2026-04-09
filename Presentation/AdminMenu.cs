@@ -10,9 +10,10 @@ static class AdminMenu
         {
             Console.WriteLine("\n==== Admin Menu ====");
             Console.WriteLine("1. Add a new doctor");
-            Console.WriteLine("2. Add a new planner");
             Console.WriteLine("3. Add a new room");
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("0. Log out");
+            Console.ResetColor();
 
             string? input = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(input))

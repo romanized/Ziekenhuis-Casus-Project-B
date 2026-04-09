@@ -7,6 +7,7 @@ static class ParentMenu
         bool running = true;
         while (running)
         {
+            Console.Clear();
             Console.WriteLine("\n==== Parent Main Menu ====");
             Console.WriteLine("1. View my next appointment");
             Console.WriteLine("2. View all my appointments");

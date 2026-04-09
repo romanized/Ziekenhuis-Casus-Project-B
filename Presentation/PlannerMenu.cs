@@ -9,6 +9,7 @@ static class PlannerMenu
         bool running = true;
         while (running)
         {
+            Console.Clear();
             Console.WriteLine("\n==== Planner Menu ====");
             Console.WriteLine("1. View all appointments");
             Console.WriteLine("2. Create new appointment");

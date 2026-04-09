@@ -7,6 +7,7 @@ static class DoctorMenu
         bool running = true;
         while (running)
         {
+            Console.Clear();
             Console.WriteLine("\n==== Doctor Main Menu ====");
             Console.WriteLine($"Logged in as: Dr. {doctor.FullName}" +
                               (string.IsNullOrWhiteSpace(doctor.Specialty) ? "" : $" ({doctor.Specialty})"));

@@ -2,6 +2,7 @@ static class UserRegister
 {
     public static void Start()
     {
+        Console.Clear();
         UserLogic userLogic = new();
         Console.WriteLine("Welcome to Register Page");
 

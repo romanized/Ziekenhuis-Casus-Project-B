@@ -2,6 +2,7 @@ static class Menu
 {
     public static void Start()
     {
+        Console.Clear();
         bool check = true ;
         while (check)
         {

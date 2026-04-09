@@ -21,7 +21,7 @@ static class UserLogin
         switch (acc.Role)
         {
             case "admin":
-                Console.WriteLine("Welcome back Admin");
+                AdminMenu.Start(acc);
                 break;
             case "doctor":
                 Console.WriteLine($"Welcome doctor {acc.FullName}");

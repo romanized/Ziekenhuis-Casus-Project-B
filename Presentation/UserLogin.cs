@@ -27,7 +27,7 @@ static class UserLogin
                 DoctorMenu.Start(acc);
                 break;
             case "planner":
-                Console.WriteLine($"Welcome planner {acc.FullName}");
+                PlannerMenu.Start(acc);
                 break;
             case "ouder":
                 ParentMenu.Start(acc);

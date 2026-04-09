@@ -3,7 +3,7 @@ using Dapper;
 
 public class ReservationAccess
 {
-    private SqliteConnection _connection = new SqliteConnection("Data Source=DataSources/project.db");
+    private SqliteConnection _connection = new SqliteConnection("Data Source=DataSources/project.db;Foreign Keys=False");
 
     public ReservationModel? GetNextActiveReservationByUserId(long userId)
     {

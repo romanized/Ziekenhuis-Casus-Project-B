@@ -8,9 +8,8 @@ static class ParentMenu
         while (running)
         {
             Console.WriteLine("\n==== Parent Main Menu ====");
-            Console.WriteLine("1. View my next appointment");
-            Console.WriteLine("2. View all my appointments");
-            Console.ForegroundColor = ConsoleColor.Red ;
+            Console.WriteLine("1. View appointment overview");
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("0. Log out");
             Console.ResetColor();
 
@@ -24,10 +23,7 @@ static class ParentMenu
             switch (input.Trim())
             {
                 case "1":
-                    ShowNextAppointment(user);
-                    break;
-                case "2":
-                    ShowAllAppointments(user);
+                    ShowAppointmentOverview(user);
                     break;
                 case "0":
                     running = false;
@@ -39,32 +35,83 @@ static class ParentMenu
         }
     }
 
-    private static void ShowNextAppointment(UserModel user)
+    private static void ShowAppointmentOverview(UserModel user)
     {
-        ReservationModel? next = reservationAccess.GetNextActiveReservationByUserId(user.Id);
-        Console.WriteLine("\n-- Next appointment --");
-        if (next == null)
+        List<ReservationModel> allAppointments = reservationAccess.GetAllReservationsByUserId(user.Id);
+
+        List<ReservationModel> upcomingAppointments = new List<ReservationModel>();
+        List<ReservationModel> pastAppointments = new List<ReservationModel>();
+
+        DateTime now = DateTime.Now;
+
+        foreach (ReservationModel appointment in allAppointments)
         {
-            Console.WriteLine("You have no active upcoming appointments.");
-            return;
+            DateTime appointmentDateTime;
+            bool validDate = DateTime.TryParse($"{appointment.Date} {appointment.Time}", out appointmentDateTime);
+
+            if (!validDate)
+            {
+                continue;
+            }
+
+            if (appointmentDateTime >= now)
+            {
+                upcomingAppointments.Add(appointment);
+            }
+            else
+            {
+                pastAppointments.Add(appointment);
+            }
         }
-        Console.WriteLine("Date: " + next.Date);
-        Console.WriteLine("Time: " + next.Time);
-        Console.WriteLine("Room: " + next.RoomNumber);
+
+        Console.WriteLine("\n================ APPOINTMENT OVERVIEW ================\n");
+        PrintSideBySideTables(upcomingAppointments, pastAppointments);
+
+        Console.WriteLine();
+        Console.WriteLine("Press Enter to return...");
+        Console.ReadLine();
     }
 
-    private static void ShowAllAppointments(UserModel user)
+    private static void PrintSideBySideTables(List<ReservationModel> upcoming, List<ReservationModel> past)
     {
-        List<ReservationModel> list = reservationAccess.GetAllReservationsByUserId(user.Id);
-        Console.WriteLine("\n-- All appointments --");
-        if (list.Count == 0)
+        List<string> leftTable = BuildTableLines("Upcoming appointments", upcoming);
+        List<string> rightTable = BuildTableLines("Past appointments", past);
+
+        int leftWidth = 45;
+        int maxLines = Math.Max(leftTable.Count, rightTable.Count);
+
+        for (int i = 0; i < maxLines; i++)
         {
-            Console.WriteLine("You have no appointments.");
-            return;
+            string leftLine = i < leftTable.Count ? leftTable[i] : "";
+            string rightLine = i < rightTable.Count ? rightTable[i] : "";
+
+            Console.WriteLine(leftLine.PadRight(leftWidth) + "   " + rightLine);
         }
-        foreach (ReservationModel r in list)
+    }
+
+    private static List<string> BuildTableLines(string title, List<ReservationModel> appointments)
+    {
+        List<string> lines = new List<string>();
+
+        lines.Add(title);
+        lines.Add("----------------------------------------");
+        lines.Add(string.Format("{0,-12} {1,-6} {2,-12}", "Date", "Time", "Room"));
+        lines.Add("----------------------------------------");
+
+        if (appointments.Count == 0)
         {
-            Console.WriteLine($"{r.Date} {r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
+            lines.Add("No appointments");
+            return lines;
         }
+
+        foreach (ReservationModel appointment in appointments)
+        {
+            lines.Add(string.Format("{0,-12} {1,-6} {2,-12}",
+                appointment.Date,
+                appointment.Time,
+                appointment.RoomNumber));
+        }
+
+        return lines;
     }
 }

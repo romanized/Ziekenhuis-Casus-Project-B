@@ -5,7 +5,7 @@ using Dapper;
 
 public class UserAccess
 {
-    private SqliteConnection _connection = new SqliteConnection($"Data Source=DataSources/project.db");
+    private SqliteConnection _connection = new SqliteConnection("Data Source=DataSources/project.db;Foreign Keys=False");
 
     private string Table = "User";
 
@@ -37,5 +37,20 @@ public class UserAccess
     {
         string sql = $"SELECT * FROM {Table} WHERE Role = @Role ORDER BY Fullname";
         return _connection.Query<UserModel>(sql, new { Role = role }).ToList();
+    }
+
+    public List<UserModel> GetAvailableDoctors(string dateTime)
+    {
+        string sql = $@"
+            SELECT * FROM {Table}
+            WHERE Role = 'specialty'
+            AND ID NOT IN (
+                SELECT Specialist_ID FROM Reservation
+                WHERE datetime(Date) = datetime(@DateTime)
+                AND Status = 'gepland'
+                AND Specialist_ID IS NOT NULL
+            )
+            ORDER BY Fullname";
+        return _connection.Query<UserModel>(sql, new { DateTime = dateTime }).ToList();
     }
 }

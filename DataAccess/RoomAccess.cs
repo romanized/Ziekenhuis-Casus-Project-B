@@ -3,7 +3,7 @@ using Dapper;
 
 public class RoomAccess
 {
-    private SqliteConnection _connection = new SqliteConnection("Data Source=DataSources/project.db");
+    private SqliteConnection _connection = new SqliteConnection("Data Source=DataSources/project.db;Foreign Keys=False");
 
     public void AddRoom(RoomModel room)
     {
@@ -15,5 +15,18 @@ public class RoomAccess
     {
         string sql = "SELECT ID as Id, Name, Type, Location FROM Room ORDER BY Name";
         return _connection.Query<RoomModel>(sql).ToList();
+    }
+
+    public List<RoomModel> GetAvailableRooms(string dateTime)
+    {
+        string sql = @"
+            SELECT ID as Id, Name, Type, Location FROM Room
+            WHERE ID NOT IN (
+                SELECT Room_ID FROM Reservation
+                WHERE datetime(Date) = datetime(@DateTime)
+                AND Status = 'gepland'
+            )
+            ORDER BY Name";
+        return _connection.Query<RoomModel>(sql, new { DateTime = dateTime }).ToList();
     }
 }

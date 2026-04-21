@@ -12,6 +12,7 @@ static class DoctorMenu
                               (string.IsNullOrWhiteSpace(doctor.Specialty) ? "" : $" ({doctor.Specialty})"));
             Console.WriteLine("1. View my next appointment");
             Console.WriteLine("2. View all my appointments");
+            Console.WriteLine("3. View the Agenda for the day");
             Console.WriteLine("0. Log out");
 
             string? input = Console.ReadLine();
@@ -28,6 +29,9 @@ static class DoctorMenu
                     break;
                 case "2":
                     ShowAllAppointments(doctor);
+                    break;
+                case "3":
+                    ShowAgenda(doctor);
                     break;
                 case "0":
                     running = false;
@@ -66,5 +70,38 @@ static class DoctorMenu
         {
             Console.WriteLine($"{r.Date} {r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
         }
+    }
+    public static void ShowAgenda(UserModel doctor)
+    {
+
+        Console.WriteLine("Please enter the date of the agenda with this format YYYY/MM/DD");
+        // string date = Console.ReadLine();
+        string date = "2026/04/25";
+        DateTime newdate = Convert.ToDateTime(date);
+        Console.WriteLine($"{newdate.Year} {newdate.Month} {newdate.Day}");
+        List<ReservationModel> list = doctorAccess.GetAllReservationsByDoctorIdByDate(doctor.Id, newdate);
+        Console.WriteLine("\n-- All appointments --");
+        Console.WriteLine($"\n-- Agenda for {date:yyyy-MM-dd} --");
+
+        if (list.Count == 0)
+        {
+            Console.WriteLine("No appointments for this day.");
+            return;
+        }
+
+        foreach (var r in list)
+        {
+            Console.WriteLine($"{r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
+        }
+}
+
+        
+        // foreach (ReservationModel r in list)
+        // {
+
+
+            
+        //     Console.WriteLine($"{r.Date} {r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
+        // }
     }
 }

@@ -1,3 +1,5 @@
+using Microsoft.VisualBasic;
+
 static class DoctorMenu
 {
     private static DoctorAccess doctorAccess = new DoctorAccess();
@@ -12,6 +14,7 @@ static class DoctorMenu
                               (string.IsNullOrWhiteSpace(doctor.Specialty) ? "" : $" ({doctor.Specialty})"));
             Console.WriteLine("1. View my next appointment");
             Console.WriteLine("2. View all my appointments");
+            Console.WriteLine("3. View the Agenda for the day");
             Console.WriteLine("0. Log out");
 
             string? input = Console.ReadLine();
@@ -28,6 +31,9 @@ static class DoctorMenu
                     break;
                 case "2":
                     ShowAllAppointments(doctor);
+                    break;
+                case "3":
+                    ShowAgenda(doctor);
                     break;
                 case "0":
                     running = false;
@@ -67,4 +73,48 @@ static class DoctorMenu
             Console.WriteLine($"{r.Date} {r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
         }
     }
+    public static void ShowAgenda(UserModel doctor)
+    {
+
+        Console.WriteLine("Please enter the date of the agenda with this format YYYY/MM/DD");
+        string date = Console.ReadLine();
+        DateTime newdate = Convert.ToDateTime(date);
+        List<ReservationModel> list = doctorAccess.GetAllReservationsByDoctorIdByDate(doctor.Id, newdate);
+        Console.WriteLine($"\n-- Agenda for {date:yyyy-MM-dd} --");
+
+
+        DateTime time = DateTime.Today.AddHours(8); // 09:00
+
+        for (int i = 0; i < 19; i++)
+        {
+
+            foreach (var r in list)
+            {
+
+            if (r.Time == time.ToString("HH:mm"))
+                {
+                    UserAccess _acces = new UserAccess();
+                    string name = _acces.GetFullNameById(r.UserId);
+                    RoomAccess _access = new RoomAccess();
+                    string roomname = _access.GetRoomNameById(r.RoomId);
+                    Console.WriteLine($"{time:HH:mm} | Patient {name} Room : {r.RoomId} {roomname} Type : {r.Type}");
+                }
+        
+            }
+            
+
+            Console.WriteLine($"{time:HH:mm} | Available ");
+
+            time = time.AddMinutes(30);
+        }
 }
+
+        
+        // foreach (ReservationModel r in list)
+        // {
+
+
+            
+        //     Console.WriteLine($"{r.Date} {r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
+        // }
+    }

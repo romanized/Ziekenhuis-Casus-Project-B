@@ -44,6 +44,9 @@ static class DoctorMenu
                     break;
             }
         }
+
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey();
     }
 
     private static void ShowNextAppointment(UserModel doctor)
@@ -74,6 +77,7 @@ static class DoctorMenu
             Console.WriteLine($"{r.Date} {r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
         }
     }
+
     public static void ShowAgenda(UserModel doctor)
     {
         Console.WriteLine("Enter date (YYYY/MM/DD):");
@@ -146,14 +150,4 @@ static class DoctorMenu
             time = time.AddMinutes(30);
         }
     }
-
-
-        
-        // foreach (ReservationModel r in list)
-        // {
-
-
-            
-        //     Console.WriteLine($"{r.Date} {r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
-        // }
-    }
+}

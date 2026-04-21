@@ -49,12 +49,16 @@ static class PlannerMenu
         if (list.Count == 0)
         {
             Console.WriteLine("No appointments found.");
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey(true);
             return;
         }
         foreach (ReservationModel r in list)
         {
             Console.WriteLine($"{r.Date} {r.Time} | Room: {r.RoomNumber} | Status: {r.Status}");
         }
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey(true);
     }
 
     private static void CreateAppointment()
@@ -66,12 +70,19 @@ static class PlannerMenu
         if (patients.Count == 0)
         {
             Console.WriteLine("No patients found.");
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey(true);
             return;
         }
         Console.WriteLine("\nSelect patient:");
         for (int i = 0; i < patients.Count; i++)
             Console.WriteLine($"{i + 1}. {patients[i].FullName} ({patients[i].Email})");
-        if (!TryPickIndex(patients.Count, out int patientIdx)) return;
+        if (!TryPickIndex(patients.Count, out int patientIdx)) 
+        {
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey(true);
+            return;
+        }
         UserModel patient = patients[patientIdx];
 
         // Select room
@@ -79,12 +90,19 @@ static class PlannerMenu
         if (rooms.Count == 0)
         {
             Console.WriteLine("No rooms available. Add a room first.");
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey(true);
             return;
         }
         Console.WriteLine("\nSelect room:");
         for (int i = 0; i < rooms.Count; i++)
             Console.WriteLine($"{i + 1}. {rooms[i].Name} ({rooms[i].Type}, {rooms[i].Location})");
-        if (!TryPickIndex(rooms.Count, out int roomIdx)) return;
+        if (!TryPickIndex(rooms.Count, out int roomIdx)) 
+        {
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey(true);
+            return;
+        }
         RoomModel room = rooms[roomIdx];
 
         // Select doctor (optional)
@@ -113,6 +131,8 @@ static class PlannerMenu
         if (string.IsNullOrWhiteSpace(date) || string.IsNullOrWhiteSpace(time))
         {
             Console.WriteLine("Date and time are required.");
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey(true);
             return;
         }
 
@@ -124,6 +144,8 @@ static class PlannerMenu
         string dateTime = $"{date} {time}";
         reservationAccess.CreateReservation(patient.Id, room.Id, specialistId, dateTime, type);
         Console.WriteLine($"Appointment created for {patient.FullName} on {date} at {time} in room {room.Name}.");
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey(true);
     }
 
     private static bool TryPickIndex(int count, out int index)
@@ -140,3 +162,4 @@ static class PlannerMenu
         return false;
     }
 }
+

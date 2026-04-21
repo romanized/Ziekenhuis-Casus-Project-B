@@ -47,11 +47,15 @@ static class ParentMenu
         if (next == null)
         {
             Console.WriteLine("You have no active upcoming appointments.");
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey(true);
             return;
         }
         Console.WriteLine("Date: " + next.Date);
         Console.WriteLine("Time: " + next.Time);
         Console.WriteLine("Room: " + next.RoomNumber);
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey(true);
     }
 
     private static void ShowAllAppointments(UserModel user)
@@ -61,11 +65,16 @@ static class ParentMenu
         if (list.Count == 0)
         {
             Console.WriteLine("You have no appointments.");
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey(true);
             return;
         }
         foreach (ReservationModel r in list)
         {
             Console.WriteLine($"{r.Date} {r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
         }
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey(true);
     }
 }
+

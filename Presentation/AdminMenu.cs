@@ -8,6 +8,7 @@ static class AdminMenu
         bool running = true;
         while (running)
         {
+            Console.Clear();
             Console.WriteLine("\n==== Admin Menu ====");
             Console.WriteLine("1. Add a new doctor");
             Console.WriteLine("2. Add a new planner");
@@ -66,6 +67,8 @@ static class AdminMenu
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(fullname))
         {
             Console.WriteLine("All fields are required.");
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey(true);
             return;
         }
 
@@ -78,6 +81,8 @@ static class AdminMenu
         {
             Console.WriteLine("An account with this email already exists.");
         }
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey(true);
     }
 
     private static void CreateRoom()
@@ -94,6 +99,8 @@ static class AdminMenu
         if (string.IsNullOrWhiteSpace(name))
         {
             Console.WriteLine("Room name is required.");
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey(true);
             return;
         }
 
@@ -105,5 +112,8 @@ static class AdminMenu
         });
 
         Console.WriteLine($"Room '{name}' added successfully.");
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey(true);
     }
 }
+

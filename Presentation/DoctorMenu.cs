@@ -112,9 +112,11 @@ static class DoctorMenu
 
         DateTime time = date.Date.AddHours(8); 
         ReservationModel apoint = null;
+        DateTime now = DateTime.Now;
 
         for (int i = 0; i < 19; i++)
         {
+
             bool istrue = false;
             apoint = null;
 
@@ -137,11 +139,20 @@ static class DoctorMenu
                 string roomname = _access.GetRoomNameById(apoint.RoomId);
 
                 Console.WriteLine($"{time:HH:mm} | Patient : {name} Room : {apoint.RoomId} {roomname}");
+
             }
             else
             {
                 Console.WriteLine($"{time:HH:mm} | Available");
             }
+            if (
+                        date.Date == now.Date &&
+                        now.TimeOfDay < time.TimeOfDay)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"---------------------- {now:HH:mm} ----------------------");
+                        Console.ResetColor();
+                    }
 
             time = time.AddMinutes(30);
         }

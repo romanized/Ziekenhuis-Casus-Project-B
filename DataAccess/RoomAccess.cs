@@ -29,4 +29,10 @@ public class RoomAccess
             ORDER BY Name";
         return _connection.Query<RoomModel>(sql, new { DateTime = dateTime }).ToList();
     }
+    public string GetRoomNameById(long id)
+    {
+        string sql = "SELECT Name FROM Room WHERE ID = @Id";
+
+        return _connection.QueryFirstOrDefault<string>(sql, new { Id = id });
+    }
 }

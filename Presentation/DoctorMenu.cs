@@ -76,51 +76,77 @@ static class DoctorMenu
     }
     public static void ShowAgenda(UserModel doctor)
     {
+        Console.WriteLine("Enter date (YYYY/MM/DD):");
 
-        Console.WriteLine("Please enter the date of the agenda with this format YYYY/MM/DD");
-        string date = Console.ReadLine();
-        DateTime newdate = Convert.ToDateTime(date);
-        List<ReservationModel> list = doctorAccess.GetAllReservationsByDoctorIdByDate(doctor.Id, newdate);
+        DateTime date = Convert.ToDateTime(Console.ReadLine());
+
+        while (true)
+        {
+            List<ReservationModel> list =
+                doctorAccess.GetAllReservationsByDoctorIdByDate(doctor.Id, date);
+
+            AgendaTemplate(doctor, date, list);
+
+            Console.WriteLine("\n1 = Next day | 2 = Previous day | 0 = Exit");
+            string input = Console.ReadLine();
+
+            switch (input.Trim())
+            {
+                case "1":
+                    date = date.AddDays(1);
+                    break;
+
+                case "2":
+                    date = date.AddDays(-1);
+                    break;
+
+                case "0":
+                    return;
+            }
+        }
+    }
+
+    public static void AgendaTemplate(UserModel doctor, DateTime date, List<ReservationModel> list)
+    {
         Console.WriteLine($"\n-- Agenda for {date:yyyy-MM-dd} --");
 
-
-        DateTime time = DateTime.Today.AddHours(8); // 09:00
-        ReservationModel  apoint = null;
+        DateTime time = date.Date.AddHours(8); 
+        ReservationModel apoint = null;
 
         for (int i = 0; i < 19; i++)
         {
             bool istrue = false;
+            apoint = null;
+
             foreach (var r in list)
             {
-                
-            if (r.Time == time.ToString("HH:mm"))
+                if (r.Time == time.ToString("HH:mm"))
                 {
                     istrue = true;
                     apoint = r;
+                    break;
                 }
-        
             }
 
-            if (istrue)
+            if (istrue && apoint != null)
             {
-                        UserAccess _acces = new UserAccess();
-                        string name = _acces.GetFullNameById(apoint.UserId);
-                        RoomAccess _access = new RoomAccess();
-                        string roomname = _access.GetRoomNameById(apoint.RoomId);
-                        Console.WriteLine($"{time:HH:mm} | Patient {name} Room : {apoint.RoomId} {roomname}");
+                UserAccess _acces = new UserAccess();
+                string name = _acces.GetFullNameById(apoint.UserId);
+
+                RoomAccess _access = new RoomAccess();
+                string roomname = _access.GetRoomNameById(apoint.RoomId);
+
+                Console.WriteLine($"{time:HH:mm} | Patient : {name} Room : {apoint.RoomId} {roomname}");
             }
             else
             {
-                    Console.WriteLine($"{time:HH:mm} | Available ");
-
+                Console.WriteLine($"{time:HH:mm} | Available");
             }
-            
-                    // Console.WriteLine("-------------------------------------------");
-
 
             time = time.AddMinutes(30);
         }
-}
+    }
+
 
         
         // foreach (ReservationModel r in list)

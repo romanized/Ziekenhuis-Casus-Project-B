@@ -53,4 +53,10 @@ public class UserAccess
             ORDER BY Fullname";
         return _connection.Query<UserModel>(sql, new { DateTime = dateTime }).ToList();
     }
+    public string GetFullNameById(long id)
+    {
+        string sql = $"SELECT Fullname FROM {Table} WHERE ID = @Id";
+
+        return _connection.QueryFirstOrDefault<string>(sql, new { Id = id });
+    }
 }

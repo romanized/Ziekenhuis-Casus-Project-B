@@ -1,3 +1,5 @@
+using Microsoft.VisualBasic;
+
 static class DoctorMenu
 {
     private static DoctorAccess doctorAccess = new DoctorAccess();
@@ -75,23 +77,35 @@ static class DoctorMenu
     {
 
         Console.WriteLine("Please enter the date of the agenda with this format YYYY/MM/DD");
-        // string date = Console.ReadLine();
-        string date = "2026/04/25";
+        string date = Console.ReadLine();
         DateTime newdate = Convert.ToDateTime(date);
-        Console.WriteLine($"{newdate.Year} {newdate.Month} {newdate.Day}");
         List<ReservationModel> list = doctorAccess.GetAllReservationsByDoctorIdByDate(doctor.Id, newdate);
-        Console.WriteLine("\n-- All appointments --");
         Console.WriteLine($"\n-- Agenda for {date:yyyy-MM-dd} --");
 
-        if (list.Count == 0)
-        {
-            Console.WriteLine("No appointments for this day.");
-            return;
-        }
 
-        foreach (var r in list)
+        DateTime time = DateTime.Today.AddHours(8); // 09:00
+
+        for (int i = 0; i < 19; i++)
         {
-            Console.WriteLine($"{r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
+
+            foreach (var r in list)
+            {
+
+            if (r.Time == time.ToString("HH:mm"))
+                {
+                    UserAccess _acces = new UserAccess();
+                    string name = _acces.GetFullNameById(r.UserId);
+                    RoomAccess _access = new RoomAccess();
+                    string roomname = _access.GetRoomNameById(r.RoomId);
+                    Console.WriteLine($"{time:HH:mm} | Patient {name} Room : {r.RoomId} {roomname} Type : {r.Type}");
+                }
+        
+            }
+            
+
+            Console.WriteLine($"{time:HH:mm} | Available ");
+
+            time = time.AddMinutes(30);
         }
 }
 
@@ -104,4 +118,3 @@ static class DoctorMenu
         //     Console.WriteLine($"{r.Date} {r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
         // }
     }
-}

@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualBasic;
 
 static class DoctorMenu
@@ -84,26 +85,38 @@ static class DoctorMenu
 
 
         DateTime time = DateTime.Today.AddHours(8); // 09:00
+        ReservationModel  apoint = null;
 
         for (int i = 0; i < 19; i++)
         {
-
+            bool istrue = false;
             foreach (var r in list)
             {
-
+                
             if (r.Time == time.ToString("HH:mm"))
                 {
-                    UserAccess _acces = new UserAccess();
-                    string name = _acces.GetFullNameById(r.UserId);
-                    RoomAccess _access = new RoomAccess();
-                    string roomname = _access.GetRoomNameById(r.RoomId);
-                    Console.WriteLine($"{time:HH:mm} | Patient {name} Room : {r.RoomId} {roomname} Type : {r.Type}");
+                    istrue = true;
+                    apoint = r;
                 }
         
             }
-            
 
-            Console.WriteLine($"{time:HH:mm} | Available ");
+            if (istrue)
+            {
+                        UserAccess _acces = new UserAccess();
+                        string name = _acces.GetFullNameById(apoint.UserId);
+                        RoomAccess _access = new RoomAccess();
+                        string roomname = _access.GetRoomNameById(apoint.RoomId);
+                        Console.WriteLine($"{time:HH:mm} | Patient {name} Room : {apoint.RoomId} {roomname}");
+            }
+            else
+            {
+                    Console.WriteLine($"{time:HH:mm} | Available ");
+
+            }
+            
+                    // Console.WriteLine("-------------------------------------------");
+
 
             time = time.AddMinutes(30);
         }

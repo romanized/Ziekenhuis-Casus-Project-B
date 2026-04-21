@@ -42,6 +42,9 @@ static class AdminMenu
                     break;
             }
         }
+
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey();
     }
 
     private static void CreateEmployee(string role)

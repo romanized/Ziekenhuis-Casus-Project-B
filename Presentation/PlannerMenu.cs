@@ -9,6 +9,7 @@ static class PlannerMenu
         bool running = true;
         while (running)
         {
+            Console.Clear();
             Console.WriteLine("\n==== Planner Menu ====");
             Console.WriteLine("1. View agenda");
             Console.WriteLine("2. Create new appointment");
@@ -27,6 +28,9 @@ static class PlannerMenu
                 default: Console.WriteLine("Invalid input."); break;
             }
         }
+
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey();
     }
 
     private static void ShowAgenda()

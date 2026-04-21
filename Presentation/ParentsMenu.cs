@@ -33,6 +33,9 @@ static class ParentMenu
                     break;
             }
         }
+
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey();
     }
 
     private static void ShowAppointmentOverview(UserModel user)
@@ -64,7 +67,7 @@ static class ParentMenu
             }
         }
 
-        Console.WriteLine("\n================ APPOINTMENT OVERVIEW ================\n");
+        Console.WriteLine("\n================ APPOINTMENT OVERVIEW ================");
         PrintSideBySideTables(upcomingAppointments, pastAppointments);
 
         Console.WriteLine();

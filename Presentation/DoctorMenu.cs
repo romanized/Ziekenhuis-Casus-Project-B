@@ -106,6 +106,8 @@ static class DoctorMenu
         }
     }
 
+
+
     public static void AgendaTemplate(UserModel doctor, DateTime date, List<ReservationModel> list)
     {
         Console.WriteLine($"\n-- Agenda for {date:yyyy-MM-dd} --");
@@ -113,10 +115,23 @@ static class DoctorMenu
         DateTime time = date.Date.AddHours(8); 
         ReservationModel apoint = null;
         DateTime now = DateTime.Now;
+       int  minutes = now.Minute;
+        DateTime noww;
+        if (minutes <= 29)
+        {
+             noww = new DateTime(now.Year, now.Month, now.Day, now.Hour, 0, 0);
+        }
+        else
+        {
+             noww = new DateTime(now.Year, now.Month, now.Day, now.Hour, 30, 0);
+        }
+        if (noww.Hour >= 17 && minutes >= 30 )
+        {
+            noww = new DateTime(now.Year, now.Month, now.Day, 17 , 0, 0);
+        }
 
         for (int i = 0; i < 19; i++)
         {
-
             bool istrue = false;
             apoint = null;
 
@@ -138,33 +153,37 @@ static class DoctorMenu
                 RoomAccess _access = new RoomAccess();
                 string roomname = _access.GetRoomNameById(apoint.RoomId);
 
-                Console.WriteLine($"{time:HH:mm} | Patient : {name} Room : {apoint.RoomId} {roomname}");
+                Console.ForegroundColor = ConsoleColor.Yellow;
 
+                Console.Write($"{time:HH:mm} ");
+                
+                Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.Green;
+
+                Console.Write($"| Patient : {name} Room : {apoint.RoomId} {roomname}");
+                Console.ResetColor();
+                Console.WriteLine();           
             }
             else
             {
-                Console.WriteLine($"{time:HH:mm} | Available");
+                // Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"{time:HH:mm} | ");
+                // Console.ResetColor();
+                // Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("Available");
+                // Console.ResetColor();
+                Console.WriteLine();           
+             }
+            
+            
+            if ( time.ToString("HH:mm")  == noww.ToString(("HH:mm") ))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"--------------------- now {now:HH:mm}");
+                Console.ResetColor();
+           
             }
-            if (
-                        date.Date == now.Date &&
-                        now.TimeOfDay < time.TimeOfDay)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"---------------------- {now:HH:mm} ----------------------");
-                        Console.ResetColor();
-                    }
 
             time = time.AddMinutes(30);
         }
-    }
-
-
-        
-        // foreach (ReservationModel r in list)
-        // {
-
-
-            
-        //     Console.WriteLine($"{r.Date} {r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
-        // }
-    }
+    }    }

@@ -13,6 +13,7 @@ static class PlannerMenu
             Console.WriteLine("\n==== Planner Menu ====");
             Console.WriteLine("1. View agenda");
             Console.WriteLine("2. Create new appointment");
+            Console.WriteLine("3. Kamerstatus bekijken");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("0. Log out");
             Console.ResetColor();
@@ -24,12 +25,46 @@ static class PlannerMenu
             {
                 case "1": ShowAgenda(); break;
                 case "2": CreateAppointment(); break;
+                case "3": ShowRoomStatus(); break;
                 case "0": running = false; break;
                 default: Console.WriteLine("Invalid input."); break;
             }
         }
 
         Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey();
+    }
+
+    private static void ShowRoomStatus()
+    {
+        Console.WriteLine($"\n-- Kamerstatus op {DateTime.Today:dd-MM-yyyy} --");
+        List<RoomModel> rooms = roomAccess.GetAllRooms();
+        List<ReservationModel> todays = reservationAccess.GetReservationsForDate(DateTime.Today.ToString("yyyy-MM-dd"));
+
+        foreach (RoomModel room in rooms)
+        {
+            List<ReservationModel> inRoom = todays.Where(r => r.RoomId == room.Id).ToList();
+
+            Console.Write($"Kamer {room.Name} ({room.Type}, {room.Location}) - Status: ");
+            if (inRoom.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("VRIJ");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"BEZET: {inRoom.Count} afspraken vandaag");
+                Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                foreach (ReservationModel r in inRoom)
+                    Console.WriteLine($"    {r.Time} | {r.Type} | Patient: {r.PatientName}");
+                Console.ResetColor();
+            }
+        }
+
+        Console.WriteLine("\nDruk op een toets om terug te gaan...");
         Console.ReadKey();
     }
 

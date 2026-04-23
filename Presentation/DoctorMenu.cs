@@ -82,7 +82,20 @@ static class DoctorMenu
     {
         Console.WriteLine("Enter date (YYYY/MM/DD):");
 
-        DateTime date = Convert.ToDateTime(Console.ReadLine());
+        DateTime date;
+        while (true)
+        {
+            string? dateInput = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(dateInput))
+            {
+                return;
+            }
+            if (DateTime.TryParse(dateInput, out date))
+            {
+                break;
+            }
+            Console.WriteLine("Ongeldige datum. Probeer opnieuw.");
+        }
 
         while (true)
         {
@@ -92,7 +105,11 @@ static class DoctorMenu
             AgendaTemplate(doctor, date, list);
 
             Console.WriteLine("\n1 = Next day | 2 = Previous day | 0 = Exit");
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
+            if (string.IsNullOrEmpty(input))
+            {
+                continue;
+            }
 
             switch (input.Trim())
             {
@@ -135,10 +152,10 @@ static class DoctorMenu
             if (istrue && apoint != null)
             {
                 UserAccess _acces = new UserAccess();
-                string name = _acces.GetFullNameById(apoint.UserId);
+                string name = _acces.GetFullNameById(apoint.UserId) ?? "Onbekend";
 
                 RoomAccess _access = new RoomAccess();
-                string roomname = _access.GetRoomNameById(apoint.RoomId);
+                string roomname = _access.GetRoomNameById(apoint.RoomId) ?? "";
 
                 Console.WriteLine($"{time:HH:mm} | Patient : {name} Room : {apoint.RoomId} {roomname}");
             }

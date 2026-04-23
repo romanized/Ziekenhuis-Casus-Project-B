@@ -1,4 +1,6 @@
-Project B case description Na het afgelopen jaar behoorlijk wat in het ziekenhuis te zijn geweest, ben ik erachter gekomen dat het een enorm apparaat is dat continu draait om moeder en kind zo goed mogelijk te verzorgen.
+# Project B — Case description
+
+Na het afgelopen jaar behoorlijk wat in het ziekenhuis te zijn geweest, ben ik erachter gekomen dat het een enorm apparaat is dat continu draait om moeder en kind zo goed mogelijk te verzorgen.
 
 Tijdens een zwangerschap kom je enkele tot vele malen terug in het ziekenhuis voor verschillende afspraken. Dit is nodig om de juiste informatie te krijgen en te controleren of de baby goed groeit. Hiervoor moeten regelmatig afspraken worden ingepland, waarbij tegelijkertijd de juiste specialisten én de juiste ruimtes beschikbaar moeten zijn.
 

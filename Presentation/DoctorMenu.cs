@@ -45,6 +45,7 @@ static class DoctorMenu
             }
         }
 
+        UserLogic.Logout();
         Console.WriteLine("\nPress any key to continue...");
         Console.ReadKey();
     }

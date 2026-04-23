@@ -15,6 +15,11 @@
         }
         return null!;
     }
+
+    public static void Logout()
+    {
+        CurrentAccount = null;
+    }
     // rigster a user
     public bool Register( string email, string password,string fullname,string date, string phoneNumber,string startdate)
     {

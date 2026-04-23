@@ -35,6 +35,7 @@ static class ParentMenu
             }
         }
 
+        UserLogic.Logout();
         Console.WriteLine("\nPress any key to continue...");
         Console.ReadKey();
     }

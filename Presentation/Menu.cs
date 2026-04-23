@@ -2,8 +2,8 @@ static class Menu
 {
     public static void Start()
     {
-        bool check = true ;
-        while (check)
+        bool running = true;
+        while (running)
         {
             Console.WriteLine("\n=== Main Menu ===");
             Console.WriteLine("Enter 1 to login");

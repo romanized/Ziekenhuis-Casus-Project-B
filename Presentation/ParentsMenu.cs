@@ -1,6 +1,7 @@
 static class ParentMenu
 {
     private static ReservationAccess reservationAccess = new ReservationAccess();
+    private static RoomAccess roomAccess = new RoomAccess();
 
     public static void Start(UserModel user)
     {
@@ -40,47 +41,86 @@ static class ParentMenu
 
     private static void ShowAppointmentOverview(UserModel user)
     {
-        List<ReservationModel> allAppointments = reservationAccess.GetAllReservationsByUserId(user.Id);
-
-        List<ReservationModel> upcomingAppointments = new List<ReservationModel>();
-        List<ReservationModel> pastAppointments = new List<ReservationModel>();
-
-        DateTime now = DateTime.Now;
-
-        foreach (ReservationModel appointment in allAppointments)
+        bool viewing = true;
+        while (viewing)
         {
-            DateTime appointmentDateTime;
-            bool validDate = DateTime.TryParse($"{appointment.Date} {appointment.Time}", out appointmentDateTime);
+            List<ReservationModel> allAppointments = reservationAccess.GetAllReservationsByUserId(user.Id);
 
-            if (!validDate)
+            List<ReservationModel> upcomingAppointments = new List<ReservationModel>();
+            List<ReservationModel> pastAppointments = new List<ReservationModel>();
+
+            DateTime now = DateTime.Now;
+
+            foreach (ReservationModel appointment in allAppointments)
             {
+                DateTime appointmentDateTime;
+                bool validDate = DateTime.TryParse($"{appointment.Date} {appointment.Time}", out appointmentDateTime);
+
+                if (!validDate)
+                {
+                    continue;
+                }
+
+                if (appointmentDateTime >= now)
+                {
+                    upcomingAppointments.Add(appointment);
+                }
+                else
+                {
+                    pastAppointments.Add(appointment);
+                }
+            }
+
+            List<ReservationModel> combined = upcomingAppointments.Concat(pastAppointments).ToList();
+
+            Console.WriteLine("\n================ APPOINTMENT OVERVIEW ================");
+            PrintSideBySideTables(upcomingAppointments, pastAppointments);
+
+            Console.WriteLine();
+            Console.Write("Voer een nummer in om een afspraak te bekijken (of Enter om terug te gaan): ");
+            string? input = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                viewing = false;
                 continue;
             }
 
-            if (appointmentDateTime >= now)
+            int choice;
+            if (!int.TryParse(input.Trim(), out choice) || choice < 1 || choice > combined.Count)
             {
-                upcomingAppointments.Add(appointment);
+                Console.WriteLine("Ongeldig nummer.");
+                continue;
             }
-            else
-            {
-                pastAppointments.Add(appointment);
-            }
+
+            ShowAppointmentDetail(combined[choice - 1]);
         }
+    }
 
-        Console.WriteLine("\n================ APPOINTMENT OVERVIEW ================");
-        PrintSideBySideTables(upcomingAppointments, pastAppointments);
+    private static void ShowAppointmentDetail(ReservationModel appointment)
+    {
+        string location = roomAccess.GetRoomLocationById(appointment.RoomId) ?? "";
+        string doctor = string.IsNullOrWhiteSpace(appointment.DoctorName) ? "Nog niet toegewezen" : appointment.DoctorName;
 
+        Console.WriteLine("\n================ AFSPRAAK DETAILS ================");
+        Console.WriteLine($"Datum:           {appointment.Date}");
+        Console.WriteLine($"Tijd:            {appointment.Time}");
+        Console.WriteLine($"Type afspraak:   {appointment.Type}");
+        Console.WriteLine($"Status:          {appointment.Status}");
+        Console.WriteLine($"Kamer:           {appointment.RoomNumber}");
+        Console.WriteLine($"Locatie:         {location}");
+        Console.WriteLine($"Arts:            {doctor}");
         Console.WriteLine();
-        Console.WriteLine("Press Enter to return...");
+        Console.WriteLine("Druk op Enter om terug te gaan...");
         Console.ReadLine();
     }
 
     private static void PrintSideBySideTables(List<ReservationModel> upcoming, List<ReservationModel> past)
     {
-        List<string> leftTable = BuildTableLines("Upcoming appointments", upcoming);
-        List<string> rightTable = BuildTableLines("Past appointments", past);
+        List<string> leftTable = BuildTableLines("Upcoming appointments", upcoming, 1);
+        List<string> rightTable = BuildTableLines("Past appointments", past, upcoming.Count + 1);
 
-        int leftWidth = 45;
+        int leftWidth = 50;
         int maxLines = Math.Max(leftTable.Count, rightTable.Count);
 
         for (int i = 0; i < maxLines; i++)
@@ -92,14 +132,14 @@ static class ParentMenu
         }
     }
 
-    private static List<string> BuildTableLines(string title, List<ReservationModel> appointments)
+    private static List<string> BuildTableLines(string title, List<ReservationModel> appointments, int startIndex)
     {
         List<string> lines = new List<string>();
 
         lines.Add(title);
-        lines.Add("----------------------------------------");
-        lines.Add(string.Format("{0,-12} {1,-6} {2,-12}", "Date", "Time", "Room"));
-        lines.Add("----------------------------------------");
+        lines.Add("---------------------------------------------");
+        lines.Add(string.Format("{0,-4} {1,-12} {2,-6} {3,-12}", "#", "Date", "Time", "Room"));
+        lines.Add("---------------------------------------------");
 
         if (appointments.Count == 0)
         {
@@ -107,12 +147,15 @@ static class ParentMenu
             return lines;
         }
 
+        int index = startIndex;
         foreach (ReservationModel appointment in appointments)
         {
-            lines.Add(string.Format("{0,-12} {1,-6} {2,-12}",
+            lines.Add(string.Format("{0,-4} {1,-12} {2,-6} {3,-12}",
+                index,
                 appointment.Date,
                 appointment.Time,
                 appointment.RoomNumber));
+            index++;
         }
 
         return lines;

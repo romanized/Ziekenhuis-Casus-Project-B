@@ -35,4 +35,11 @@ public class RoomAccess
 
         return _connection.QueryFirstOrDefault<string>(sql, new { Id = id });
     }
+
+    public string GetRoomLocationById(long id)
+    {
+        string sql = "SELECT Location FROM Room WHERE ID = @Id";
+
+        return _connection.QueryFirstOrDefault<string>(sql, new { Id = id });
+    }
 }

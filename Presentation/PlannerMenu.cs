@@ -145,7 +145,6 @@ static class PlannerMenu
     {
         Console.WriteLine("\n-- Nieuwe afspraak aanmaken --");
 
-        // Stap 1: Datum selecteren
         DateTime viewMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
         DateTime selectedDate;
         while (true)
@@ -167,7 +166,6 @@ static class PlannerMenu
             break;
         }
 
-        // Stap 2: Type afspraak
         string[] types = { "Controle", "Consult", "Operatie", "Spoedgeval", "Algemeen" };
         Console.WriteLine("\nStap 2 - Selecteer type afspraak:");
         for (int i = 0; i < types.Length; i++)
@@ -175,7 +173,6 @@ static class PlannerMenu
         if (!TryPickIndex(types.Length, out int typeIdx)) return;
         string appointmentType = types[typeIdx];
 
-        // Stap 3: Tijdstip selecteren
         string[] slots = GenerateTimeSlots();
         Console.WriteLine("\nStap 3 - Selecteer tijdstip:");
         for (int i = 0; i < slots.Length; i++)
@@ -184,7 +181,6 @@ static class PlannerMenu
         string selectedTime = slots[slotIdx];
         string dateTimeStr = $"{selectedDate:yyyy-MM-dd} {selectedTime}";
 
-        // Stap 4a: Beschikbare kamers
         List<RoomModel> availableRooms = roomAccess.GetAvailableRooms(dateTimeStr);
         if (availableRooms.Count == 0)
         {
@@ -197,7 +193,6 @@ static class PlannerMenu
         if (!TryPickIndex(availableRooms.Count, out int roomIdx)) return;
         RoomModel selectedRoom = availableRooms[roomIdx];
 
-        // Stap 4b: Beschikbare artsen
         List<UserModel> availableDoctors = userAccess.GetAvailableDoctors(dateTimeStr);
         long? specialistId = null;
         if (availableDoctors.Count > 0)
@@ -216,7 +211,6 @@ static class PlannerMenu
             Console.WriteLine("Geen artsen beschikbaar op dit tijdstip.");
         }
 
-        // Stap 5: Patient selecteren
         List<UserModel> patients = userAccess.GetAllByRole("ouder");
         if (patients.Count == 0) { Console.WriteLine("Geen patienten gevonden."); return; }
         Console.WriteLine("\nStap 5 - Selecteer patient:");
@@ -225,7 +219,6 @@ static class PlannerMenu
         if (!TryPickIndex(patients.Count, out int patientIdx)) return;
         UserModel selectedPatient = patients[patientIdx];
 
-        // Bevestiging
         string doctorName = specialistId.HasValue
             ? availableDoctors.FirstOrDefault(d => d.Id == specialistId)?.FullName ?? "-"
             : "-";

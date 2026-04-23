@@ -1,9 +1,8 @@
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.VisualBasic;
-
 static class DoctorMenu
 {
     private static DoctorAccess doctorAccess = new DoctorAccess();
+    private static UserAccess userAccess = new UserAccess();
+    private static RoomAccess roomAccess = new RoomAccess();
 
     public static void Start(UserModel doctor)
     {
@@ -132,33 +131,31 @@ static class DoctorMenu
     {
         Console.WriteLine($"\n-- Agenda for {date:yyyy-MM-dd} --");
 
-        DateTime time = date.Date.AddHours(8); 
-        ReservationModel apoint = null;
+        DateTime time = date.Date.AddHours(8);
+        ReservationModel appointment = null;
 
         for (int i = 0; i < 19; i++)
         {
-            bool istrue = false;
-            apoint = null;
+            bool found = false;
+            appointment = null;
 
             foreach (var r in list)
             {
                 if (r.Time == time.ToString("HH:mm"))
                 {
-                    istrue = true;
-                    apoint = r;
+                    found = true;
+                    appointment = r;
                     break;
                 }
             }
 
-            if (istrue && apoint != null)
+            if (found && appointment != null)
             {
-                UserAccess _acces = new UserAccess();
-                string name = _acces.GetFullNameById(apoint.UserId) ?? "Onbekend";
+                string name = userAccess.GetFullNameById(appointment.UserId) ?? "Onbekend";
 
-                RoomAccess _access = new RoomAccess();
-                string roomname = _access.GetRoomNameById(apoint.RoomId) ?? "";
+                string roomname = roomAccess.GetRoomNameById(appointment.RoomId) ?? "";
 
-                Console.WriteLine($"{time:HH:mm} | Patient : {name} Room : {apoint.RoomId} {roomname}");
+                Console.WriteLine($"{time:HH:mm} | Patient : {name} Room : {appointment.RoomId} {roomname}");
             }
             else
             {

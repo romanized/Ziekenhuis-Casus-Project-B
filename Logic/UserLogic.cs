@@ -38,7 +38,7 @@
             BirthDate = date,
             PhoneNumber = phoneNumber,
             Specialty = null!,
-            Role = "ouder", // standaard rol
+            Role = "ouder", // default role
             StartDate = startdate
             
         };

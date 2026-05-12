@@ -41,7 +41,6 @@ public class UserAccess
 
     public List<UserModel> GetAvailableDoctors(string dateTime)
     {
-        // Same 30-minute window logic as rooms.
         string sql = $@"
             SELECT * FROM {Table}
             WHERE Role = 'specialty'
@@ -53,6 +52,7 @@ public class UserAccess
                 AND datetime(Date, '+30 minutes') > datetime(@DateTime)
             )
             ORDER BY Fullname";
+
         return _connection.Query<UserModel>(sql, new { DateTime = dateTime }).ToList();
     }
     public string GetFullNameById(long id)

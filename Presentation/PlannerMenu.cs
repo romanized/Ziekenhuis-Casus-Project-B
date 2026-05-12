@@ -177,9 +177,9 @@ static class PlannerMenu
 
     private static void CreateAppointment()
     {
-        // Step 1: pick a date
         DateTime viewMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
         DateTime selectedDate;
+
         while (true)
         {
             DrawCalendar(viewMonth);
@@ -199,14 +199,13 @@ static class PlannerMenu
             break;
         }
 
-        // Step 2: show day grid and pick slot
         (string time, RoomModel room)? picked = ShowDayGridAndPick(selectedDate);
         if (picked == null) return;
+
         string selectedTime = picked.Value.time;
         RoomModel selectedRoom = picked.Value.room;
         string dateTimeStr = $"{selectedDate:yyyy-MM-dd} {selectedTime}";
 
-        // Step 3: type
         string[] types = { "Controle", "Consult", "Operatie", "Spoedgeval", "Algemeen" };
         Console.WriteLine("\nType afspraak:");
         for (int i = 0; i < types.Length; i++)
@@ -214,9 +213,9 @@ static class PlannerMenu
         if (!TryPickIndex(types.Length, out int typeIdx)) return;
         string appointmentType = types[typeIdx];
 
-        // Step 4: doctor (optional)
         List<UserModel> availableDoctors = userAccess.GetAvailableDoctors(dateTimeStr);
         long? specialistId = null;
+
         if (availableDoctors.Count > 0)
         {
             Console.WriteLine($"\nHulpverlener (Enter om over te slaan):");
@@ -229,9 +228,9 @@ static class PlannerMenu
                 specialistId = availableDoctors[docChoice - 1].Id;
         }
 
-        // Step 5: patient
         List<UserModel> patients = userAccess.GetAllByRole("ouder");
         if (patients.Count == 0) { Console.WriteLine("Geen patienten gevonden."); return; }
+
         Console.WriteLine("\nPatient:");
         for (int i = 0; i < patients.Count; i++)
             Console.WriteLine($"  {i + 1}. {patients[i].FullName} ({patients[i].Email})");
@@ -264,10 +263,9 @@ static class PlannerMenu
         while (true)
         {
             Console.Clear();
-            Console.WriteLine($"\n-- Dagplanning {date:dddd dd MMMM yyyy} -- (groen = vrij, rood = bezet)");
+            Console.WriteLine($"\n-- Dagplanning {date:dddd dd MMMM yyyy} --");
             Console.WriteLine();
 
-            // Header
             Console.Write($"{"Tijd",-7}");
             foreach (RoomModel r in rooms)
                 Console.Write($"| {r.Name,-12}");
@@ -277,27 +275,20 @@ static class PlannerMenu
             foreach (string slot in slots)
             {
                 Console.Write($"{slot,-7}");
+
                 foreach (RoomModel room in rooms)
                 {
-                    bool occupied = dayReservations.Any(res =>
-                    {
-                        if (res.RoomId != room.Id) return false;
-                        if (!DateTime.TryParse($"{date:yyyy-MM-dd} {res.Time}", out DateTime start)) return false;
-                        DateTime slotDt = DateTime.Parse($"{date:yyyy-MM-dd} {slot}");
-                        return slotDt >= start && slotDt < start.AddMinutes(30);
-                    });
+                    DateTime slotDt = DateTime.Parse($"{date:yyyy-MM-dd} {slot}");
 
-                    if (occupied)
+                    ReservationModel? res = dayReservations.FirstOrDefault(r =>
+                        r.RoomId == room.Id
+                        && DateTime.TryParse($"{date:yyyy-MM-dd} {r.Time}", out DateTime start)
+                        && slotDt >= start && slotDt < start.AddMinutes(30));
+
+                    if (res != null)
                     {
-                        ReservationModel? res = dayReservations.FirstOrDefault(r2 =>
-                        {
-                            if (r2.RoomId != room.Id) return false;
-                            if (!DateTime.TryParse($"{date:yyyy-MM-dd} {r2.Time}", out DateTime start)) return false;
-                            DateTime slotDt = DateTime.Parse($"{date:yyyy-MM-dd} {slot}");
-                            return slotDt >= start && slotDt < start.AddMinutes(30);
-                        });
                         Console.ForegroundColor = ConsoleColor.Red;
-                        string label = res?.Type?.Length > 9 ? res.Type[..9] : (res?.Type ?? "BEZET");
+                        string label = res.Type?.Length > 9 ? res.Type[..9] : (res.Type ?? "BEZET");
                         Console.Write($"| {label,-12}");
                     }
                     else
@@ -305,13 +296,15 @@ static class PlannerMenu
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.Write($"| {"VRIJ",-12}");
                     }
+
                     Console.ResetColor();
                 }
+
                 Console.WriteLine("|");
             }
 
             Console.WriteLine();
-            Console.WriteLine("Voer tijd in (bijv. 09:30) en kamernummer om slot te kiezen, of 0 om terug te gaan.");
+            Console.WriteLine("Tijd invoeren (bijv. 09:30) | 0 = terug");
             Console.Write("Tijd: ");
             string? timeInput = Console.ReadLine()?.Trim();
             if (string.IsNullOrEmpty(timeInput) || timeInput == "0") return null;
@@ -322,9 +315,9 @@ static class PlannerMenu
             RoomModel? chosenRoom = rooms.FirstOrDefault(r => r.Name.Equals(roomInput, StringComparison.OrdinalIgnoreCase));
             if (chosenRoom == null) { Console.WriteLine("Kamer niet gevonden."); Console.ReadKey(); continue; }
 
-            // Verify actually free
             string dateTimeStr = $"{date:yyyy-MM-dd} {timeInput}";
             List<RoomModel> freeRooms = roomAccess.GetAvailableRooms(dateTimeStr);
+
             if (!freeRooms.Any(r => r.Id == chosenRoom.Id))
             {
                 Console.ForegroundColor = ConsoleColor.Red;

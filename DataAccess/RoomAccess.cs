@@ -19,7 +19,6 @@ public class RoomAccess
 
     public List<RoomModel> GetAvailableRooms(string dateTime)
     {
-        // Each appointment occupies a 30-minute window. Exclude rooms where that window overlaps.
         string sql = @"
             SELECT ID as Id, Name, Type, Location FROM Room
             WHERE ID NOT IN (
@@ -29,8 +28,10 @@ public class RoomAccess
                 AND datetime(Date, '+30 minutes') > datetime(@DateTime)
             )
             ORDER BY Name";
+
         return _connection.Query<RoomModel>(sql, new { DateTime = dateTime }).ToList();
     }
+
     public string GetRoomNameById(long id)
     {
         string sql = "SELECT Name FROM Room WHERE ID = @Id";

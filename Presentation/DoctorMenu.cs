@@ -145,11 +145,7 @@ static class DoctorMenu
         Console.WriteLine($"\n-- Agenda for {date:yyyy-MM-dd} --");
 
         DateTime time = date.Date.AddHours(8);
-<<<<<<< HEAD
         ReservationModel appointment = null;
-=======
-        ReservationModel apoint = null;
->>>>>>> 77bd698 (update presentation text + hulpverlener)
 
         for (int i = 0; i < 19; i++)
         {

@@ -31,70 +31,75 @@ static class UserRegister
         Console.WriteLine();
         return password;
     }
-public static void Start()
-{
-    UserLogic userLogic = new();
-    Console.WriteLine("Welcome to Register Page");
-
-    Console.Write("Enter your Email: ");
-    string? email = Console.ReadLine();
-
-    if (!IsValidEmail(email ?? ""))
+    public static void Start()
     {
-        Console.WriteLine("Invalid email format.");
-        return;
+        UserLogic userLogic = new();
+        Console.WriteLine("=== Registratie patiënt ===");
+        Console.WriteLine();
+        Console.WriteLine("Welkom bij de registratie van het ziekenhuis.");
+        Console.WriteLine("Tijdens deze registratie vult u uw gegevens in, zodat het ziekenhuis uw zorg en afspraken goed kan voorbereiden.");
+        Console.WriteLine("Alle informatie wordt vertrouwelijk behandeld en alleen gebruikt voor uw zorgtraject.");
+        Console.WriteLine();
+
+        Console.Write("Enter your Email: ");
+        string? email = Console.ReadLine();
+
+        if (!IsValidEmail(email ?? ""))
+        {
+            Console.WriteLine("Invalid email format.");
+            return;
+        }
+
+        Console.Write("Enter your Password (min 6 chars): ");
+        string password = ReadMaskedPassword();
+
+        if (!IsValidPassword(password))
+        {
+            Console.WriteLine("Password must be at least 6 characters.");
+            return;
+        }
+
+        Console.Write("Enter your Full Name: ");
+        string? fullname = Console.ReadLine();
+
+        Console.Write("Enter your BirthDate (yyyy-mm-dd): ");
+        string? birthdateInput = Console.ReadLine();
+
+        if (!DateTime.TryParse(birthdateInput, out DateTime birthdate))
+        {
+            Console.WriteLine("Invalid birthdate format.");
+            return;
+        }
+
+        Console.Write("Enter your Phone number: ");
+        string? phonenumber = Console.ReadLine();
+
+        Console.Write("Enter your Pregnancy start date (yyyy-mm-dd): ");
+        string? startdateInput = Console.ReadLine();
+
+        if (!DateTime.TryParse(startdateInput, out DateTime startdate))
+        {
+            Console.WriteLine("Invalid start date.");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(fullname) || string.IsNullOrWhiteSpace(phonenumber))
+        {
+            Console.WriteLine("Name and phone number cannot be empty.");
+            return;
+        }
+
+        bool ok = userLogic.Register(
+            email!,
+            password,
+            fullname,
+            birthdate.ToString("yyyy-MM-dd"),
+            phonenumber,
+            startdate.ToString("yyyy-MM-dd")
+        );
+
+        Console.WriteLine(ok
+            ? "Account created! You can now log in."
+            : "An account with this email already exists.");
     }
-
-    Console.Write("Enter your Password (min 6 chars): ");
-    string password = ReadMaskedPassword();
-
-    if (!IsValidPassword(password))
-    {
-        Console.WriteLine("Password must be at least 6 characters.");
-        return;
-    }
-
-    Console.Write("Enter your Full Name: ");
-    string? fullname = Console.ReadLine();
-
-    Console.Write("Enter your BirthDate (yyyy-mm-dd): ");
-    string? birthdateInput = Console.ReadLine();
-
-    if (!DateTime.TryParse(birthdateInput, out DateTime birthdate))
-    {
-        Console.WriteLine("Invalid birthdate format.");
-        return;
-    }
-
-    Console.Write("Enter your Phone number: ");
-    string? phonenumber = Console.ReadLine();
-
-    Console.Write("Enter your Pregnancy start date (yyyy-mm-dd): ");
-    string? startdateInput = Console.ReadLine();
-
-    if (!DateTime.TryParse(startdateInput, out DateTime startdate))
-    {
-        Console.WriteLine("Invalid start date.");
-        return;
-    }
-
-    if (string.IsNullOrWhiteSpace(fullname) || string.IsNullOrWhiteSpace(phonenumber))
-    {
-        Console.WriteLine("Name and phone number cannot be empty.");
-        return;
-    }
-
-    bool ok = userLogic.Register(
-        email!,
-        password,
-        fullname,
-        birthdate.ToString("yyyy-MM-dd"),
-        phonenumber,
-        startdate.ToString("yyyy-MM-dd")
-    );
-
-    Console.WriteLine(ok
-        ? "Account created! You can now log in."
-        : "An account with this email already exists.");
-}
 }

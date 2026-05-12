@@ -9,8 +9,21 @@ static class DoctorMenu
         bool running = true;
         while (running)
         {
-            Console.WriteLine("\n==== Doctor Main Menu ====");
-            Console.WriteLine($"Logged in as: Dr. {doctor.FullName}" +
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(@"
+        ______ _      _              _           _     
+        |___  /(_)    | |            | |         (_)    
+            / /  _  ___| | _____ _ __ | |__  _   _ _ ___
+        / /  | |/ _ \ |/ / _ \ '_ \| '_ \| | | | / __|
+        / /__ | |  __/   <  __/ | | | | | | |_| | \__ \
+        /_____||_|\___|_|\_\___|_| |_|_| |_|\__,_|_|___/
+
+        ");
+            Console.ResetColor();
+            Console.WriteLine("\n==== Hulpverlener Main Menu ====");
+            Console.WriteLine($"Logged in as: {doctor.FullName}" +
                               (string.IsNullOrWhiteSpace(doctor.Specialty) ? "" : $" ({doctor.Specialty})"));
             Console.WriteLine("1. View my next appointment");
             Console.WriteLine("2. View all my appointments");
@@ -132,7 +145,11 @@ static class DoctorMenu
         Console.WriteLine($"\n-- Agenda for {date:yyyy-MM-dd} --");
 
         DateTime time = date.Date.AddHours(8);
+<<<<<<< HEAD
         ReservationModel appointment = null;
+=======
+        ReservationModel apoint = null;
+>>>>>>> 77bd698 (update presentation text + hulpverlener)
 
         for (int i = 0; i < 19; i++)
         {

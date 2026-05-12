@@ -8,6 +8,19 @@ static class ParentMenu
         bool running = true;
         while (running)
         {
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(@"
+        ______ _      _              _           _     
+        |___  /(_)    | |            | |         (_)    
+            / /  _  ___| | _____ _ __ | |__  _   _ _ ___
+        / /  | |/ _ \ |/ / _ \ '_ \| '_ \| | | | / __|
+        / /__ | |  __/   <  __/ | | | | | | |_| | \__ \
+        /_____||_|\___|_|\_\___|_| |_|_| |_|\__,_|_|___/
+
+        ");
+            Console.ResetColor();
             Console.WriteLine("\n==== Parent Main Menu ====");
             Console.WriteLine("1. View appointment overview");
             Console.ForegroundColor = ConsoleColor.Red;

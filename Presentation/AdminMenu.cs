@@ -8,8 +8,21 @@ static class AdminMenu
         bool running = true;
         while (running)
         {
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(@"
+        ______ _      _              _           _     
+        |___  /(_)    | |            | |         (_)    
+            / /  _  ___| | _____ _ __ | |__  _   _ _ ___
+        / /  | |/ _ \ |/ / _ \ '_ \| '_ \| | | | / __|
+        / /__ | |  __/   <  __/ | | | | | | |_| | \__ \
+        /_____||_|\___|_|\_\___|_| |_|_| |_|\__,_|_|___/
+
+        ");
+            Console.ResetColor();
             Console.WriteLine("\n==== Admin Menu ====");
-            Console.WriteLine("1. Add a new doctor");
+            Console.WriteLine("1. Add a new hulpverlener");
             Console.WriteLine("2. Add a new planner");
             Console.WriteLine("3. Add a new room");
             Console.ForegroundColor = ConsoleColor.Red;
@@ -50,7 +63,8 @@ static class AdminMenu
 
     private static void CreateEmployee(string role)
     {
-        Console.WriteLine($"\n-- Add new {role} --");
+        string displayRole = role == "specialty" ? "hulpverlener" : role;
+        Console.WriteLine($"\n-- Add new {displayRole} --");
 
         Console.WriteLine("Enter email:");
         string? email = Console.ReadLine();
@@ -63,7 +77,7 @@ static class AdminMenu
         string specialty = "";
         if (role == "specialty")
         {
-            Console.WriteLine("Enter specialty:");
+            Console.WriteLine("Enter specialization:");
             specialty = Console.ReadLine() ?? "";
         }
 
@@ -76,7 +90,7 @@ static class AdminMenu
         bool ok = userLogic.CreateEmployee(email, password, fullname, role, specialty);
         if (ok)
         {
-            Console.WriteLine($"New {role} '{fullname}' created successfully.");
+            Console.WriteLine($"New {displayRole} '{fullname}' created successfully.");
         }
         else
         {

@@ -2,13 +2,8 @@ static class Menu
 {
     public static void Start()
     {
-<<<<<<< HEAD
         bool running = true;
         while (running)
-=======
-        bool check = true;
-        while (check)
->>>>>>> 77bd698 (update presentation text + hulpverlener)
         {
             Console.Clear();
 

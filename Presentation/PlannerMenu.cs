@@ -10,6 +10,18 @@ static class PlannerMenu
         while (running)
         {
             Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(@"
+            ______ _      _              _           _     
+            |___  /(_)    | |            | |         (_)    
+                / /  _  ___| | _____ _ __ | |__  _   _ _ ___
+            / /  | |/ _ \ |/ / _ \ '_ \| '_ \| | | | / __|
+            / /__ | |  __/   <  __/ | | | | | | |_| | \__ \
+            /_____||_|\___|_|\_\___|_| |_|_| |_|\__,_|_|___/
+
+            ");
+            Console.ResetColor();
             Console.WriteLine("\n==== Planner Menu ====");
             Console.WriteLine("1. View agenda");
             Console.WriteLine("2. Create new appointment");
@@ -135,8 +147,8 @@ static class PlannerMenu
         foreach (ReservationModel r in appointments)
         {
             Console.ForegroundColor = r.Status == "gepland" ? ConsoleColor.Cyan : ConsoleColor.DarkGray;
-            string doctor = string.IsNullOrEmpty(r.DoctorName) ? "-" : r.DoctorName;
-            Console.WriteLine($"  {r.Time} | {r.Type,-15} | Kamer: {r.RoomNumber,-10} | Patient: {r.PatientName,-20} | Arts: {doctor,-20} | Status: {r.Status}");
+            string hulpverlener = string.IsNullOrEmpty(r.DoctorName) ? "-" : r.DoctorName;
+            Console.WriteLine($"  {r.Time} | {r.Type,-15} | Kamer: {r.RoomNumber,-10} | Patient: {r.PatientName,-20} | Hulpverlener: {hulpverlener,-20} | Status: {r.Status}");
             Console.ResetColor();
         }
     }
@@ -197,9 +209,13 @@ static class PlannerMenu
         long? specialistId = null;
         if (availableDoctors.Count > 0)
         {
-            Console.WriteLine($"\nStap 4 - Beschikbare artsen op {selectedDate:dd-MM-yyyy} om {selectedTime} (Enter om over te slaan):");
+            Console.WriteLine($"\nStap 4 - Beschikbare hulpverleners op {selectedDate:dd-MM-yyyy} om {selectedTime} (Enter om over te slaan):");
+
             for (int i = 0; i < availableDoctors.Count; i++)
+            {
                 Console.WriteLine($"  {i + 1}. {availableDoctors[i].FullName} ({availableDoctors[i].Specialty})");
+            }
+
             Console.Write("Keuze: ");
             string? docInput = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(docInput) && int.TryParse(docInput, out int docChoice)
@@ -208,7 +224,7 @@ static class PlannerMenu
         }
         else
         {
-            Console.WriteLine("Geen artsen beschikbaar op dit tijdstip.");
+            Console.WriteLine("Geen hulpverleners beschikbaar op dit tijdstip.");
         }
 
         List<UserModel> patients = userAccess.GetAllByRole("ouder");
@@ -228,7 +244,7 @@ static class PlannerMenu
         Console.WriteLine($"  Tijd:     {selectedTime}");
         Console.WriteLine($"  Type:     {appointmentType}");
         Console.WriteLine($"  Kamer:    {selectedRoom.Name} ({selectedRoom.Type})");
-        Console.WriteLine($"  Arts:     {doctorName}");
+        Console.WriteLine($"  Hulpverlener: {doctorName}");
         Console.WriteLine($"  Patient:  {selectedPatient.FullName}");
         Console.Write("\nBevestigen? (J/N): ");
         string? confirm = Console.ReadLine();

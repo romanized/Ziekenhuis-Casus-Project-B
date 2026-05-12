@@ -50,29 +50,51 @@ static class PlannerMenu
 
     private static void ShowRoomStatus()
     {
-        Console.WriteLine($"\n-- Kamerstatus op {DateTime.Today:dd-MM-yyyy} --");
+        DateTime now = DateTime.Now;
+        Console.WriteLine($"\n-- Kamerstatus op {now:dd-MM-yyyy HH:mm} --");
         List<RoomModel> rooms = roomAccess.GetAllRooms();
-        List<ReservationModel> todays = reservationAccess.GetReservationsForDate(DateTime.Today.ToString("yyyy-MM-dd"));
+        List<ReservationModel> todays = reservationAccess.GetReservationsForDate(now.ToString("yyyy-MM-dd"));
 
         foreach (RoomModel room in rooms)
         {
-            List<ReservationModel> inRoom = todays.Where(r => r.RoomId == room.Id).ToList();
+            List<ReservationModel> inRoom = todays
+                .Where(r => r.RoomId == room.Id)
+                .OrderBy(r => r.Time)
+                .ToList();
 
-            Console.Write($"Kamer {room.Name} ({room.Type}, {room.Location}) - Status: ");
-            if (inRoom.Count == 0)
+            Console.Write($"Kamer {room.Name} ({room.Type}, {room.Location}) - ");
+
+            ReservationModel? current = inRoom.FirstOrDefault(r =>
+            {
+                if (!DateTime.TryParse($"{now:yyyy-MM-dd} {r.Time}", out DateTime start)) return false;
+                return now >= start && now < start.AddMinutes(30);
+            });
+
+            ReservationModel? next = inRoom
+                .Where(r => DateTime.TryParse($"{now:yyyy-MM-dd} {r.Time}", out DateTime s) && s > now)
+                .OrderBy(r => r.Time)
+                .FirstOrDefault();
+
+            if (current != null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("NU BEZET");
+                Console.ResetColor();
+                Console.WriteLine($" — {current.Time} | {current.Type} | {current.PatientName}");
+            }
+            else if (next != null)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("VRIJ");
+                Console.Write("VRIJ");
+                Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine($" (volgende: {next.Time} — {next.Type} | {next.PatientName})");
                 Console.ResetColor();
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"BEZET: {inRoom.Count} afspraken vandaag");
-                Console.ResetColor();
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                foreach (ReservationModel r in inRoom)
-                    Console.WriteLine($"    {r.Time} | {r.Type} | Patient: {r.PatientName}");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("VRIJ (geen afspraken meer vandaag)");
                 Console.ResetColor();
             }
         }

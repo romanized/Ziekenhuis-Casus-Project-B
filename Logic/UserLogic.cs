@@ -21,7 +21,7 @@
         CurrentAccount = null;
     }
     // rigster a user
-    public bool Register( string email, string password,string fullname,string date, string phoneNumber,string startdate)
+    public bool Register( string email, string password,string fullname,string date, string phoneNumber,string startdate,string notes)
     {
         // Check of email exist
         UserModel? existingUser = _access.GetByEmail(email);
@@ -39,7 +39,8 @@
             PhoneNumber = phoneNumber,
             Specialty = null!,
             Role = "ouder", // default role
-            StartDate = startdate
+            StartDate = startdate,
+            Notes = notes
             
         };
 

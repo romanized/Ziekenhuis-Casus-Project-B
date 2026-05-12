@@ -88,6 +88,8 @@ static class UserRegister
             Console.WriteLine("Name and phone number cannot be empty.");
             return;
         }
+        Console.Write("Enter your Notes: ");
+        string? notes = Console.ReadLine();
 
         bool ok = userLogic.Register(
             email!,
@@ -95,7 +97,8 @@ static class UserRegister
             fullname,
             birthdate.ToString("yyyy-MM-dd"),
             phonenumber,
-            startdate.ToString("yyyy-MM-dd")
+            startdate.ToString("yyyy-MM-dd"),
+            notes
         );
 
         Console.WriteLine(ok

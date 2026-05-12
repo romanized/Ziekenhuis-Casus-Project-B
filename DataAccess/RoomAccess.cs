@@ -23,12 +23,15 @@ public class RoomAccess
             SELECT ID as Id, Name, Type, Location FROM Room
             WHERE ID NOT IN (
                 SELECT Room_ID FROM Reservation
-                WHERE datetime(Date) = datetime(@DateTime)
-                AND Status = 'gepland'
+                WHERE Status = 'gepland'
+                AND datetime(Date) < datetime(@DateTime, '+30 minutes')
+                AND datetime(Date, '+30 minutes') > datetime(@DateTime)
             )
             ORDER BY Name";
+
         return _connection.Query<RoomModel>(sql, new { DateTime = dateTime }).ToList();
     }
+
     public string GetRoomNameById(long id)
     {
         string sql = "SELECT Name FROM Room WHERE ID = @Id";

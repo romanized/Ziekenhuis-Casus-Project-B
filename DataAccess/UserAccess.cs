@@ -46,11 +46,13 @@ public class UserAccess
             WHERE Role = 'specialty'
             AND ID NOT IN (
                 SELECT Specialist_ID FROM Reservation
-                WHERE datetime(Date) = datetime(@DateTime)
-                AND Status = 'gepland'
+                WHERE Status = 'gepland'
                 AND Specialist_ID IS NOT NULL
+                AND datetime(Date) < datetime(@DateTime, '+30 minutes')
+                AND datetime(Date, '+30 minutes') > datetime(@DateTime)
             )
             ORDER BY Fullname";
+
         return _connection.Query<UserModel>(sql, new { DateTime = dateTime }).ToList();
     }
     public string GetFullNameById(long id)

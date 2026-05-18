@@ -50,16 +50,34 @@ static class PlannerMenu
 
     private static void ShowRoomStatus()
     {
-        Console.WriteLine($"\n-- Kamerstatus op {DateTime.Today:dd-MM-yyyy} --");
+        Console.Write("\nDatum (YYYY-MM-DD, Enter = vandaag): ");
+        string? dateInput = Console.ReadLine();
+        DateTime date = DateTime.Today;
+        if (!string.IsNullOrWhiteSpace(dateInput) && !DateTime.TryParse(dateInput, out date))
+        {
+            Console.WriteLine("Ongeldige datum.");
+            Console.ReadKey();
+            return;
+        }
+
+        string[] slots = GenerateTimeSlots();
+        Console.WriteLine("\nSelecteer tijdstip:");
+        for (int i = 0; i < slots.Length; i++)
+            Console.WriteLine($"  {i + 1}. {slots[i]}");
+        if (!TryPickIndex(slots.Length, out int slotIdx)) return;
+        string selectedTime = slots[slotIdx];
+        string dateTimeStr = $"{date:yyyy-MM-dd} {selectedTime}";
+
+        Console.WriteLine($"\n-- Kamerstatus op {date:dd-MM-yyyy} om {selectedTime} --");
         List<RoomModel> rooms = roomAccess.GetAllRooms();
-        List<ReservationModel> todays = reservationAccess.GetReservationsForDate(DateTime.Today.ToString("yyyy-MM-dd"));
+        List<ReservationModel> todays = reservationAccess.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
 
         foreach (RoomModel room in rooms)
         {
-            List<ReservationModel> inRoom = todays.Where(r => r.RoomId == room.Id).ToList();
+            ReservationModel? atSlot = todays.FirstOrDefault(r => r.RoomId == room.Id && r.Time == selectedTime);
 
             Console.Write($"Kamer {room.Name} ({room.Type}, {room.Location}) - Status: ");
-            if (inRoom.Count == 0)
+            if (atSlot == null)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("VRIJ");
@@ -68,11 +86,7 @@ static class PlannerMenu
             else
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"BEZET: {inRoom.Count} afspraken vandaag");
-                Console.ResetColor();
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                foreach (ReservationModel r in inRoom)
-                    Console.WriteLine($"    {r.Time} | {r.Type} | Patient: {r.PatientName}");
+                Console.WriteLine($"BEZET ({atSlot.Type}, patient: {atSlot.PatientName})");
                 Console.ResetColor();
             }
         }

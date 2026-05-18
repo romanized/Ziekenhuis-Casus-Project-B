@@ -2,12 +2,39 @@ static class UserRegister
 {
     private static bool IsValidEmail(string email)
     {
-        return !string.IsNullOrEmpty(email) && email.Contains('@') && email.EndsWith(".com");
+        if (string.IsNullOrEmpty(email)) return false;
+        int at = email.IndexOf('@');
+        if (at <= 0) return false;
+        int dot = email.IndexOf('.', at);
+        return dot > at + 1 && dot < email.Length - 1;
     }
 
     private static bool IsValidPassword(string password)
     {
-        return !string.IsNullOrEmpty(password) && password.Length >= 6;
+        if (string.IsNullOrEmpty(password) || password.Length < 6) return false;
+        return password.Any(char.IsDigit);
+    }
+
+    private static string AskEmail()
+    {
+        while (true)
+        {
+            Console.Write("Enter your Email: ");
+            string? email = Console.ReadLine();
+            if (IsValidEmail(email ?? "")) return email!;
+            Console.WriteLine("Ongeldig e-mailadres. Een geldig adres bevat '@' en een '.' (bijv. naam@mail.nl).");
+        }
+    }
+
+    private static string AskPassword()
+    {
+        while (true)
+        {
+            Console.Write("Enter your Password (min 6 chars, minstens 1 cijfer): ");
+            string password = ReadMaskedPassword();
+            if (IsValidPassword(password)) return password;
+            Console.WriteLine("Wachtwoord moet minimaal 6 tekens zijn en minimaal 1 cijfer bevatten.");
+        }
     }
 
     private static string ReadMaskedPassword()
@@ -41,23 +68,8 @@ static class UserRegister
         Console.WriteLine("Alle informatie wordt vertrouwelijk behandeld en alleen gebruikt voor uw zorgtraject.");
         Console.WriteLine();
 
-        Console.Write("Enter your Email: ");
-        string? email = Console.ReadLine();
-
-        if (!IsValidEmail(email ?? ""))
-        {
-            Console.WriteLine("Invalid email format.");
-            return;
-        }
-
-        Console.Write("Enter your Password (min 6 chars): ");
-        string password = ReadMaskedPassword();
-
-        if (!IsValidPassword(password))
-        {
-            Console.WriteLine("Password must be at least 6 characters.");
-            return;
-        }
+        string email = AskEmail();
+        string password = AskPassword();
 
         Console.Write("Enter your Full Name: ");
         string? fullname = Console.ReadLine();
@@ -92,7 +104,7 @@ static class UserRegister
         string? notes = Console.ReadLine();
 
         bool ok = userLogic.Register(
-            email!,
+            email,
             password,
             fullname,
             birthdate.ToString("yyyy-MM-dd"),

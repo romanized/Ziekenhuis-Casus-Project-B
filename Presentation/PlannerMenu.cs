@@ -223,7 +223,7 @@ static class PlannerMenu
         long? specialistId = null;
         if (availableDoctors.Count > 0)
         {
-            Console.WriteLine($"\nStap 4 - Beschikbare hulpverleners op {selectedDate:dd-MM-yyyy} om {selectedTime} (Enter om over te slaan):");
+            Console.WriteLine($"\nStap 5 - Beschikbare hulpverleners op {selectedDate:dd-MM-yyyy} om {selectedTime} (Enter om over te slaan):");
 
             for (int i = 0; i < availableDoctors.Count; i++)
             {
@@ -249,7 +249,7 @@ static class PlannerMenu
             .OrderBy(p => DateTime.TryParse(p.BirthDate, out DateTime bd) ? bd : DateTime.MaxValue)
             .ToList();
 
-        Console.WriteLine("\nStap 5 - Selecteer patient (ouderen bovenaan):");
+        Console.WriteLine("\nStap 6 - Selecteer patient (ouderen bovenaan):");
         for (int i = 0; i < patients.Count; i++)
         {
             string age = DateTime.TryParse(patients[i].BirthDate, out DateTime bd)

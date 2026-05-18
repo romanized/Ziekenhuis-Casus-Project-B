@@ -18,6 +18,8 @@ static class Menu
 
         ");
             Console.ResetColor();
+            Console.WriteLine("Welkom bij het Ziekenhuis Zikenhuis afsprakensysteem.");
+            Console.WriteLine("Hier kunt u inloggen of een nieuw account aanmaken om uw afspraken te beheren.");
             Console.WriteLine("\n=== Main Menu ===");
             Console.WriteLine("Enter 1 to login");
             Console.WriteLine("Enter 2 to make account");

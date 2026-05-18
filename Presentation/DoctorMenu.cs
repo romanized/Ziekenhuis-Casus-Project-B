@@ -168,7 +168,7 @@ static class DoctorMenu
 
                 string roomname = roomAccess.GetRoomNameById(appointment.RoomId) ?? "";
 
-                Console.WriteLine($"{time:HH:mm} | Patient : {name} Room : {appointment.RoomId} {roomname}");
+                Console.WriteLine($"{time:HH:mm} | Patient: {name} | Room: {roomname}");
             }
             else
             {

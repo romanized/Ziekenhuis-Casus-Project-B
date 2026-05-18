@@ -23,7 +23,7 @@ public class UserAccess
 
     public void Update(UserModel account)
     {
-        string sql = $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName WHERE id = @Id";
+        string sql = $"UPDATE {Table} SET email = @Email, password = @Password, fullname = @FullName WHERE id = @Id";
         _connection.Execute(sql, account);
     }
 

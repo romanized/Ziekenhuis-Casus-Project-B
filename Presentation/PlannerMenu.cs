@@ -243,9 +243,20 @@ static class PlannerMenu
 
         List<UserModel> patients = userAccess.GetAllByRole("ouder");
         if (patients.Count == 0) { Console.WriteLine("Geen patienten gevonden."); return; }
-        Console.WriteLine("\nStap 5 - Selecteer patient:");
+
+        // ouderen eerst zodat de planner ze niet onderaan de lijst hoeft te zoeken
+        patients = patients
+            .OrderBy(p => DateTime.TryParse(p.BirthDate, out DateTime bd) ? bd : DateTime.MaxValue)
+            .ToList();
+
+        Console.WriteLine("\nStap 5 - Selecteer patient (ouderen bovenaan):");
         for (int i = 0; i < patients.Count; i++)
-            Console.WriteLine($"  {i + 1}. {patients[i].FullName} ({patients[i].Email})");
+        {
+            string age = DateTime.TryParse(patients[i].BirthDate, out DateTime bd)
+                ? $"{(int)((DateTime.Today - bd).TotalDays / 365.25)} jaar"
+                : "leeftijd onbekend";
+            Console.WriteLine($"  {i + 1}. {patients[i].FullName} ({age}) - {patients[i].Email}");
+        }
         if (!TryPickIndex(patients.Count, out int patientIdx)) return;
         UserModel selectedPatient = patients[patientIdx];
 

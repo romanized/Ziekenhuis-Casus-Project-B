@@ -51,6 +51,7 @@ static class PlannerMenu
 
     private static void ShowRoomStatus()
     {
+        Console.Clear();
         Console.Write("\nDatum (YYYY-MM-DD, Enter = vandaag): ");
         string? dateInput = Console.ReadLine();
         DateTime date = DateTime.Today;
@@ -97,6 +98,7 @@ static class PlannerMenu
 
     private static void ShowAgenda()
     {
+        Console.Clear();
         DateTime viewMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
 
         while (true)
@@ -119,6 +121,7 @@ static class PlannerMenu
 
     private static void DrawCalendar(DateTime month)
     {
+        Console.Clear();
         List<string> reservedDates = reservationAccess.GetReservedDatesForMonth(month.ToString("yyyy-MM"));
 
         Console.WriteLine($"\n========== {month:MMMM yyyy} ==========");
@@ -154,6 +157,7 @@ static class PlannerMenu
 
     private static void ShowAppointmentsForDate(DateTime date)
     {
+        Console.Clear();
         List<ReservationModel> appointments = reservationAccess.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
         Console.WriteLine($"\n-- Afspraken op {date:dddd dd MMMM yyyy} --");
         if (appointments.Count == 0) { Console.WriteLine("Geen afspraken op deze datum."); return; }
@@ -169,6 +173,7 @@ static class PlannerMenu
 
     private static void CreateAppointment()
     {
+        Console.Clear();
         Console.WriteLine("\n-- Nieuwe afspraak aanmaken --");
 
         DateTime viewMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
@@ -280,6 +285,7 @@ static class PlannerMenu
     // als er templates zijn krijgt de planner eerst de optie om er een te kiezen, anders gaat het gewoon handmatig
     private static string PickAppointmentType()
     {
+        Console.Clear();
         List<TemplateModel> templates = templateAccess.GetAll();
 
         if (templates.Count > 0)
@@ -334,6 +340,7 @@ static class PlannerMenu
 
     private static bool TryPickIndex(int count, out int index)
     {
+        Console.Clear();
         Console.Write("Keuze: ");
         string? input = Console.ReadLine();
         if (int.TryParse(input, out int choice) && choice >= 1 && choice <= count)

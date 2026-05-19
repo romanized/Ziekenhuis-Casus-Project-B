@@ -41,15 +41,19 @@ static class AdminMenu
             switch (input.Trim())
             {
                 case "1":
+                    Console.Clear();
                     CreateEmployee("specialty");
                     break;
                 case "2":
+                    Console.Clear();
                     CreateEmployee("planner");
                     break;
                 case "3":
+                    Console.Clear();    
                     CreateRoom();
                     break;
                 case "4":
+                    Console.Clear();
                     ManageTemplates();
                     break;
                 case "0":
@@ -68,6 +72,7 @@ static class AdminMenu
 
     private static void CreateEmployee(string role)
     {
+        Console.Clear();
         string displayRole = role == "specialty" ? "hulpverlener" : role;
         Console.WriteLine($"\n-- Add new {displayRole} --");
 
@@ -104,6 +109,7 @@ static class AdminMenu
 
     private static void CreateRoom()
     {
+        Console.Clear();
         Console.WriteLine("\n-- Add new room --");
 
         Console.WriteLine("Enter room name:");
@@ -135,6 +141,7 @@ static class AdminMenu
         bool running = true;
         while (running)
         {
+
             Console.Clear();
             Console.WriteLine("\n==== Afspraak Templates ====");
             Console.WriteLine("1. Nieuw template aanmaken");
@@ -167,6 +174,7 @@ static class AdminMenu
     // vraagt naam, type en notitie en slaat het op
     private static void CreateTemplate()
     {
+        Console.Clear();
         Console.WriteLine("\n-- Nieuw template --");
 
         Console.Write("Naam van het template (bijv. 'Zwangerschapscontrole week 20'): ");
@@ -209,6 +217,7 @@ static class AdminMenu
 
     private static void ShowTemplates()
     {
+        Console.Clear();
         List<TemplateModel> templates = templateAccess.GetAll();
         Console.WriteLine("\n-- Alle templates --");
 
@@ -232,6 +241,7 @@ static class AdminMenu
 
     private static void DeleteTemplate()
     {
+        Console.Clear();
         List<TemplateModel> templates = templateAccess.GetAll();
         if (templates.Count == 0)
         {

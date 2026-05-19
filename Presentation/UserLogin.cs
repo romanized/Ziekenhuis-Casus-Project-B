@@ -25,6 +25,7 @@ static class UserLogin
 
     public static void Start()
     {
+        Console.Clear();
         Console.WriteLine("Welcome to the login page");
 
         Console.WriteLine("Please enter your email address");
@@ -52,15 +53,19 @@ static class UserLogin
         switch (acc.Role.ToLower())
         {
             case "admin":
+                Console.Clear();
                 AdminMenu.Start(acc);
                 break;
             case "specialty":
+                Console.Clear();
                 DoctorMenu.Start(acc);
                 break;
             case "planner":
+                Console.Clear();
                 PlannerMenu.Start(acc);
                 break;
             case "ouder":
+                Console.Clear();
                 ParentMenu.Start(acc);
                 break;
             default:

@@ -73,11 +73,16 @@ static class DoctorMenu
         if (next == null)
         {
             Console.WriteLine("You have no active upcoming appointments.");
+            Console.WriteLine("\nPress any key...");
+            Console.ReadKey();
             return;
         }
         Console.WriteLine("Date: " + next.Date);
         Console.WriteLine("Time: " + next.Time);
         Console.WriteLine("Room: " + next.RoomNumber);
+            
+        Console.WriteLine("\nPress any key...");
+        Console.ReadKey();
     }
 
     private static void ShowAllAppointments(UserModel doctor)
@@ -88,12 +93,16 @@ static class DoctorMenu
         if (list.Count == 0)
         {
             Console.WriteLine("You have no appointments.");
+            Console.WriteLine("\nPress any key...");
+            Console.ReadKey();
             return;
         }
         foreach (ReservationModel r in list)
         {
             Console.WriteLine($"{r.Date} {r.Time} | Room {r.RoomNumber} | Status: {r.Status}");
         }
+        Console.WriteLine("\nPress any key...");
+        Console.ReadKey();
     }
 
     public static void ShowAgenda(UserModel doctor)
@@ -123,26 +132,76 @@ static class DoctorMenu
 
             AgendaTemplate(doctor, date, list);
 
-            Console.WriteLine("\n1 = Next day | 2 = Previous day | 0 = Exit");
+            Console.WriteLine("\nN = Next day | P = Previous day |Type number to view appointment details X = Exit");
             string? input = Console.ReadLine();
             if (string.IsNullOrEmpty(input))
             {
                 continue;
             }
 
-            switch (input.Trim())
+switch (input.Trim().ToUpper())
+{
+    case "N":
+        date = date.AddDays(1);
+        break;
+
+    case "P":
+        date = date.AddDays(-1);
+        break;
+
+    case "X":
+        return;
+
+    default:
+
+        int number;
+
+        if (int.TryParse(input, out number))
+        {
+            DateTime selectedTime = date.Date
+                .AddHours(8)
+                .AddMinutes((number - 1) * 30);
+
+            ReservationModel? selectedAppointment = null;
+
+            foreach (ReservationModel r in list)
             {
-                case "1":
-                    date = date.AddDays(1);
+                if (r.Time == selectedTime.ToString("HH:mm"))
+                {
+                    selectedAppointment = r;
                     break;
-
-                case "2":
-                    date = date.AddDays(-1);
-                    break;
-
-                case "0":
-                    return;
+                }
             }
+
+            if (selectedAppointment != null)
+            {
+                Console.Clear();
+
+                Console.WriteLine("=== Appointment Details ===");
+
+                Console.WriteLine($"Date: {selectedAppointment.Date}");
+                Console.WriteLine($"Time: {selectedAppointment.Time}");
+                Console.WriteLine($"Room: {selectedAppointment.RoomNumber}");
+                Console.WriteLine($"Status: {selectedAppointment.Status}");
+
+                string patientName =
+                    userAccess.GetFullNameById(selectedAppointment.UserId)
+                    ?? "Unknown";
+
+                Console.WriteLine($"Patient: {patientName}");
+
+                Console.WriteLine("\nPress any key...");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine("No appointment in this slot.");
+                Console.ReadKey();
+            }
+        }
+
+        break;
+}
         }
     }
 

@@ -3,10 +3,15 @@ using Dapper;
 
 public class TemplateAccess
 {
-    private SqliteConnection _connection = new SqliteConnection("Data Source=DataSources/project.db;Foreign Keys=False");
+    private SqliteConnection _connection;
 
-    public TemplateAccess()
+    public TemplateAccess() : this("Data Source=DataSources/project.db;Foreign Keys=False") { }
+
+    // deze overload is handig voor tests — geef gewoon ":memory:" mee
+    public TemplateAccess(string connectionString)
     {
+        _connection = new SqliteConnection(connectionString);
+        // tabel wordt aangemaakt als die nog niet bestaat, zodat je niets handmatig hoeft te doen
         _connection.Execute(@"
             CREATE TABLE IF NOT EXISTS AppointmentTemplate (
                 ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,6 +27,7 @@ public class TemplateAccess
         _connection.Execute(sql, template);
     }
 
+    // gesorteerd op naam zodat de planner ze makkelijk terugvindt
     public List<TemplateModel> GetAll()
     {
         string sql = "SELECT ID as Id, Name, Type, Notes FROM AppointmentTemplate ORDER BY Name";

@@ -290,7 +290,7 @@ static class PlannerMenu
 
         if (templates.Count > 0)
         {
-            Console.WriteLine("\nStap 2 - Wil je een template gebruiken? (J/N)");
+            Console.WriteLine("\nStap 3 - Wil je een template gebruiken? (J/N)");
             string? useTemplate = Console.ReadLine()?.Trim().ToUpper();
 
             if (useTemplate == "J")
@@ -311,7 +311,7 @@ static class PlannerMenu
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Template '{picked.Name}' geselecteerd, type: {picked.Type}");
                     Console.ResetColor();
-                    // type komt uit het template, stap 2 is dus klaar
+                    // type komt uit het template, stap 3 is dus klaar
                     return picked.Type;
                 }
 
@@ -320,7 +320,7 @@ static class PlannerMenu
         }
 
         string[] types = { "Controle", "Consult", "Operatie", "Spoedgeval", "Algemeen" };
-        Console.WriteLine("\nStap 2 - Selecteer type afspraak:");
+        Console.WriteLine("\nStap 3 - Selecteer type afspraak:");
         for (int i = 0; i < types.Length; i++)
             Console.WriteLine($"  {i + 1}. {types[i]}");
         if (!TryPickIndex(types.Length, out int typeIdx)) return "";

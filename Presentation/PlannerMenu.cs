@@ -26,7 +26,7 @@ static class PlannerMenu
             Console.WriteLine("\n==== Planner Menu ====");
             Console.WriteLine("1. View agenda");
             Console.WriteLine("2. Create new appointment");
-            Console.WriteLine("3. Kamerstatus bekijken");
+            Console.WriteLine("3. View room status");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("0. Log out");
             Console.ResetColor();
@@ -52,24 +52,24 @@ static class PlannerMenu
     private static void ShowRoomStatus()
     {
         Console.Clear();
-        Console.Write("\nDatum (YYYY-MM-DD, Enter = vandaag): ");
+        Console.Write("\nDate (YYYY-MM-DD, Enter = today): ");
         string? dateInput = Console.ReadLine();
         DateTime date = DateTime.Today;
         if (!string.IsNullOrWhiteSpace(dateInput) && !DateTime.TryParse(dateInput, out date))
         {
-            Console.WriteLine("Ongeldige datum.");
+            Console.WriteLine("Invalid date.");
             Console.ReadKey();
             return;
         }
 
         string[] slots = GenerateTimeSlots();
-        Console.WriteLine("\nSelecteer tijdstip:");
+        Console.WriteLine("\nSelect time slot:");
         for (int i = 0; i < slots.Length; i++)
             Console.WriteLine($"  {i + 1}. {slots[i]}");
         if (!TryPickIndex(slots.Length, out int slotIdx)) return;
         string selectedTime = slots[slotIdx];
 
-        Console.WriteLine($"\n-- Kamerstatus op {date:dd-MM-yyyy} om {selectedTime} --");
+        Console.WriteLine($"\n-- Room status on {date:dd-MM-yyyy} at {selectedTime} --");
         List<RoomModel> rooms = roomAccess.GetAllRooms();
         List<ReservationModel> todays = reservationAccess.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
 
@@ -77,22 +77,22 @@ static class PlannerMenu
         {
             ReservationModel? atSlot = todays.FirstOrDefault(r => r.RoomId == room.Id && r.Time == selectedTime);
 
-            Console.Write($"Kamer {room.Name} ({room.Type}, {room.Location}) - Status: ");
+            Console.Write($"Room {room.Name} ({room.Type}, {room.Location}) - Status: ");
             if (atSlot == null)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("VRIJ");
+                Console.WriteLine("FREE");
                 Console.ResetColor();
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"BEZET ({atSlot.Type}, patient: {atSlot.PatientName})");
+                Console.WriteLine($"OCCUPIED ({atSlot.Type}, patient: {atSlot.PatientName})");
                 Console.ResetColor();
             }
         }
 
-        Console.WriteLine("\nDruk op een toets om terug te gaan...");
+        Console.WriteLine("\nPress any key to go back...");
         Console.ReadKey();
     }
 
@@ -104,8 +104,8 @@ static class PlannerMenu
         while (true)
         {
             DrawCalendar(viewMonth);
-            Console.WriteLine("\nN = volgende maand | P = vorige maand | datum invoeren (YYYY-MM-DD) | 0 = terug");
-            Console.Write("Keuze: ");
+            Console.WriteLine("\nN = next month | P = previous month | enter date (YYYY-MM-DD) | 0 = back");
+            Console.Write("Choice: ");
             string? input = Console.ReadLine()?.Trim();
 
             if (string.IsNullOrEmpty(input) || input == "0") return;
@@ -115,7 +115,7 @@ static class PlannerMenu
             if (DateTime.TryParse(input, out DateTime selectedDate))
                 ShowAppointmentsForDate(selectedDate);
             else
-                Console.WriteLine("Ongeldige invoer.");
+                Console.WriteLine("Invalid input.");
         }
     }
 
@@ -125,7 +125,7 @@ static class PlannerMenu
         List<string> reservedDates = reservationAccess.GetReservedDatesForMonth(month.ToString("yyyy-MM"));
 
         Console.WriteLine($"\n========== {month:MMMM yyyy} ==========");
-        Console.WriteLine(" Ma   Di   Wo   Do   Vr   Za   Zo");
+        Console.WriteLine(" Mo   Tu   We   Th   Fr   Sa   Su");
 
         int startDay = (int)new DateTime(month.Year, month.Month, 1).DayOfWeek;
         if (startDay == 0) startDay = 7;
@@ -150,7 +150,7 @@ static class PlannerMenu
         }
 
         Console.WriteLine("\n");
-        Console.ForegroundColor = ConsoleColor.Yellow; Console.Write("[Geel=Heeft afspraken]");
+        Console.ForegroundColor = ConsoleColor.Yellow; Console.Write("[Yellow=Has appointments]");
         Console.ResetColor();
         Console.WriteLine();
     }
@@ -159,14 +159,14 @@ static class PlannerMenu
     {
         Console.Clear();
         List<ReservationModel> appointments = reservationAccess.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
-        Console.WriteLine($"\n-- Afspraken op {date:dddd dd MMMM yyyy} --");
-        if (appointments.Count == 0) { Console.WriteLine("Geen afspraken op deze datum."); return; }
+        Console.WriteLine($"\n-- Appointments on {date:dddd dd MMMM yyyy} --");
+        if (appointments.Count == 0) { Console.WriteLine("No appointments on this date."); return; }
 
         foreach (ReservationModel r in appointments)
         {
             Console.ForegroundColor = r.Status == "gepland" ? ConsoleColor.Cyan : ConsoleColor.DarkGray;
-            string hulpverlener = string.IsNullOrEmpty(r.DoctorName) ? "-" : r.DoctorName;
-            Console.WriteLine($"  {r.Time} | {r.Type,-15} | Kamer: {r.RoomNumber,-10} | Patient: {r.PatientName,-20} | Hulpverlener: {hulpverlener,-20} | Status: {r.Status}");
+            string caregiver = string.IsNullOrEmpty(r.DoctorName) ? "-" : r.DoctorName;
+            Console.WriteLine($"  {r.Time} | {r.Type,-15} | Room: {r.RoomNumber,-10} | Patient: {r.PatientName,-20} | Caregiver: {caregiver,-20} | Status: {r.Status}");
             Console.ResetColor();
         }
     }
@@ -174,43 +174,43 @@ static class PlannerMenu
     private static void CreateAppointment()
     {
         Console.Clear();
-        Console.WriteLine("\n-- Nieuwe afspraak aanmaken --");
+        Console.WriteLine("\n-- Create new appointment --");
 
         DateTime viewMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
         DateTime selectedDate;
         while (true)
         {
             DrawCalendar(viewMonth);
-            Console.WriteLine("\nN = volgende maand | P = vorige maand | datum invoeren (YYYY-MM-DD) om te selecteren");
-            Console.Write("Datum: ");
+            Console.WriteLine("\nN = next month | P = previous month | enter date (YYYY-MM-DD) to select");
+            Console.Write("Date: ");
             string? dateInput = Console.ReadLine()?.Trim();
 
-            if (string.IsNullOrEmpty(dateInput)) { Console.WriteLine("Geannuleerd."); return; }
+            if (string.IsNullOrEmpty(dateInput)) { Console.WriteLine("Cancelled."); return; }
             if (dateInput.ToUpper() == "N") { viewMonth = viewMonth.AddMonths(1); continue; }
             if (dateInput.ToUpper() == "P") { viewMonth = viewMonth.AddMonths(-1); continue; }
 
             if (!DateTime.TryParse(dateInput, out selectedDate) || selectedDate.Date < DateTime.Today)
             {
-                Console.WriteLine("Voer een geldige toekomstige datum in (YYYY-MM-DD).");
+                Console.WriteLine("Enter a valid future date (YYYY-MM-DD).");
                 continue;
             }
             break;
         }
 
         List<UserModel> patients = userAccess.GetAllByRole("ouder");
-        if (patients.Count == 0) { Console.WriteLine("Geen patienten gevonden."); return; }
+        if (patients.Count == 0) { Console.WriteLine("No patients found."); return; }
 
-        // ouderen eerst zodat de planner ze niet onderaan de lijst hoeft te zoeken
+        // oldest patients at the top so the planner doesn't have to scroll
         patients = patients
             .OrderBy(p => DateTime.TryParse(p.BirthDate, out DateTime bd) ? bd : DateTime.MaxValue)
             .ToList();
 
-        Console.WriteLine("\nStap 2 - Selecteer patient (ouderen bovenaan):");
+        Console.WriteLine("\nStep 2 - Select patient (oldest first):");
         for (int i = 0; i < patients.Count; i++)
         {
             string age = DateTime.TryParse(patients[i].BirthDate, out DateTime bd)
-                ? $"{(int)((DateTime.Today - bd).TotalDays / 365.25)} jaar"
-                : "leeftijd onbekend";
+                ? $"{(int)((DateTime.Today - bd).TotalDays / 365.25)} years"
+                : "age unknown";
             Console.WriteLine($"  {i + 1}. {patients[i].FullName} ({age}) - {patients[i].Email}");
         }
         if (!TryPickIndex(patients.Count, out int patientIdx)) return;
@@ -220,7 +220,7 @@ static class PlannerMenu
         if (appointmentType == "") return;
 
         string[] slots = GenerateTimeSlots();
-        Console.WriteLine("\nStap 4 - Selecteer tijdstip:");
+        Console.WriteLine("\nStep 4 - Select time slot:");
         for (int i = 0; i < slots.Length; i++)
             Console.WriteLine($"  {i + 1}. {slots[i]}");
         if (!TryPickIndex(slots.Length, out int slotIdx)) return;
@@ -230,10 +230,10 @@ static class PlannerMenu
         List<RoomModel> availableRooms = roomAccess.GetAvailableRooms(dateTimeStr);
         if (availableRooms.Count == 0)
         {
-            Console.WriteLine("Geen kamers beschikbaar op dit tijdstip.");
+            Console.WriteLine("No rooms available at this time.");
             return;
         }
-        Console.WriteLine($"\nStap 5 - Beschikbare kamers op {selectedDate:dd-MM-yyyy} om {selectedTime}:");
+        Console.WriteLine($"\nStep 5 - Available rooms on {selectedDate:dd-MM-yyyy} at {selectedTime}:");
         for (int i = 0; i < availableRooms.Count; i++)
             Console.WriteLine($"  {i + 1}. {availableRooms[i].Name} ({availableRooms[i].Type}, {availableRooms[i].Location})");
         if (!TryPickIndex(availableRooms.Count, out int roomIdx)) return;
@@ -243,14 +243,12 @@ static class PlannerMenu
         long? specialistId = null;
         if (availableDoctors.Count > 0)
         {
-            Console.WriteLine($"\nStap 6 - Beschikbare hulpverleners op {selectedDate:dd-MM-yyyy} om {selectedTime} (Enter om over te slaan):");
+            Console.WriteLine($"\nStep 6 - Available caregivers on {selectedDate:dd-MM-yyyy} at {selectedTime} (Enter to skip):");
 
             for (int i = 0; i < availableDoctors.Count; i++)
-            {
                 Console.WriteLine($"  {i + 1}. {availableDoctors[i].FullName} ({availableDoctors[i].Specialty})");
-            }
 
-            Console.Write("Keuze: ");
+            Console.Write("Choice: ");
             string? docInput = Console.ReadLine();
             if (!string.IsNullOrWhiteSpace(docInput) && int.TryParse(docInput, out int docChoice)
                 && docChoice >= 1 && docChoice <= availableDoctors.Count)
@@ -258,31 +256,31 @@ static class PlannerMenu
         }
         else
         {
-            Console.WriteLine("Geen hulpverleners beschikbaar op dit tijdstip.");
+            Console.WriteLine("No caregivers available at this time.");
         }
 
         string doctorName = specialistId.HasValue
             ? availableDoctors.FirstOrDefault(d => d.Id == specialistId)?.FullName ?? "-"
             : "-";
 
-        Console.WriteLine("\n-- Bevestig afspraak --");
-        Console.WriteLine($"  Datum:    {selectedDate:dddd dd MMMM yyyy}");
-        Console.WriteLine($"  Tijd:     {selectedTime}");
-        Console.WriteLine($"  Type:     {appointmentType}");
-        Console.WriteLine($"  Kamer:    {selectedRoom.Name} ({selectedRoom.Type})");
-        Console.WriteLine($"  Hulpverlener: {doctorName}");
-        Console.WriteLine($"  Patient:  {selectedPatient.FullName}");
-        Console.Write("\nBevestigen? (J/N): ");
+        Console.WriteLine("\n-- Confirm appointment --");
+        Console.WriteLine($"  Date:      {selectedDate:dddd dd MMMM yyyy}");
+        Console.WriteLine($"  Time:      {selectedTime}");
+        Console.WriteLine($"  Type:      {appointmentType}");
+        Console.WriteLine($"  Room:      {selectedRoom.Name} ({selectedRoom.Type})");
+        Console.WriteLine($"  Caregiver: {doctorName}");
+        Console.WriteLine($"  Patient:   {selectedPatient.FullName}");
+        Console.Write("\nConfirm? (Y/N): ");
         string? confirm = Console.ReadLine();
-        if (confirm?.Trim().ToUpper() != "J") { Console.WriteLine("Geannuleerd."); return; }
+        if (confirm?.Trim().ToUpper() != "Y") { Console.WriteLine("Cancelled."); return; }
 
         reservationAccess.CreateReservation(selectedPatient.Id, selectedRoom.Id, specialistId, dateTimeStr, appointmentType);
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"\nAfspraak aangemaakt voor {selectedPatient.FullName} op {selectedDate:dd-MM-yyyy} om {selectedTime} in kamer {selectedRoom.Name}.");
+        Console.WriteLine($"\nAppointment created for {selectedPatient.FullName} on {selectedDate:dd-MM-yyyy} at {selectedTime} in room {selectedRoom.Name}.");
         Console.ResetColor();
     }
 
-    // als er templates zijn krijgt de planner eerst de optie om er een te kiezen, anders gaat het gewoon handmatig
+    // if templates exist, planner gets the option to pick one first, otherwise it's manual
     private static string PickAppointmentType()
     {
         Console.Clear();
@@ -290,12 +288,12 @@ static class PlannerMenu
 
         if (templates.Count > 0)
         {
-            Console.WriteLine("\nStap 3 - Wil je een template gebruiken? (J/N)");
+            Console.WriteLine("\nStep 3 - Do you want to use a template? (Y/N)");
             string? useTemplate = Console.ReadLine()?.Trim().ToUpper();
 
-            if (useTemplate == "J")
+            if (useTemplate == "Y")
             {
-                Console.WriteLine("\nBeschikbare templates:");
+                Console.WriteLine("\nAvailable templates:");
                 for (int i = 0; i < templates.Count; i++)
                 {
                     Console.WriteLine($"  {i + 1}. {templates[i].Name} (type: {templates[i].Type})");
@@ -303,24 +301,24 @@ static class PlannerMenu
                         Console.WriteLine($"       -> {templates[i].Notes}");
                 }
 
-                Console.Write("Keuze: ");
+                Console.Write("Choice: ");
                 string? tInput = Console.ReadLine();
                 if (int.TryParse(tInput, out int tChoice) && tChoice >= 1 && tChoice <= templates.Count)
                 {
                     TemplateModel picked = templates[tChoice - 1];
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"Template '{picked.Name}' geselecteerd, type: {picked.Type}");
+                    Console.WriteLine($"Template '{picked.Name}' selected, type: {picked.Type}");
                     Console.ResetColor();
-                    // type komt uit het template, stap 3 is dus klaar
+                    // type comes from the template, step 3 done
                     return picked.Type;
                 }
 
-                Console.WriteLine("Ongeldige keuze, handmatig selecteren.");
+                Console.WriteLine("Invalid choice, selecting manually.");
             }
         }
 
-        string[] types = { "Controle", "Consult", "Operatie", "Spoedgeval", "Algemeen" };
-        Console.WriteLine("\nStap 3 - Selecteer type afspraak:");
+        string[] types = { "Checkup", "Consultation", "Surgery", "Emergency", "General" };
+        Console.WriteLine("\nStep 3 - Select appointment type:");
         for (int i = 0; i < types.Length; i++)
             Console.WriteLine($"  {i + 1}. {types[i]}");
         if (!TryPickIndex(types.Length, out int typeIdx)) return "";
@@ -340,15 +338,14 @@ static class PlannerMenu
 
     private static bool TryPickIndex(int count, out int index)
     {
-        Console.Clear();
-        Console.Write("Keuze: ");
+        Console.Write("Choice: ");
         string? input = Console.ReadLine();
         if (int.TryParse(input, out int choice) && choice >= 1 && choice <= count)
         {
             index = choice - 1;
             return true;
         }
-        Console.WriteLine("Ongeldige keuze.");
+        Console.WriteLine("Invalid choice.");
         index = -1;
         return false;
     }

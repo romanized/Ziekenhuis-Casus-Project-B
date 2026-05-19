@@ -73,7 +73,6 @@ static class AdminMenu
         Console.WriteLine("Enter full name:");
         string? fullname = Console.ReadLine();
 
-        // only doctors (role "specialty") have a specialty field
         string specialty = "";
         if (role == "specialty")
         {

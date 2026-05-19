@@ -23,10 +23,10 @@ static class AdminMenu
         ");
             Console.ResetColor();
             Console.WriteLine("\n==== Admin Menu ====");
-            Console.WriteLine("1. Add a new hulpverlener");
+            Console.WriteLine("1. Add a new caregiver");
             Console.WriteLine("2. Add a new planner");
             Console.WriteLine("3. Add a new room");
-            Console.WriteLine("4. Beheer afspraak templates");
+            Console.WriteLine("4. Manage appointment templates");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("0. Log out");
             Console.ResetColor();
@@ -49,7 +49,7 @@ static class AdminMenu
                     CreateEmployee("planner");
                     break;
                 case "3":
-                    Console.Clear();    
+                    Console.Clear();
                     CreateRoom();
                     break;
                 case "4":
@@ -73,7 +73,7 @@ static class AdminMenu
     private static void CreateEmployee(string role)
     {
         Console.Clear();
-        string displayRole = role == "specialty" ? "hulpverlener" : role;
+        string displayRole = role == "specialty" ? "caregiver" : role;
         Console.WriteLine($"\n-- Add new {displayRole} --");
 
         Console.WriteLine("Enter email:");
@@ -98,13 +98,9 @@ static class AdminMenu
 
         bool ok = userLogic.CreateEmployee(email, password, fullname, role, specialty);
         if (ok)
-        {
             Console.WriteLine($"New {displayRole} '{fullname}' created successfully.");
-        }
         else
-        {
             Console.WriteLine("An account with this email already exists.");
-        }
     }
 
     private static void CreateRoom()
@@ -135,19 +131,18 @@ static class AdminMenu
         Console.WriteLine($"Room '{name}' added successfully.");
     }
 
-    // submenu voor template beheer, admin komt hier via optie 4
+    // template management submenu, admin gets here via option 4
     private static void ManageTemplates()
     {
         bool running = true;
         while (running)
         {
-
             Console.Clear();
-            Console.WriteLine("\n==== Afspraak Templates ====");
-            Console.WriteLine("1. Nieuw template aanmaken");
-            Console.WriteLine("2. Alle templates bekijken");
-            Console.WriteLine("3. Template verwijderen");
-            Console.WriteLine("0. Terug");
+            Console.WriteLine("\n==== Appointment Templates ====");
+            Console.WriteLine("1. Create new template");
+            Console.WriteLine("2. View all templates");
+            Console.WriteLine("3. Delete template");
+            Console.WriteLine("0. Back");
 
             string? input = Console.ReadLine()?.Trim();
             switch (input)
@@ -165,41 +160,41 @@ static class AdminMenu
                     running = false;
                     break;
                 default:
-                    Console.WriteLine("Ongeldige keuze.");
+                    Console.WriteLine("Invalid choice.");
                     break;
             }
         }
     }
 
-    // vraagt naam, type en notitie en slaat het op
+    // asks for name, type and note then saves it
     private static void CreateTemplate()
     {
         Console.Clear();
-        Console.WriteLine("\n-- Nieuw template --");
+        Console.WriteLine("\n-- New template --");
 
-        Console.Write("Naam van het template (bijv. 'Zwangerschapscontrole week 20'): ");
+        Console.Write("Template name (e.g. 'Pregnancy check week 20'): ");
         string? name = Console.ReadLine();
         if (string.IsNullOrWhiteSpace(name))
         {
-            Console.WriteLine("Naam is verplicht.");
+            Console.WriteLine("Name is required.");
             return;
         }
 
-        string[] types = { "Controle", "Consult", "Operatie", "Spoedgeval", "Algemeen" };
-        Console.WriteLine("Selecteer afspraaktype:");
+        string[] types = { "Checkup", "Consultation", "Surgery", "Emergency", "General" };
+        Console.WriteLine("Select appointment type:");
         for (int i = 0; i < types.Length; i++)
             Console.WriteLine($"  {i + 1}. {types[i]}");
 
-        Console.Write("Keuze: ");
+        Console.Write("Choice: ");
         string? typeInput = Console.ReadLine();
         if (!int.TryParse(typeInput, out int typeIdx) || typeIdx < 1 || typeIdx > types.Length)
         {
-            Console.WriteLine("Ongeldige keuze.");
+            Console.WriteLine("Invalid choice.");
             return;
         }
         string selectedType = types[typeIdx - 1];
 
-        Console.Write("Extra notities voor de planner (mag leeg): ");
+        Console.Write("Extra notes for the planner (optional): ");
         string notes = Console.ReadLine() ?? "";
 
         templateAccess.AddTemplate(new TemplateModel
@@ -210,7 +205,7 @@ static class AdminMenu
         });
 
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Template '{name}' aangemaakt.");
+        Console.WriteLine($"Template '{name}' created.");
         Console.ResetColor();
         Console.ReadKey();
     }
@@ -219,11 +214,11 @@ static class AdminMenu
     {
         Console.Clear();
         List<TemplateModel> templates = templateAccess.GetAll();
-        Console.WriteLine("\n-- Alle templates --");
+        Console.WriteLine("\n-- All templates --");
 
         if (templates.Count == 0)
         {
-            Console.WriteLine("Nog geen templates aangemaakt.");
+            Console.WriteLine("No templates yet.");
             Console.ReadKey();
             return;
         }
@@ -232,10 +227,10 @@ static class AdminMenu
         {
             Console.WriteLine($"  [{t.Id}] {t.Name} | Type: {t.Type}");
             if (!string.IsNullOrWhiteSpace(t.Notes))
-                Console.WriteLine($"       Notities: {t.Notes}");
+                Console.WriteLine($"       Notes: {t.Notes}");
         }
 
-        Console.WriteLine("\nDruk op een toets om terug te gaan...");
+        Console.WriteLine("\nPress any key to go back...");
         Console.ReadKey();
     }
 
@@ -245,27 +240,27 @@ static class AdminMenu
         List<TemplateModel> templates = templateAccess.GetAll();
         if (templates.Count == 0)
         {
-            Console.WriteLine("Geen templates om te verwijderen.");
+            Console.WriteLine("No templates to delete.");
             Console.ReadKey();
             return;
         }
 
-        Console.WriteLine("\n-- Template verwijderen --");
+        Console.WriteLine("\n-- Delete template --");
         for (int i = 0; i < templates.Count; i++)
             Console.WriteLine($"  {i + 1}. {templates[i].Name} ({templates[i].Type})");
 
-        Console.Write("Keuze (0 = annuleren): ");
+        Console.Write("Choice (0 = cancel): ");
         string? input = Console.ReadLine();
         if (!int.TryParse(input, out int choice) || choice == 0) return;
         if (choice < 1 || choice > templates.Count)
         {
-            Console.WriteLine("Ongeldige keuze.");
+            Console.WriteLine("Invalid choice.");
             return;
         }
 
         TemplateModel toDelete = templates[choice - 1];
         templateAccess.Delete(toDelete.Id);
-        Console.WriteLine($"Template '{toDelete.Name}' verwijderd.");
+        Console.WriteLine($"Template '{toDelete.Name}' deleted.");
         Console.ReadKey();
     }
 }

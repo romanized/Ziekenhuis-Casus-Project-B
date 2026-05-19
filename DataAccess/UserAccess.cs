@@ -5,9 +5,41 @@ using Dapper;
 
 public class UserAccess
 {
-    private SqliteConnection _connection = new SqliteConnection("Data Source=DataSources/project.db;Foreign Keys=False");
+    private SqliteConnection _connection;
 
     private string Table = "User";
+
+    public UserAccess() : this("Data Source=DataSources/project.db;Foreign Keys=False") { }
+
+    // overload voor tests: geef ":memory:" mee en de tabel wordt direct aangemaakt
+    public UserAccess(string connectionString)
+    {
+        _connection = new SqliteConnection(connectionString);
+        _connection.Open();
+        _connection.Execute(@"
+            CREATE TABLE IF NOT EXISTS User (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                Email TEXT,
+                Password TEXT,
+                Fullname TEXT,
+                BirthDate TEXT,
+                Phone_Number TEXT,
+                StartDate TEXT,
+                Role TEXT,
+                Specialty TEXT,
+                Notes TEXT
+            )");
+        _connection.Execute(@"
+            CREATE TABLE IF NOT EXISTS Reservation (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                User_ID INTEGER,
+                Specialist_ID INTEGER,
+                Room_ID INTEGER,
+                Date TEXT,
+                Type TEXT,
+                Status TEXT
+            )");
+    }
 
     public void Write(UserModel account)
     {

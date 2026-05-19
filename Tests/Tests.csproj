@@ -19,8 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="../DataModels/TemplateModel.cs" />
-    <Compile Include="../DataAccess/TemplateAccess.cs" />
+    <Compile Include="../DataModels/*.cs" />
+    <Compile Include="../DataAccess/*.cs" />
+    <Compile Include="../Logic/*.cs" />
   </ItemGroup>
 
 </Project>

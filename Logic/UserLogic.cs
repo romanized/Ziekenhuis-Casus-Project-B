@@ -1,9 +1,12 @@
 ﻿public class UserLogic
 {
     public static UserModel? CurrentAccount { get; private set; }
-    private UserAccess _access = new();
+    private UserAccess _access;
 
-    public UserLogic(){}
+    public UserLogic() { _access = new UserAccess(); }
+
+    // overload voor tests: geef je eigen UserAccess mee met in-memory db
+    public UserLogic(UserAccess access) { _access = access; }
 
     public UserModel CheckLogin(string email, string password)
     {

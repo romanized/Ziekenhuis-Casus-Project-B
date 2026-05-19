@@ -22,7 +22,7 @@ static class DoctorMenu
 
         ");
             Console.ResetColor();
-            Console.WriteLine("\n==== Hulpverlener Main Menu ====");
+            Console.WriteLine("\n==== Caregiver Main Menu ====");
             Console.WriteLine($"Logged in as: {doctor.FullName}" +
                               (string.IsNullOrWhiteSpace(doctor.Specialty) ? "" : $" ({doctor.Specialty})"));
             Console.WriteLine("1. View my next appointment");
@@ -122,7 +122,7 @@ static class DoctorMenu
             {
                 break;
             }
-            Console.WriteLine("Ongeldige datum. Probeer opnieuw.");
+            Console.WriteLine("Invalid date. Try again.");
         }
 
         while (true)
@@ -230,7 +230,7 @@ switch (input.Trim().ToUpper())
 
             if (found && appointment != null)
             {
-                string name = userAccess.GetFullNameById(appointment.UserId) ?? "Onbekend";
+                string name = userAccess.GetFullNameById(appointment.UserId) ?? "Unknown";
 
                 string roomname = roomAccess.GetRoomNameById(appointment.RoomId) ?? "";
 

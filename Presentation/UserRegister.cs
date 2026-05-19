@@ -22,7 +22,7 @@ static class UserRegister
             Console.Write("Enter your Email: ");
             string? email = Console.ReadLine();
             if (IsValidEmail(email ?? "")) return email!;
-            Console.WriteLine("Ongeldig e-mailadres. Een geldig adres bevat '@' en een '.' (bijv. naam@mail.nl).");
+            Console.WriteLine("Invalid email. A valid address contains '@' and '.' (e.g. name@mail.com).");
         }
     }
 
@@ -30,10 +30,10 @@ static class UserRegister
     {
         while (true)
         {
-            Console.Write("Enter your Password (min 6 chars, minstens 1 cijfer): ");
+            Console.Write("Enter your Password (min 6 chars, at least 1 digit): ");
             string password = ReadMaskedPassword();
             if (IsValidPassword(password)) return password;
-            Console.WriteLine("Wachtwoord moet minimaal 6 tekens zijn en minimaal 1 cijfer bevatten.");
+            Console.WriteLine("Password must be at least 6 characters and contain at least 1 digit.");
         }
     }
 
@@ -62,11 +62,10 @@ static class UserRegister
     {
         Console.Clear();
         UserLogic userLogic = new();
-        Console.WriteLine("=== Registratie patiënt ===");
+        Console.WriteLine("=== Patient registration ===");
         Console.WriteLine();
-        Console.WriteLine("Welkom bij de registratie van het ziekenhuis.");
-        Console.WriteLine("Tijdens deze registratie vult u uw gegevens in, zodat het ziekenhuis uw zorg en afspraken goed kan voorbereiden.");
-        Console.WriteLine("Alle informatie wordt vertrouwelijk behandeld en alleen gebruikt voor uw zorgtraject.");
+        Console.WriteLine("Welcome to the hospital registration.");
+        Console.WriteLine("Fill in your details so the hospital can prepare your care and appointments.");
         Console.WriteLine();
 
         string email = AskEmail();

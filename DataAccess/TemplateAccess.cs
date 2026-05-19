@@ -7,13 +7,13 @@ public class TemplateAccess
 
     public TemplateAccess() : this("Data Source=DataSources/project.db;Foreign Keys=False") { }
 
-    // deze overload is handig voor tests — geef gewoon ":memory:" mee
+    // this overload is useful for tests — just pass ":memory:"
     public TemplateAccess(string connectionString)
     {
         _connection = new SqliteConnection(connectionString);
-        // verbinding open houden zodat in-memory SQLite de data niet kwijtraakt tussen queries
+        // keep connection open so in-memory SQLite doesn't lose data between queries
         _connection.Open();
-        // tabel wordt aangemaakt als die nog niet bestaat, zodat je niets handmatig hoeft te doen
+        // table gets created if it doesn't exist yet, no manual setup needed
         _connection.Execute(@"
             CREATE TABLE IF NOT EXISTS AppointmentTemplate (
                 ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,7 +29,7 @@ public class TemplateAccess
         _connection.Execute(sql, template);
     }
 
-    // gesorteerd op naam zodat de planner ze makkelijk terugvindt
+    // sorted by name so the planner can find them easily
     public List<TemplateModel> GetAll()
     {
         string sql = "SELECT ID as Id, Name, Type, Notes FROM AppointmentTemplate ORDER BY Name";

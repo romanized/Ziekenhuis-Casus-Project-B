@@ -12,8 +12,8 @@ static class ParentMenu
 
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(@"
-        ______ _      _              _           _     
-        |___  /(_)    | |            | |         (_)    
+        ______ _      _              _           _
+        |___  /(_)    | |            | |         (_)
             / /  _  ___| | _____ _ __ | |__  _   _ _ ___
         / /  | |/ _ \ |/ / _ \ '_ \| '_ \| | | | / __|
         / /__ | |  __/   <  __/ | | | | | | |_| | \__ \
@@ -71,19 +71,12 @@ static class ParentMenu
                 DateTime appointmentDateTime;
                 bool validDate = DateTime.TryParse($"{appointment.Date} {appointment.Time}", out appointmentDateTime);
 
-                if (!validDate)
-                {
-                    continue;
-                }
+                if (!validDate) continue;
 
                 if (appointmentDateTime >= now)
-                {
                     upcomingAppointments.Add(appointment);
-                }
                 else
-                {
                     pastAppointments.Add(appointment);
-                }
             }
 
             List<ReservationModel> combined = upcomingAppointments.Concat(pastAppointments).ToList();
@@ -92,7 +85,7 @@ static class ParentMenu
             PrintSideBySideTables(upcomingAppointments, pastAppointments);
 
             Console.WriteLine();
-            Console.Write("Voer een nummer in om een afspraak te bekijken (of Enter om terug te gaan): ");
+            Console.Write("Enter a number to view an appointment (or Enter to go back): ");
             string? input = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(input))
@@ -104,7 +97,7 @@ static class ParentMenu
             int choice;
             if (!int.TryParse(input.Trim(), out choice) || choice < 1 || choice > combined.Count)
             {
-                Console.WriteLine("Ongeldig nummer.");
+                Console.WriteLine("Invalid number.");
                 continue;
             }
 
@@ -116,24 +109,23 @@ static class ParentMenu
     {
         Console.Clear();
         string location = roomAccess.GetRoomLocationById(appointment.RoomId) ?? "";
-        string doctor = string.IsNullOrWhiteSpace(appointment.DoctorName) ? "Nog niet toegewezen" : appointment.DoctorName;
+        string doctor = string.IsNullOrWhiteSpace(appointment.DoctorName) ? "Not assigned yet" : appointment.DoctorName;
 
-        Console.WriteLine("\n================ AFSPRAAK DETAILS ================");
-        Console.WriteLine($"Datum:           {appointment.Date}");
-        Console.WriteLine($"Tijd:            {appointment.Time}");
-        Console.WriteLine($"Type afspraak:   {appointment.Type}");
-        Console.WriteLine($"Status:          {appointment.Status}");
-        Console.WriteLine($"Kamer:           {appointment.RoomNumber}");
-        Console.WriteLine($"Locatie:         {location}");
-        Console.WriteLine($"Arts:            {doctor}");
+        Console.WriteLine("\n================ APPOINTMENT DETAILS ================");
+        Console.WriteLine($"Date:             {appointment.Date}");
+        Console.WriteLine($"Time:             {appointment.Time}");
+        Console.WriteLine($"Appointment type: {appointment.Type}");
+        Console.WriteLine($"Status:           {appointment.Status}");
+        Console.WriteLine($"Room:             {appointment.RoomNumber}");
+        Console.WriteLine($"Location:         {location}");
+        Console.WriteLine($"Doctor:           {doctor}");
         Console.WriteLine();
-        Console.WriteLine("Druk op Enter om terug te gaan...");
+        Console.WriteLine("Press Enter to go back...");
         Console.ReadLine();
     }
 
     private static void PrintSideBySideTables(List<ReservationModel> upcoming, List<ReservationModel> past)
     {
-        Console.Clear();
         List<string> leftTable = BuildTableLines("Upcoming appointments", upcoming, 1);
         List<string> rightTable = BuildTableLines("Past appointments", past, upcoming.Count + 1);
 
@@ -151,7 +143,6 @@ static class ParentMenu
 
     private static List<string> BuildTableLines(string title, List<ReservationModel> appointments, int startIndex)
     {
-        Console.Clear();
         List<string> lines = new List<string>();
 
         lines.Add(title);

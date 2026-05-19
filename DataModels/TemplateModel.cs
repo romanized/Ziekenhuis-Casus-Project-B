@@ -1,9 +1,9 @@
-// een template is een naam + afspraaktype + optionele notitie voor de planner
+// a template is a name + appointment type + optional note for the planner
 public class TemplateModel
 {
     public long Id { get; set; }
     public string Name { get; set; } = "";
     public string Type { get; set; } = "";
-    // mag leeg zijn, maar helpt de planner soms even herinneren wat er moet gebeuren
+    // can be empty, but helps remind the planner what needs to happen
     public string Notes { get; set; } = "";
 }

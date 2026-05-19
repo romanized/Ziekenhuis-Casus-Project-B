@@ -197,11 +197,30 @@ static class PlannerMenu
             break;
         }
 
+        List<UserModel> patients = userAccess.GetAllByRole("ouder");
+        if (patients.Count == 0) { Console.WriteLine("Geen patienten gevonden."); return; }
+
+        // ouderen eerst zodat de planner ze niet onderaan de lijst hoeft te zoeken
+        patients = patients
+            .OrderBy(p => DateTime.TryParse(p.BirthDate, out DateTime bd) ? bd : DateTime.MaxValue)
+            .ToList();
+
+        Console.WriteLine("\nStap 2 - Selecteer patient (ouderen bovenaan):");
+        for (int i = 0; i < patients.Count; i++)
+        {
+            string age = DateTime.TryParse(patients[i].BirthDate, out DateTime bd)
+                ? $"{(int)((DateTime.Today - bd).TotalDays / 365.25)} jaar"
+                : "leeftijd onbekend";
+            Console.WriteLine($"  {i + 1}. {patients[i].FullName} ({age}) - {patients[i].Email}");
+        }
+        if (!TryPickIndex(patients.Count, out int patientIdx)) return;
+        UserModel selectedPatient = patients[patientIdx];
+
         string appointmentType = PickAppointmentType();
         if (appointmentType == "") return;
 
         string[] slots = GenerateTimeSlots();
-        Console.WriteLine("\nStap 3 - Selecteer tijdstip:");
+        Console.WriteLine("\nStap 4 - Selecteer tijdstip:");
         for (int i = 0; i < slots.Length; i++)
             Console.WriteLine($"  {i + 1}. {slots[i]}");
         if (!TryPickIndex(slots.Length, out int slotIdx)) return;
@@ -214,7 +233,7 @@ static class PlannerMenu
             Console.WriteLine("Geen kamers beschikbaar op dit tijdstip.");
             return;
         }
-        Console.WriteLine($"\nStap 4 - Beschikbare kamers op {selectedDate:dd-MM-yyyy} om {selectedTime}:");
+        Console.WriteLine($"\nStap 5 - Beschikbare kamers op {selectedDate:dd-MM-yyyy} om {selectedTime}:");
         for (int i = 0; i < availableRooms.Count; i++)
             Console.WriteLine($"  {i + 1}. {availableRooms[i].Name} ({availableRooms[i].Type}, {availableRooms[i].Location})");
         if (!TryPickIndex(availableRooms.Count, out int roomIdx)) return;
@@ -224,7 +243,7 @@ static class PlannerMenu
         long? specialistId = null;
         if (availableDoctors.Count > 0)
         {
-            Console.WriteLine($"\nStap 5 - Beschikbare hulpverleners op {selectedDate:dd-MM-yyyy} om {selectedTime} (Enter om over te slaan):");
+            Console.WriteLine($"\nStap 6 - Beschikbare hulpverleners op {selectedDate:dd-MM-yyyy} om {selectedTime} (Enter om over te slaan):");
 
             for (int i = 0; i < availableDoctors.Count; i++)
             {
@@ -241,25 +260,6 @@ static class PlannerMenu
         {
             Console.WriteLine("Geen hulpverleners beschikbaar op dit tijdstip.");
         }
-
-        List<UserModel> patients = userAccess.GetAllByRole("ouder");
-        if (patients.Count == 0) { Console.WriteLine("Geen patienten gevonden."); return; }
-
-        // ouderen eerst zodat de planner ze niet onderaan de lijst hoeft te zoeken
-        patients = patients
-            .OrderBy(p => DateTime.TryParse(p.BirthDate, out DateTime bd) ? bd : DateTime.MaxValue)
-            .ToList();
-
-        Console.WriteLine("\nStap 6 - Selecteer patient (ouderen bovenaan):");
-        for (int i = 0; i < patients.Count; i++)
-        {
-            string age = DateTime.TryParse(patients[i].BirthDate, out DateTime bd)
-                ? $"{(int)((DateTime.Today - bd).TotalDays / 365.25)} jaar"
-                : "leeftijd onbekend";
-            Console.WriteLine($"  {i + 1}. {patients[i].FullName} ({age}) - {patients[i].Email}");
-        }
-        if (!TryPickIndex(patients.Count, out int patientIdx)) return;
-        UserModel selectedPatient = patients[patientIdx];
 
         string doctorName = specialistId.HasValue
             ? availableDoctors.FirstOrDefault(d => d.Id == specialistId)?.FullName ?? "-"

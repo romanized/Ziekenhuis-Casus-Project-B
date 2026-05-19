@@ -11,6 +11,8 @@ public class TemplateAccess
     public TemplateAccess(string connectionString)
     {
         _connection = new SqliteConnection(connectionString);
+        // verbinding open houden zodat in-memory SQLite de data niet kwijtraakt tussen queries
+        _connection.Open();
         // tabel wordt aangemaakt als die nog niet bestaat, zodat je niets handmatig hoeft te doen
         _connection.Execute(@"
             CREATE TABLE IF NOT EXISTS AppointmentTemplate (

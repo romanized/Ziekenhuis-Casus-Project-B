@@ -3,6 +3,7 @@ static class PlannerMenu
     private static ReservationAccess reservationAccess = new ReservationAccess();
     private static RoomAccess roomAccess = new RoomAccess();
     private static UserAccess userAccess = new UserAccess();
+    private static TemplateAccess templateAccess = new TemplateAccess();
 
     public static void Start(UserModel planner)
     {
@@ -13,8 +14,8 @@ static class PlannerMenu
 
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(@"
-            ______ _      _              _           _     
-            |___  /(_)    | |            | |         (_)    
+            ______ _      _              _           _
+            |___  /(_)    | |            | |         (_)
                 / /  _  ___| | _____ _ __ | |__  _   _ _ ___
             / /  | |/ _ \ |/ / _ \ '_ \| '_ \| | | | / __|
             / /__ | |  __/   <  __/ | | | | | | |_| | \__ \
@@ -66,7 +67,6 @@ static class PlannerMenu
             Console.WriteLine($"  {i + 1}. {slots[i]}");
         if (!TryPickIndex(slots.Length, out int slotIdx)) return;
         string selectedTime = slots[slotIdx];
-        string dateTimeStr = $"{date:yyyy-MM-dd} {selectedTime}";
 
         Console.WriteLine($"\n-- Kamerstatus op {date:dd-MM-yyyy} om {selectedTime} --");
         List<RoomModel> rooms = roomAccess.GetAllRooms();
@@ -192,12 +192,8 @@ static class PlannerMenu
             break;
         }
 
-        string[] types = { "Controle", "Consult", "Operatie", "Spoedgeval", "Algemeen" };
-        Console.WriteLine("\nStap 2 - Selecteer type afspraak:");
-        for (int i = 0; i < types.Length; i++)
-            Console.WriteLine($"  {i + 1}. {types[i]}");
-        if (!TryPickIndex(types.Length, out int typeIdx)) return;
-        string appointmentType = types[typeIdx];
+        string appointmentType = PickAppointmentType();
+        if (appointmentType == "") return;
 
         string[] slots = GenerateTimeSlots();
         Console.WriteLine("\nStap 3 - Selecteer tijdstip:");
@@ -279,6 +275,48 @@ static class PlannerMenu
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"\nAfspraak aangemaakt voor {selectedPatient.FullName} op {selectedDate:dd-MM-yyyy} om {selectedTime} in kamer {selectedRoom.Name}.");
         Console.ResetColor();
+    }
+
+    private static string PickAppointmentType()
+    {
+        List<TemplateModel> templates = templateAccess.GetAll();
+
+        if (templates.Count > 0)
+        {
+            Console.WriteLine("\nStap 2 - Wil je een template gebruiken? (J/N)");
+            string? useTemplate = Console.ReadLine()?.Trim().ToUpper();
+
+            if (useTemplate == "J")
+            {
+                Console.WriteLine("\nBeschikbare templates:");
+                for (int i = 0; i < templates.Count; i++)
+                {
+                    Console.WriteLine($"  {i + 1}. {templates[i].Name} (type: {templates[i].Type})");
+                    if (!string.IsNullOrWhiteSpace(templates[i].Notes))
+                        Console.WriteLine($"       -> {templates[i].Notes}");
+                }
+
+                Console.Write("Keuze: ");
+                string? tInput = Console.ReadLine();
+                if (int.TryParse(tInput, out int tChoice) && tChoice >= 1 && tChoice <= templates.Count)
+                {
+                    TemplateModel picked = templates[tChoice - 1];
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"Template '{picked.Name}' geselecteerd, type: {picked.Type}");
+                    Console.ResetColor();
+                    return picked.Type;
+                }
+
+                Console.WriteLine("Ongeldige keuze, handmatig selecteren.");
+            }
+        }
+
+        string[] types = { "Controle", "Consult", "Operatie", "Spoedgeval", "Algemeen" };
+        Console.WriteLine("\nStap 2 - Selecteer type afspraak:");
+        for (int i = 0; i < types.Length; i++)
+            Console.WriteLine($"  {i + 1}. {types[i]}");
+        if (!TryPickIndex(types.Length, out int typeIdx)) return "";
+        return types[typeIdx];
     }
 
     private static string[] GenerateTimeSlots()

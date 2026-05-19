@@ -20,14 +20,13 @@
     {
         CurrentAccount = null;
     }
-    // rigster a user
-    public bool Register( string email, string password,string fullname,string date, string phoneNumber,string startdate,string notes)
+
+    public bool Register(string email, string password, string fullname, string date, string phoneNumber, string startdate, string notes)
     {
-        // Check of email exist
         UserModel? existingUser = _access.GetByEmail(email);
         if (existingUser != null)
         {
-            return false; 
+            return false;
         }
 
         UserModel newUser = new UserModel
@@ -38,14 +37,13 @@
             BirthDate = date,
             PhoneNumber = phoneNumber,
             Specialty = null!,
-            Role = "ouder", // default role
+            Role = "ouder",
             StartDate = startdate,
             Notes = notes
-            
         };
 
         _access.Write(newUser);
-        return true; // created
+        return true;
     }
 
     public bool CreateEmployee(string email, string password, string fullname, string role, string specialty)

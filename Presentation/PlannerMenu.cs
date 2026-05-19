@@ -277,6 +277,7 @@ static class PlannerMenu
         Console.ResetColor();
     }
 
+    // als er templates zijn krijgt de planner eerst de optie om er een te kiezen, anders gaat het gewoon handmatig
     private static string PickAppointmentType()
     {
         List<TemplateModel> templates = templateAccess.GetAll();
@@ -304,6 +305,7 @@ static class PlannerMenu
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Template '{picked.Name}' geselecteerd, type: {picked.Type}");
                     Console.ResetColor();
+                    // type komt uit het template, stap 2 is dus klaar
                     return picked.Type;
                 }
 

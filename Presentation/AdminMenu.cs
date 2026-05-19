@@ -129,6 +129,7 @@ static class AdminMenu
         Console.WriteLine($"Room '{name}' added successfully.");
     }
 
+    // submenu voor template beheer, admin komt hier via optie 4
     private static void ManageTemplates()
     {
         bool running = true;
@@ -163,6 +164,7 @@ static class AdminMenu
         }
     }
 
+    // vraagt naam, type en notitie en slaat het op
     private static void CreateTemplate()
     {
         Console.WriteLine("\n-- Nieuw template --");

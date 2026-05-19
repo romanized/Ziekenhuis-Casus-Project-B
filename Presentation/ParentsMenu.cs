@@ -58,6 +58,7 @@ static class ParentMenu
         bool viewing = true;
         while (viewing)
         {
+            Console.Clear();
             List<ReservationModel> allAppointments = reservationAccess.GetAllReservationsByUserId(user.Id);
 
             List<ReservationModel> upcomingAppointments = new List<ReservationModel>();
@@ -113,6 +114,7 @@ static class ParentMenu
 
     private static void ShowAppointmentDetail(ReservationModel appointment)
     {
+        Console.Clear();
         string location = roomAccess.GetRoomLocationById(appointment.RoomId) ?? "";
         string doctor = string.IsNullOrWhiteSpace(appointment.DoctorName) ? "Nog niet toegewezen" : appointment.DoctorName;
 
@@ -131,6 +133,7 @@ static class ParentMenu
 
     private static void PrintSideBySideTables(List<ReservationModel> upcoming, List<ReservationModel> past)
     {
+        Console.Clear();
         List<string> leftTable = BuildTableLines("Upcoming appointments", upcoming, 1);
         List<string> rightTable = BuildTableLines("Past appointments", past, upcoming.Count + 1);
 
@@ -148,6 +151,7 @@ static class ParentMenu
 
     private static List<string> BuildTableLines(string title, List<ReservationModel> appointments, int startIndex)
     {
+        Console.Clear();
         List<string> lines = new List<string>();
 
         lines.Add(title);

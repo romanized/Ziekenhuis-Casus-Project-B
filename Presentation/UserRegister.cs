@@ -60,6 +60,7 @@ static class UserRegister
     }
     public static void Start()
     {
+        Console.Clear();
         UserLogic userLogic = new();
         Console.WriteLine("=== Registratie patiënt ===");
         Console.WriteLine();

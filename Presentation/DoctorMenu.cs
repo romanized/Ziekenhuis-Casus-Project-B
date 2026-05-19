@@ -40,12 +40,15 @@ static class DoctorMenu
             switch (input.Trim())
             {
                 case "1":
+                    Console.Clear();
                     ShowNextAppointment(doctor);
                     break;
                 case "2":
+                    Console.Clear();
                     ShowAllAppointments(doctor);
                     break;
                 case "3":
+                    Console.Clear();
                     ShowAgenda(doctor);
                     break;
                 case "0":
@@ -64,6 +67,7 @@ static class DoctorMenu
 
     private static void ShowNextAppointment(UserModel doctor)
     {
+        Console.Clear();
         ReservationModel? next = doctorAccess.GetNextActiveReservationByDoctorId(doctor.Id);
         Console.WriteLine("\n-- Next appointment --");
         if (next == null)
@@ -78,6 +82,7 @@ static class DoctorMenu
 
     private static void ShowAllAppointments(UserModel doctor)
     {
+        Console.Clear();
         List<ReservationModel> list = doctorAccess.GetAllReservationsByDoctorId(doctor.Id);
         Console.WriteLine("\n-- All appointments --");
         if (list.Count == 0)
@@ -93,6 +98,7 @@ static class DoctorMenu
 
     public static void ShowAgenda(UserModel doctor)
     {
+        Console.Clear();
         Console.WriteLine("Enter date (YYYY/MM/DD):");
 
         DateTime date;
@@ -142,6 +148,7 @@ static class DoctorMenu
 
     public static void AgendaTemplate(UserModel doctor, DateTime date, List<ReservationModel> list)
     {
+        Console.Clear();
         Console.WriteLine($"\n-- Agenda for {date:yyyy-MM-dd} --");
 
         DateTime time = date.Date.AddHours(8);

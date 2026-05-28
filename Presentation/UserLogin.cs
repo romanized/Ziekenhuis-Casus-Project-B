@@ -36,7 +36,10 @@ static class UserLogin
 
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Email and password cannot be empty.");
+            Console.ResetColor();
+            Console.ReadKey();
             return;
         }
 
@@ -44,7 +47,10 @@ static class UserLogin
 
         if (acc == null)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("No account found with that email and password");
+            Console.ResetColor();
+            Console.ReadKey();
             return;
         }
 

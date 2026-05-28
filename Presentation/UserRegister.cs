@@ -60,61 +60,94 @@ static class UserRegister
     }
     public static void Start()
     {
-        Console.Clear();
         UserLogic userLogic = new();
-        Console.WriteLine("=== Patient registration ===");
-        Console.WriteLine();
-        Console.WriteLine("Welcome to the hospital registration.");
-        Console.WriteLine("Fill in your details so the hospital can prepare your care and appointments.");
-        Console.WriteLine();
+        bool running = true;
 
-        string email = AskEmail();
-        string password = AskPassword();
-
-        Console.Write("Enter your Full Name: ");
-        string? fullname = Console.ReadLine();
-
-        Console.Write("Enter your BirthDate (yyyy-mm-dd): ");
-        string? birthdateInput = Console.ReadLine();
-
-        if (!DateTime.TryParse(birthdateInput, out DateTime birthdate))
+        while (running)
         {
-            Console.WriteLine("Invalid birthdate format.");
-            return;
+            Console.Clear();
+            Console.WriteLine("=== Patient registration ===");
+            Console.WriteLine();
+            Console.WriteLine("Welcome to the hospital registration.");
+            Console.WriteLine("Fill in your details so the hospital can prepare your care and appointments.");
+            Console.WriteLine();
+
+            string email = AskEmail();
+            string password = AskPassword();
+
+            Console.Write("Enter your Full Name: ");
+            string? fullname = Console.ReadLine();
+
+            Console.Write("Enter your BirthDate (yyyy-mm-dd): ");
+            string? birthdateInput = Console.ReadLine();
+
+            if (!DateTime.TryParse(birthdateInput, out DateTime birthdate))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Invalid birthdate format.");
+                Console.ResetColor();
+                Console.ReadKey();
+                continue;
+            }
+
+            Console.Write("Enter your Phone number: ");
+            string? phonenumber = Console.ReadLine();
+
+            Console.Write("Enter your Pregnancy start date (yyyy-mm-dd): ");
+            string? startdateInput = Console.ReadLine();
+
+            if (!DateTime.TryParse(startdateInput, out DateTime startdate))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Invalid start date.");
+                Console.ResetColor();
+                Console.ReadKey();
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(fullname) || string.IsNullOrWhiteSpace(phonenumber))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Name and phone number cannot be empty.");
+                Console.ResetColor();
+                Console.ReadKey();
+                continue;
+            }
+
+            Console.Write("Enter your Notes: ");
+            string? notes = Console.ReadLine();
+
+            bool ok = userLogic.Register(
+                email,
+                password,
+                fullname,
+                birthdate.ToString("yyyy-MM-dd"),
+                phonenumber,
+                startdate.ToString("yyyy-MM-dd"),
+                notes
+            );
+
+            if (ok)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Account created! You can now log in.");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("An account with this email already exists.");
+            }
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+            Console.WriteLine("Do you want to register another patient? (y/n)");
+            string? choice = Console.ReadLine();
+
+            if (choice?.ToLower() != "y")
+            {
+                running = false;
+            }
         }
-
-        Console.Write("Enter your Phone number: ");
-        string? phonenumber = Console.ReadLine();
-
-        Console.Write("Enter your Pregnancy start date (yyyy-mm-dd): ");
-        string? startdateInput = Console.ReadLine();
-
-        if (!DateTime.TryParse(startdateInput, out DateTime startdate))
-        {
-            Console.WriteLine("Invalid start date.");
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(fullname) || string.IsNullOrWhiteSpace(phonenumber))
-        {
-            Console.WriteLine("Name and phone number cannot be empty.");
-            return;
-        }
-        Console.Write("Enter your Notes: ");
-        string? notes = Console.ReadLine();
-
-        bool ok = userLogic.Register(
-            email,
-            password,
-            fullname,
-            birthdate.ToString("yyyy-MM-dd"),
-            phonenumber,
-            startdate.ToString("yyyy-MM-dd"),
-            notes
-        );
-
-        Console.WriteLine(ok
-            ? "Account created! You can now log in."
-            : "An account with this email already exists.");
     }
 }

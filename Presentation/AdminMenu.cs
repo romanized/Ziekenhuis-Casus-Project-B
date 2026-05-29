@@ -69,6 +69,28 @@ static class AdminMenu
         Console.WriteLine("\nPress any key to continue...");
         Console.ReadKey();
     }
+    private static string ReadMaskedPassword()
+    {
+        string password = "";
+        ConsoleKeyInfo key;
+        do
+        {
+            key = Console.ReadKey(true);
+            if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+            {
+                password = password[..^1];
+                Console.Write("\b \b");
+            }
+            else if (key.Key != ConsoleKey.Enter)
+            {
+                password += key.KeyChar;
+                Console.Write("*");
+            }
+        } while (key.Key != ConsoleKey.Enter);
+        Console.WriteLine();
+        return password;
+    }
+
 
     private static void CreateEmployee(string role)
     {
@@ -79,20 +101,24 @@ static class AdminMenu
         Console.WriteLine("Enter email:");
         string? email = Console.ReadLine();
         Console.WriteLine("Enter password:");
-        string? password = Console.ReadLine();
+        string? password = ReadMaskedPassword();
         Console.WriteLine("Enter full name:");
         string? fullname = Console.ReadLine();
 
         string specialty = "";
         if (role == "specialty")
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Enter specialization:");
+            Console.ResetColor();
             specialty = Console.ReadLine() ?? "";
         }
 
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(fullname))
         {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("All fields are required.");
+            Console.ResetColor();
             return;
         }
 

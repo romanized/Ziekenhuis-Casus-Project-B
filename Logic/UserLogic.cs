@@ -1,9 +1,12 @@
 ﻿public class UserLogic
 {
     public static UserModel? CurrentAccount { get; private set; }
-    private UserAccess _access = new();
+    private UserAccess _access;
 
-    public UserLogic(){}
+    public UserLogic() { _access = new UserAccess(); }
+
+    // overload voor tests: geef je eigen UserAccess mee met in-memory db
+    public UserLogic(UserAccess access) { _access = access; }
 
     public UserModel CheckLogin(string email, string password)
     {
@@ -20,14 +23,13 @@
     {
         CurrentAccount = null;
     }
-    // rigster a user
-    public bool Register( string email, string password,string fullname,string date, string phoneNumber,string startdate)
+
+    public bool Register(string email, string password, string fullname, string date, string phoneNumber, string startdate, string notes)
     {
-        // Check of email exist
         UserModel? existingUser = _access.GetByEmail(email);
         if (existingUser != null)
         {
-            return false; 
+            return false;
         }
 
         UserModel newUser = new UserModel
@@ -38,13 +40,13 @@
             BirthDate = date,
             PhoneNumber = phoneNumber,
             Specialty = null!,
-            Role = "ouder", // default role
-            StartDate = startdate
-            
+            Role = "ouder",
+            StartDate = startdate,
+            Notes = notes
         };
 
         _access.Write(newUser);
-        return true; // created
+        return true;
     }
 
     public bool CreateEmployee(string email, string password, string fullname, string role, string specialty)

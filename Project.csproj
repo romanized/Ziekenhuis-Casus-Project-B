@@ -15,6 +15,10 @@
 
 
   <ItemGroup>
+    <Compile Remove="Tests/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.20" />
     <PackageReference Include="Dapper" Version="2.1.66" />
   </ItemGroup>

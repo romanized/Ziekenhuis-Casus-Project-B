@@ -1,23 +1,19 @@
 ﻿public class UserModel
 {
-
     public Int64 Id { get; set; }
     public string Email { get; set; }
-
     public string Password { get; set; }
-
     public string FullName { get; set; }
     public string BirthDate { get; set; }
-
-    public string Specialty {get;set;}
-    public string Role {get; set;}
-    public string PhoneNumber {get;set;}
-    public string StartDate {get;set;}
-
+    public string Specialty { get; set; }
+    public string Role { get; set; }
+    public string PhoneNumber { get; set; }
+    public string StartDate { get; set; }
+    public string Notes { get; set; }
 
     public UserModel() { }
 
-    public UserModel(Int64 id, string email, string password, string fullName,string birthdate ,string specialty, string role,string phoneNumber,string startdate)
+    public UserModel(Int64 id, string email, string password, string fullName, string birthdate, string specialty, string role, string phoneNumber, string startdate, string notes)
     {
         Id = id;
         Email = email;
@@ -27,11 +23,7 @@
         Specialty = specialty;
         Role = role;
         PhoneNumber = phoneNumber;
-        StartDate = startdate;  
+        StartDate = startdate;
+        Notes = notes;
     }
-
-
 }
-
-
-

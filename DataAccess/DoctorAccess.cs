@@ -3,7 +3,33 @@ using Dapper;
 
 public class DoctorAccess
 {
-    private SqliteConnection _connection = new SqliteConnection("Data Source=DataSources/project.db;Foreign Keys=False");
+    private SqliteConnection _connection;
+
+    public DoctorAccess() : this("Data Source=DataSources/project.db;Foreign Keys=False") { }
+
+    // overload voor tests met in-memory db
+    public DoctorAccess(string connectionString)
+    {
+        _connection = new SqliteConnection(connectionString);
+        _connection.Open();
+        _connection.Execute(@"
+            CREATE TABLE IF NOT EXISTS Reservation (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                User_ID INTEGER,
+                Specialist_ID INTEGER,
+                Room_ID INTEGER,
+                Date TEXT,
+                Type TEXT,
+                Status TEXT
+            )");
+        _connection.Execute(@"
+            CREATE TABLE IF NOT EXISTS Room (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                Name TEXT,
+                Type TEXT,
+                Location TEXT
+            )");
+    }
 
     public ReservationModel? GetNextActiveReservationByDoctorId(long doctorId)
     {

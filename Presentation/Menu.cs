@@ -2,13 +2,8 @@ static class Menu
 {
     public static void Start()
     {
-<<<<<<< HEAD
-        bool check = true;
-        while (check)
-=======
         bool running = true;
         while (running)
->>>>>>> 54e6b8745a2fbb2ffce3ea6bd8e8b4942413b7f4
         {
             Console.Clear();
 

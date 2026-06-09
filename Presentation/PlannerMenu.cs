@@ -407,7 +407,9 @@ static class PlannerMenu
             string dateTimeStr = $"{selectedDate:yyyy-MM-dd} {selectedTime}";
 
             // Stap 4 - type afspraak kiezen
-            string appointmentType = PickAppointmentType();
+            (string type, TemplateModel? template) typeChoice = PickAppointmentType();
+            string appointmentType = typeChoice.type;
+            TemplateModel? selectedTemplate = typeChoice.template;
 
             if (string.IsNullOrWhiteSpace(appointmentType))
             {
@@ -456,6 +458,7 @@ static class PlannerMenu
             Console.WriteLine($"  Datum:        {selectedDate:dddd dd MMMM yyyy}");
             Console.WriteLine($"  Tijd:         {selectedTime}");
             Console.WriteLine($"  Type:         {appointmentType}");
+            Console.WriteLine($"  Template:     {(selectedTemplate != null ? selectedTemplate.Name : "-")}");
             Console.WriteLine($"  Kamer:        {selectedRoom.Name} ({selectedRoom.Type})");
             Console.WriteLine($"  Hulpverlener: {doctorName}");
 
@@ -469,7 +472,7 @@ static class PlannerMenu
                 return;
             }
 
-            reservationAccess.CreateReservation(selectedPatient.Id, selectedRoom.Id, specialistId, dateTimeStr, appointmentType);
+            reservationAccess.CreateReservation(selectedPatient.Id, selectedRoom.Id, specialistId, dateTimeStr, appointmentType, selectedTemplate?.Id);
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"\nAfspraak aangemaakt voor {selectedPatient.FullName} op {selectedDate:dd-MM-yyyy} om {selectedTime} in kamer {selectedRoom.Name}.");
@@ -564,7 +567,8 @@ static class PlannerMenu
         }
     }
 
-    private static string PickAppointmentType()
+    // geeft het gekozen type terug plus de gekozen template (null = geen template)
+    private static (string type, TemplateModel? template) PickAppointmentType()
     {
         Console.Clear();
 
@@ -592,7 +596,7 @@ static class PlannerMenu
             {
                 if (templateChoice == 0)
                 {
-                    return PickManualAppointmentType();
+                    return (PickManualAppointmentType(), null);
                 }
 
                 if (templateChoice >= 1 && templateChoice <= templates.Count)
@@ -606,16 +610,16 @@ static class PlannerMenu
                     Console.WriteLine("Druk op een toets om verder te gaan...");
                     Console.ReadKey();
 
-                    return picked.Type;
+                    return (picked.Type, picked);
                 }
             }
 
             Console.WriteLine("Ongeldige keuze.");
             Console.ReadKey();
-            return "";
+            return ("", null);
         }
 
-        return PickManualAppointmentType();
+        return (PickManualAppointmentType(), null);
     }
 
     private static string PickManualAppointmentType()

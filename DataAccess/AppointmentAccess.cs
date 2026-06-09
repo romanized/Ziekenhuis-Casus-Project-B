@@ -20,7 +20,8 @@ public class ReservationAccess
                 Room_ID INTEGER,
                 Date TEXT,
                 Type TEXT,
-                Status TEXT
+                Status TEXT,
+                Template_ID INTEGER
             )");
         _connection.Execute(@"
             CREATE TABLE IF NOT EXISTS Room (
@@ -42,6 +43,23 @@ public class ReservationAccess
                 Specialty TEXT,
                 Notes TEXT
             )");
+        // join-doel voor de gekozen template; zorg dat de tabel bestaat
+        _connection.Execute(@"
+            CREATE TABLE IF NOT EXISTS AppointmentTemplate (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                Name TEXT NOT NULL,
+                Type TEXT NOT NULL,
+                Notes TEXT NOT NULL DEFAULT ''
+            )");
+
+        // migratie voor bestaande databases: voeg Template_ID toe als die nog ontbreekt
+        bool hasTemplateId = _connection
+            .Query("PRAGMA table_info(Reservation)")
+            .Any(c => string.Equals((string)c.name, "Template_ID", StringComparison.OrdinalIgnoreCase));
+        if (!hasTemplateId)
+        {
+            _connection.Execute("ALTER TABLE Reservation ADD COLUMN Template_ID INTEGER");
+        }
     }
 
     private const string BaseSelect = @"
@@ -56,11 +74,15 @@ public class ReservationAccess
             r.Type as Type,
             room.Name as RoomNumber,
             u.Fullname as PatientName,
-            COALESCE(d.Fullname, '') as DoctorName
+            COALESCE(d.Fullname, '') as DoctorName,
+            r.Template_ID as TemplateId,
+            COALESCE(t.Name, '') as TemplateName,
+            COALESCE(t.Notes, '') as TemplateNotes
         FROM Reservation r
         INNER JOIN Room room ON r.Room_ID = room.ID
         INNER JOIN User u ON r.User_ID = u.ID
-        LEFT JOIN User d ON r.Specialist_ID = d.ID";
+        LEFT JOIN User d ON r.Specialist_ID = d.ID
+        LEFT JOIN AppointmentTemplate t ON r.Template_ID = t.ID";
 
     public ReservationModel? GetNextActiveReservationByUserId(long userId)
     {
@@ -111,10 +133,10 @@ public class ReservationAccess
         return _connection.Query<string>(sql, new { YearMonth = yearMonth }).ToList();
     }
 
-    public void CreateReservation(long userId, long roomId, long? specialistId, string dateTime, string type)
+    public void CreateReservation(long userId, long roomId, long? specialistId, string dateTime, string type, long? templateId = null)
     {
-        string sql = @"INSERT INTO Reservation (User_ID, Room_ID, Specialist_ID, Date, Type, Status)
-                       VALUES (@UserId, @RoomId, @SpecialistId, @Date, @Type, 'gepland')";
-        _connection.Execute(sql, new { UserId = userId, RoomId = roomId, SpecialistId = specialistId, Date = dateTime, Type = type });
+        string sql = @"INSERT INTO Reservation (User_ID, Room_ID, Specialist_ID, Date, Type, Status, Template_ID)
+                       VALUES (@UserId, @RoomId, @SpecialistId, @Date, @Type, 'gepland', @TemplateId)";
+        _connection.Execute(sql, new { UserId = userId, RoomId = roomId, SpecialistId = specialistId, Date = dateTime, Type = type, TemplateId = templateId });
     }
 }

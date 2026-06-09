@@ -119,6 +119,18 @@ static class ParentMenu
         Console.WriteLine($"Room:             {appointment.RoomNumber}");
         Console.WriteLine($"Location:         {location}");
         Console.WriteLine($"Doctor:           {doctor}");
+
+        // template die de planner koos; geen template gekozen = niets om te tonen
+        if (appointment.TemplateId.HasValue && !string.IsNullOrWhiteSpace(appointment.TemplateName))
+        {
+            Console.WriteLine();
+            Console.WriteLine($"Template:         {appointment.TemplateName}");
+            if (!string.IsNullOrWhiteSpace(appointment.TemplateNotes))
+            {
+                Console.WriteLine($"Template info:    {appointment.TemplateNotes}");
+            }
+        }
+
         Console.WriteLine();
         Console.WriteLine("Press Enter to go back...");
         Console.ReadLine();

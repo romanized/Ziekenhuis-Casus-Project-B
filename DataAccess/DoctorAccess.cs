@@ -20,7 +20,8 @@ public class DoctorAccess
                 Room_ID INTEGER,
                 Date TEXT,
                 Type TEXT,
-                Status TEXT
+                Status TEXT,
+                Template_ID INTEGER
             )");
         _connection.Execute(@"
             CREATE TABLE IF NOT EXISTS Room (

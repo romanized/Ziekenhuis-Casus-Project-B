@@ -27,7 +27,8 @@ public class RoomAccess
                 Room_ID INTEGER,
                 Date TEXT,
                 Type TEXT,
-                Status TEXT
+                Status TEXT,
+                Template_ID INTEGER
             )");
     }
 

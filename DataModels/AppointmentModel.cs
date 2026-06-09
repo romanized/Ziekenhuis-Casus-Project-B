@@ -13,4 +13,9 @@ public class ReservationModel
     public string RoomNumber { get; set; } = "";
     public string PatientName { get; set; } = "";
     public string DoctorName { get; set; } = "";
+
+    // de template die de planner koos (null = geen template gekozen)
+    public long? TemplateId { get; set; }
+    public string TemplateName { get; set; } = "";
+    public string TemplateNotes { get; set; } = "";
 }

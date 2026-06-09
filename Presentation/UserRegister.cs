@@ -23,6 +23,21 @@ static class UserRegister
         return password.Any(char.IsDigit);
     }
 
+    public static bool IsValidPhoneNumber(string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone)) return false;
+
+        return phone.Any(char.IsDigit)
+            && phone.All(c => char.IsDigit(c) || c == '+' || c == '-' || c == ' ');
+    }
+
+    public static bool IsValidNote(string note)
+    {
+        if (string.IsNullOrWhiteSpace(note)) return true; // Notes are optional
+
+        return !note.All(char.IsDigit);
+    }
+
     private static bool AskEmail(ref string email)
     {
         while (true)
@@ -38,7 +53,9 @@ static class UserRegister
                 return true;
             }
 
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Invalid email. A valid address contains '@' and '.' (e.g. name@mail.com).");
+            Console.ResetColor();
         }
     }
 
@@ -57,26 +74,30 @@ static class UserRegister
                 return true;
             }
 
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Password must be at least 6 characters and contain at least 1 digit.");
+            Console.ResetColor();
         }
     }
 
-    private static bool AskText(string question, string errorMessage, ref string value)
+    private static bool AskFullName(ref string fullname)
     {
         while (true)
         {
-            Console.Write(question);
+            Console.Write("Enter your Full Name or type 'back': ");
             string? input = Console.ReadLine();
 
             if (WantsBack(input)) return false;
 
             if (!string.IsNullOrWhiteSpace(input))
             {
-                value = input;
+                fullname = input;
                 return true;
             }
 
-            Console.WriteLine(errorMessage);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Name cannot be empty.");
+            Console.ResetColor();
         }
     }
 
@@ -95,19 +116,52 @@ static class UserRegister
                 return true;
             }
 
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(errorMessage);
+            Console.ResetColor();
+        }
+    }
+
+    private static bool AskPhoneNumber(ref string phonenumber)
+    {
+        while (true)
+        {
+            Console.Write("Enter your Phone number or type 'back': ");
+            string? input = Console.ReadLine();
+
+            if (WantsBack(input)) return false;
+
+            if (IsValidPhoneNumber(input ?? ""))
+            {
+                phonenumber = input!;
+                return true;
+            }
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Invalid phone number. Use digits, spaces, '+' or '-' only. Example: 0612345678");
+            Console.ResetColor();
         }
     }
 
     private static bool AskNotes(ref string notes)
     {
-        Console.Write("Enter your Notes or type 'back': ");
-        string? input = Console.ReadLine();
+        while (true)
+        {
+            Console.Write("Enter your Notes or type 'back': ");
+            string? input = Console.ReadLine();
 
-        if (WantsBack(input)) return false;
+            if (WantsBack(input)) return false;
 
-        notes = input ?? "";
-        return true;
+            if (IsValidNote(input ?? ""))
+            {
+                notes = input ?? "";
+                return true;
+            }
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Notes cannot be only numbers. Please describe in words.");
+            Console.ResetColor();
+        }
     }
 
     private static string ReadMaskedPassword()
@@ -145,7 +199,7 @@ static class UserRegister
         Console.WriteLine("Fill in your details so the hospital can prepare your care and appointments.");
         Console.WriteLine();
         Console.WriteLine($"Step {step + 1} of 7");
-        Console.WriteLine("Type 'back' to go one step back.");
+        Console.WriteLine("Type 'back' or 'terug' to go one step back.");
         Console.WriteLine();
     }
 
@@ -171,117 +225,7 @@ static class UserRegister
 
             while (!registrationFinished)
             {
-                ShowHeader(step);
-
-                if (step == 0)
-                {
-                    bool next = AskEmail(ref email);
-
-                    if (next)
-                    {
-                        step++;
-                    }
-                    else
-                    {
-                        registrationFinished = true;
-                        running = false;
-                    }
-                }
-                else if (step == 1)
-                {
-                    bool next = AskPassword(ref password);
-
-                    if (next)
-                    {
-                        step++;
-                    }
-                    else
-                    {
-                        step--;
-                    }
-                }
-                else if (step == 2)
-                {
-                    bool next = AskText(
-                        "Enter your Full Name: ",
-                        "Name cannot be empty.",
-                        ref fullname
-                    );
-
-                    if (next)
-                    {
-                        step++;
-                    }
-                    else
-                    {
-                        step--;
-                    }
-                }
-                else if (step == 3)
-                {
-                    bool next = AskDate(
-                        "Enter your BirthDate (yyyy-mm-dd): ",
-                        "Invalid birthdate format.",
-                        ref birthdate
-                    );
-
-                    if (next)
-                    {
-                        step++;
-                    }
-                    else
-                    {
-                        step--;
-                    }
-                }
-                else if (step == 4)
-                {
-                    bool next = AskText(
-                        "Enter your Phone number: ",
-                        "Phone number cannot be empty.",
-                        ref phonenumber
-                    );
-
-                    if (next)
-                    {
-                        step++;
-                    }
-                    else
-                    {
-                        step--;
-                    }
-                }
-                else if (step == 5)
-                {
-                    bool next = AskDate(
-                        "Enter your Pregnancy start date (yyyy-mm-dd): ",
-                        "Invalid start date.",
-                        ref startdate
-                    );
-
-                    if (next)
-                    {
-                        step++;
-                    }
-                    else
-                    {
-                        step--;
-                    }
-                }
-                else if (step == 6)
-                {
-                    bool next = AskNotes(ref notes);
-
-                    if (next)
-                    {
-                        step++;
-                    }
-                    else
-                    {
-                        step--;
-                    }
-                }
-                else if (step == 7)
+                if (step == 7)
                 {
                     bool ok = userLogic.Register(
                         email,
@@ -316,6 +260,110 @@ static class UserRegister
                     }
 
                     registrationFinished = true;
+                    continue;
+                }
+
+                ShowHeader(step);
+
+                if (step == 0)
+                {
+                    bool next = AskEmail(ref email);
+
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        registrationFinished = true;
+                        running = false;
+                    }
+                }
+                else if (step == 1)
+                {
+                    bool next = AskPassword(ref password);
+
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
+                }
+                else if (step == 2)
+                {
+                    bool next = AskFullName(ref fullname);
+
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
+                }
+                else if (step == 3)
+                {
+                    bool next = AskDate(
+                        "Enter your BirthDate (yyyy-mm-dd) or type 'back': ",
+                        "Invalid birthdate format.",
+                        ref birthdate
+                    );
+
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
+                }
+                else if (step == 4)
+                {
+                    bool next = AskPhoneNumber(ref phonenumber);
+
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
+                }
+                else if (step == 5)
+                {
+                    bool next = AskDate(
+                        "Enter your Pregnancy start date (yyyy-mm-dd) or type 'back': ",
+                        "Invalid start date.",
+                        ref startdate
+                    );
+
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
+                }
+                else if (step == 6)
+                {
+                    bool next = AskNotes(ref notes);
+
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
                 }
             }
         }

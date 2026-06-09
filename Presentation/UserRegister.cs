@@ -26,19 +26,30 @@ static class UserRegister
     public static bool IsValidPhoneNumber(string phone)
     {
         if (string.IsNullOrWhiteSpace(phone)) return false;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1d68775f35e3983198245bf4f7673f6693c2694c
         return phone.Any(char.IsDigit)
             && phone.All(c => char.IsDigit(c) || c == '+' || c == '-' || c == ' ');
     }
 
     public static bool IsValidNote(string note)
     {
+<<<<<<< HEAD
         if (string.IsNullOrWhiteSpace(note)) return true; // Notes are optional
 
         return !note.All(char.IsDigit);
     }
 
     private static bool AskEmail(ref string email)
+=======
+        if (string.IsNullOrWhiteSpace(note)) return true; // notes are optional
+        return !note.All(char.IsDigit);
+    }
+
+    private static string AskEmail()
+>>>>>>> 1d68775f35e3983198245bf4f7673f6693c2694c
     {
         while (true)
         {
@@ -164,6 +175,58 @@ static class UserRegister
         }
     }
 
+    private static string AskFullName()
+    {
+        while (true)
+        {
+            Console.Write("Enter your Full Name: ");
+            string? fullname = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(fullname)) return fullname;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Name cannot be empty.");
+            Console.ResetColor();
+        }
+    }
+
+    private static DateTime AskDate(string prompt, string errorMessage)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            string? input = Console.ReadLine();
+            if (DateTime.TryParse(input, out DateTime date)) return date;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(errorMessage);
+            Console.ResetColor();
+        }
+    }
+
+    private static string AskPhoneNumber()
+    {
+        while (true)
+        {
+            Console.Write("Enter your Phone number: ");
+            string? phone = Console.ReadLine();
+            if (IsValidPhoneNumber(phone ?? "")) return phone!;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Invalid phone number. Use digits only (e.g. 0612345678).");
+            Console.ResetColor();
+        }
+    }
+
+    private static string AskNotes()
+    {
+        while (true)
+        {
+            Console.Write("Enter your Notes: ");
+            string? notes = Console.ReadLine();
+            if (IsValidNote(notes ?? "")) return notes ?? "";
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Notes cannot be only numbers. Please describe in words.");
+            Console.ResetColor();
+        }
+    }
+
     private static string ReadMaskedPassword()
     {
         string password = "";
@@ -212,6 +275,7 @@ static class UserRegister
         {
             int step = 0;
 
+<<<<<<< HEAD
             string email = "";
             string password = "";
             string fullname = "";
@@ -262,6 +326,15 @@ static class UserRegister
                     registrationFinished = true;
                     continue;
                 }
+=======
+            string email = AskEmail();
+            string password = AskPassword();
+            string fullname = AskFullName();
+            DateTime birthdate = AskDate("Enter your BirthDate (yyyy-mm-dd): ", "Invalid birthdate format.");
+            string phonenumber = AskPhoneNumber();
+            DateTime startdate = AskDate("Enter your Pregnancy start date (yyyy-mm-dd): ", "Invalid start date.");
+            string notes = AskNotes();
+>>>>>>> 1d68775f35e3983198245bf4f7673f6693c2694c
 
                 ShowHeader(step);
 

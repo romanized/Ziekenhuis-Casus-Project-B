@@ -22,6 +22,7 @@
     <Compile Include="../DataModels/*.cs" />
     <Compile Include="../DataAccess/*.cs" />
     <Compile Include="../Logic/*.cs" />
+    <Compile Include="../Presentation/UserRegister.cs" />
   </ItemGroup>
 
 </Project>

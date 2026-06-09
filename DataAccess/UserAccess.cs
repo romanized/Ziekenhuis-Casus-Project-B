@@ -22,7 +22,7 @@ public class UserAccess
                 Email TEXT,
                 Password TEXT,
                 Fullname TEXT,
-                BirthDate TEXT,
+                Date_of_Birth TEXT,
                 Phone_Number TEXT,
                 StartDate TEXT,
                 Role TEXT,
@@ -43,7 +43,7 @@ public class UserAccess
 
     public void Write(UserModel account)
     {
-        string sql = $"INSERT INTO {Table} (Email, Password, Fullname, BirthDate, Phone_Number, StartDate, Role, Specialty, Notes) VALUES (@Email, @Password, @FullName, @BirthDate, @PhoneNumber, @StartDate, @Role, @Specialty, @Notes)";
+        string sql = $"INSERT INTO {Table} (Email, Password, Fullname, Date_of_Birth, Phone_Number, StartDate, Role, Specialty, Notes) VALUES (@Email, @Password, @FullName, @BirthDate, @PhoneNumber, @StartDate, @Role, @Specialty, @Notes)";
         _connection.Execute(sql, account);
     }
 

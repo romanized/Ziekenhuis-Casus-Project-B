@@ -12,4 +12,8 @@ obj/
 # OS
 .DS_Store
 Thumbs.db
+
+# Lokale database: niet via git delen (voorkomt merge conflicts).
+# Wordt bij opstart automatisch aangemaakt en gevuld door Seeder.SeedAll().
 project.db
+DataSources/*.bak*

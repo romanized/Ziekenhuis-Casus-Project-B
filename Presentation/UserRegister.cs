@@ -1,10 +1,18 @@
 static class UserRegister
 {
+    private static bool WantsBack(string? input)
+    {
+        string text = input?.Trim().ToLower() ?? "";
+        return text == "back" || text == "terug";
+    }
+
     private static bool IsValidEmail(string email)
     {
         if (string.IsNullOrEmpty(email)) return false;
+
         int at = email.IndexOf('@');
         if (at <= 0) return false;
+
         int dot = email.IndexOf('.', at);
         return dot > at + 1 && dot < email.Length - 1;
     }
@@ -15,49 +23,132 @@ static class UserRegister
         return password.Any(char.IsDigit);
     }
 
-    private static string AskEmail()
+    private static bool AskEmail(ref string email)
     {
         while (true)
         {
-            Console.Write("Enter your Email: ");
-            string? email = Console.ReadLine();
-            if (IsValidEmail(email ?? "")) return email!;
+            Console.Write("Enter your Email or type 'back': ");
+            string? input = Console.ReadLine();
+
+            if (WantsBack(input)) return false;
+
+            if (IsValidEmail(input ?? ""))
+            {
+                email = input!;
+                return true;
+            }
+
             Console.WriteLine("Invalid email. A valid address contains '@' and '.' (e.g. name@mail.com).");
         }
     }
 
-    private static string AskPassword()
+    private static bool AskPassword(ref string password)
     {
         while (true)
         {
-            Console.Write("Enter your Password (min 6 chars, at least 1 digit): ");
-            string password = ReadMaskedPassword();
-            if (IsValidPassword(password)) return password;
+            Console.Write("Enter your Password or type 'back' (min 6 chars, at least 1 digit): ");
+            string input = ReadMaskedPassword();
+
+            if (WantsBack(input)) return false;
+
+            if (IsValidPassword(input))
+            {
+                password = input;
+                return true;
+            }
+
             Console.WriteLine("Password must be at least 6 characters and contain at least 1 digit.");
         }
+    }
+
+    private static bool AskText(string question, string errorMessage, ref string value)
+    {
+        while (true)
+        {
+            Console.Write(question);
+            string? input = Console.ReadLine();
+
+            if (WantsBack(input)) return false;
+
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                value = input;
+                return true;
+            }
+
+            Console.WriteLine(errorMessage);
+        }
+    }
+
+    private static bool AskDate(string question, string errorMessage, ref DateTime value)
+    {
+        while (true)
+        {
+            Console.Write(question);
+            string? input = Console.ReadLine();
+
+            if (WantsBack(input)) return false;
+
+            if (DateTime.TryParse(input, out DateTime date))
+            {
+                value = date;
+                return true;
+            }
+
+            Console.WriteLine(errorMessage);
+        }
+    }
+
+    private static bool AskNotes(ref string notes)
+    {
+        Console.Write("Enter your Notes or type 'back': ");
+        string? input = Console.ReadLine();
+
+        if (WantsBack(input)) return false;
+
+        notes = input ?? "";
+        return true;
     }
 
     private static string ReadMaskedPassword()
     {
         string password = "";
         ConsoleKeyInfo key;
+
         do
         {
             key = Console.ReadKey(true);
+
             if (key.Key == ConsoleKey.Backspace && password.Length > 0)
             {
                 password = password[..^1];
                 Console.Write("\b \b");
             }
-            else if (key.Key != ConsoleKey.Enter)
+            else if (key.Key != ConsoleKey.Enter && !char.IsControl(key.KeyChar))
             {
                 password += key.KeyChar;
                 Console.Write("*");
             }
+
         } while (key.Key != ConsoleKey.Enter);
+
         Console.WriteLine();
         return password;
     }
+
+    private static void ShowHeader(int step)
+    {
+        Console.Clear();
+        Console.WriteLine("=== Patient registration ===");
+        Console.WriteLine();
+        Console.WriteLine("Welcome to the hospital registration.");
+        Console.WriteLine("Fill in your details so the hospital can prepare your care and appointments.");
+        Console.WriteLine();
+        Console.WriteLine($"Step {step + 1} of 7");
+        Console.WriteLine("Type 'back' to go one step back.");
+        Console.WriteLine();
+    }
+
     public static void Start()
     {
         UserLogic userLogic = new();
@@ -65,88 +156,167 @@ static class UserRegister
 
         while (running)
         {
-            Console.Clear();
-            Console.WriteLine("=== Patient registration ===");
-            Console.WriteLine();
-            Console.WriteLine("Welcome to the hospital registration.");
-            Console.WriteLine("Fill in your details so the hospital can prepare your care and appointments.");
-            Console.WriteLine();
+            int step = 0;
 
-            string email = AskEmail();
-            string password = AskPassword();
+            string email = "";
+            string password = "";
+            string fullname = "";
+            string phonenumber = "";
+            string notes = "";
 
-            Console.Write("Enter your Full Name: ");
-            string? fullname = Console.ReadLine();
+            DateTime birthdate = DateTime.MinValue;
+            DateTime startdate = DateTime.MinValue;
 
-            Console.Write("Enter your BirthDate (yyyy-mm-dd): ");
-            string? birthdateInput = Console.ReadLine();
+            bool registrationFinished = false;
 
-            if (!DateTime.TryParse(birthdateInput, out DateTime birthdate))
+            while (!registrationFinished)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid birthdate format.");
-                Console.ResetColor();
-                Console.ReadKey();
-                continue;
-            }
+                ShowHeader(step);
 
-            Console.Write("Enter your Phone number: ");
-            string? phonenumber = Console.ReadLine();
+                if (step == 0)
+                {
+                    bool next = AskEmail(ref email);
 
-            Console.Write("Enter your Pregnancy start date (yyyy-mm-dd): ");
-            string? startdateInput = Console.ReadLine();
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        registrationFinished = true;
+                        running = false;
+                    }
+                }
+                else if (step == 1)
+                {
+                    bool next = AskPassword(ref password);
 
-            if (!DateTime.TryParse(startdateInput, out DateTime startdate))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid start date.");
-                Console.ResetColor();
-                Console.ReadKey();
-                continue;
-            }
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
+                }
+                else if (step == 2)
+                {
+                    bool next = AskText(
+                        "Enter your Full Name: ",
+                        "Name cannot be empty.",
+                        ref fullname
+                    );
 
-            if (string.IsNullOrWhiteSpace(fullname) || string.IsNullOrWhiteSpace(phonenumber))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Name and phone number cannot be empty.");
-                Console.ResetColor();
-                Console.ReadKey();
-                continue;
-            }
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
+                }
+                else if (step == 3)
+                {
+                    bool next = AskDate(
+                        "Enter your BirthDate (yyyy-mm-dd): ",
+                        "Invalid birthdate format.",
+                        ref birthdate
+                    );
 
-            Console.Write("Enter your Notes: ");
-            string? notes = Console.ReadLine();
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
+                }
+                else if (step == 4)
+                {
+                    bool next = AskText(
+                        "Enter your Phone number: ",
+                        "Phone number cannot be empty.",
+                        ref phonenumber
+                    );
 
-            bool ok = userLogic.Register(
-                email,
-                password,
-                fullname,
-                birthdate.ToString("yyyy-MM-dd"),
-                phonenumber,
-                startdate.ToString("yyyy-MM-dd"),
-                notes
-            );
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
+                }
+                else if (step == 5)
+                {
+                    bool next = AskDate(
+                        "Enter your Pregnancy start date (yyyy-mm-dd): ",
+                        "Invalid start date.",
+                        ref startdate
+                    );
 
-            if (ok)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Account created! You can now log in.");
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("An account with this email already exists.");
-            }
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
+                }
+                else if (step == 6)
+                {
+                    bool next = AskNotes(ref notes);
 
-            Console.ResetColor();
+                    if (next)
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        step--;
+                    }
+                }
+                else if (step == 7)
+                {
+                    bool ok = userLogic.Register(
+                        email,
+                        password,
+                        fullname,
+                        birthdate.ToString("yyyy-MM-dd"),
+                        phonenumber,
+                        startdate.ToString("yyyy-MM-dd"),
+                        notes
+                    );
 
-            Console.WriteLine();
-            Console.WriteLine("Do you want to register another patient? (y/n)");
-            string? choice = Console.ReadLine();
+                    if (ok)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Account created! You can now log in.");
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("An account with this email already exists.");
+                    }
 
-            if (choice?.ToLower() != "y")
-            {
-                running = false;
+                    Console.ResetColor();
+
+                    Console.WriteLine();
+                    Console.WriteLine("Do you want to register another patient? (y/n)");
+                    string? choice = Console.ReadLine();
+
+                    if (choice?.ToLower() != "y")
+                    {
+                        running = false;
+                    }
+
+                    registrationFinished = true;
+                }
             }
         }
     }

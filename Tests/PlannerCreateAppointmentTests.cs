@@ -1,8 +1,9 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+[TestClass]
 public class PlannerCreateAppointmentTests
 {
-    [Fact]
+    [TestMethod]
     public void Afspraak_aanmaken_en_terugzien_op_datum()
     {
         // shared zodat alle 3 de access klassen dezelfde db zien
@@ -24,8 +25,8 @@ public class PlannerCreateAppointmentTests
         reservations.CreateReservation(patient.Id, roomId, null, "2026-06-15 10:00", "Controle");
 
         var result = reservations.GetReservationsForDate("2026-06-15");
-        Assert.Single(result);
-        Assert.Equal("gepland", result[0].Status);
-        Assert.Equal("Controle", result[0].Type);
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("gepland", result[0].Status);
+        Assert.AreEqual("Controle", result[0].Type);
     }
 }

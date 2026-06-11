@@ -1,8 +1,9 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+[TestClass]
 public class PlannerRoomStatusTests
 {
-    [Fact]
+    [TestMethod]
     public void Bezette_kamer_komt_niet_in_lijst()
     {
         string conn = "Data Source=file:roomstatus?mode=memory&cache=shared";
@@ -16,7 +17,7 @@ public class PlannerRoomStatusTests
 
         var available = rooms.GetAvailableRooms("2026-06-15 10:00");
 
-        Assert.Single(available);
-        Assert.Equal("Vrij", available[0].Name);
+        Assert.AreEqual(1, available.Count);
+        Assert.AreEqual("Vrij", available[0].Name);
     }
 }

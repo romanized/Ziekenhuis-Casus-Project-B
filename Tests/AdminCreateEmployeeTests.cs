@@ -1,8 +1,9 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+[TestClass]
 public class AdminCreateEmployeeTests
 {
-    [Fact]
+    [TestMethod]
     public void CreateEmployee_dokter_met_specialty()
     {
         var access = new UserAccess("Data Source=:memory:");
@@ -10,9 +11,10 @@ public class AdminCreateEmployeeTests
 
         bool ok = logic.CreateEmployee("dokter@ziekenhuis.nl", "doc1", "Dr Test", "specialty", "Kindergeneeskunde");
 
-        Assert.True(ok);
+        Assert.IsTrue(ok);
         var saved = access.GetByEmail("dokter@ziekenhuis.nl");
-        Assert.Equal("specialty", saved.Role);
-        Assert.Equal("Kindergeneeskunde", saved.Specialty);
+        Assert.AreEqual("specialty", saved.Role);
+        Assert.AreEqual("Kindergeneeskunde", saved.Specialty);
     }
 }
+

@@ -1,8 +1,9 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+[TestClass]
 public class AdminAddRoomTests
 {
-    [Fact]
+    [TestMethod]
     public void Kamer_toevoegen_en_terugvinden()
     {
         var access = new RoomAccess("Data Source=:memory:");
@@ -10,7 +11,8 @@ public class AdminAddRoomTests
         access.AddRoom(new RoomModel { Name = "Kamer 101", Type = "Onderzoek", Location = "Verdieping 1" });
 
         var rooms = access.GetAllRooms();
-        Assert.Single(rooms);
-        Assert.Equal("Kamer 101", rooms[0].Name);
+        Assert.AreEqual(1, rooms.Count);
+        Assert.AreEqual("Kamer 101", rooms[0].Name);
     }
 }
+

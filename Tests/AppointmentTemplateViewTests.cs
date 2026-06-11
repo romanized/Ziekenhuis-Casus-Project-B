@@ -1,9 +1,7 @@
-using Xunit;
-
-// de patiënt ziet de template die de planner koos; geen template = niets te zien
+[TestClass]
 public class AppointmentTemplateViewTests
 {
-    [Fact]
+    [TestMethod]
     public void Afspraak_met_template_toont_template_aan_patient()
     {
         string conn = "Data Source=file:tpltest1?mode=memory&cache=shared";
@@ -34,13 +32,13 @@ public class AppointmentTemplateViewTests
 
         var result = reservations.GetAllReservationsByUserId(patient.Id);
 
-        Assert.Single(result);
-        Assert.Equal(templateId, result[0].TemplateId);
-        Assert.Equal("Zwangerschapscontrole week 20", result[0].TemplateName);
-        Assert.Equal("Neem je zwangerschapsboekje mee.", result[0].TemplateNotes);
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual(templateId, result[0].TemplateId);
+        Assert.AreEqual("Zwangerschapscontrole week 20", result[0].TemplateName);
+        Assert.AreEqual("Neem je zwangerschapsboekje mee.", result[0].TemplateNotes);
     }
 
-    [Fact]
+    [TestMethod]
     public void Afspraak_zonder_template_toont_geen_template()
     {
         string conn = "Data Source=file:tpltest2?mode=memory&cache=shared";
@@ -63,8 +61,9 @@ public class AppointmentTemplateViewTests
 
         var result = reservations.GetAllReservationsByUserId(patient.Id);
 
-        Assert.Single(result);
-        Assert.Null(result[0].TemplateId);
-        Assert.Equal("", result[0].TemplateName);
+        Assert.AreEqual(1, result.Count);
+        Assert.IsNull(result[0].TemplateId);
+        Assert.AreEqual("", result[0].TemplateName);
+
     }
 }

@@ -1,8 +1,9 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+[TestClass]
 public class ParentSeeReservationsTests
 {
-    [Fact]
+    [TestMethod]
     public void Ouder_ziet_alleen_eigen_afspraken()
     {
         string conn = "Data Source=file:parentres?mode=memory&cache=shared";
@@ -27,6 +28,6 @@ public class ParentSeeReservationsTests
 
         var mine = reservations.GetAllReservationsByUserId(uid);
 
-        Assert.Equal(2, mine.Count);
+        Assert.AreEqual(2, mine.Count);
     }
 }

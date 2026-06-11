@@ -1,8 +1,9 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+[TestClass]
 public class ParentNextAppointmentTests
 {
-    [Fact]
+    [TestMethod]
     public void Eerstvolgende_afspraak_wordt_gepakt()
     {
         string conn = "Data Source=file:nextapp?mode=memory&cache=shared";
@@ -26,7 +27,7 @@ public class ParentNextAppointmentTests
 
         var next = reservations.GetNextActiveReservationByUserId(uid);
 
-        Assert.NotNull(next);
-        Assert.Equal("2099-06-15", next!.Date);
+        Assert.IsNotNull(next);
+        Assert.AreEqual("2099-06-15", next!.Date);
     }
 }

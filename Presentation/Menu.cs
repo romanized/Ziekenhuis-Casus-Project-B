@@ -18,20 +18,20 @@ static class Menu
 
         ");
             Console.ResetColor();
-            Console.WriteLine("Welcome to the hospital appointment system.");
-            Console.WriteLine("Log in or create an account to manage your appointments.");
-            Console.WriteLine("\n=== Main Menu ===");
-            Console.WriteLine("Enter 1 to login");
-            Console.WriteLine("Enter 2 to make account");
+            Console.WriteLine("Welkom bij het ziekenhuisafsprakensysteem.");
+            Console.WriteLine("Log in of maak een account aan om uw afspraken te beheren.");
+            Console.WriteLine("\n=== Hoofdmenu ===");
+            Console.WriteLine("Voer 1 in om in te loggen");
+            Console.WriteLine("Voer 2 in om een account aan te maken");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Enter Q to quit");
+            Console.WriteLine("Voer Q in om af te sluiten");
             Console.ResetColor();
 
             string? input = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(input))
             {
-                Console.WriteLine("Please enter a valid option.");
+                Console.WriteLine("Voer een geldige optie in.");
                 continue;
             }
 
@@ -52,7 +52,7 @@ static class Menu
             }
             else
             {
-                Console.WriteLine("Invalid input.");
+                Console.WriteLine("Voer een geldige optie in.");
             }
         }
     }

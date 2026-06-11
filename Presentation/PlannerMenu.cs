@@ -1,3 +1,4 @@
+using System.Globalization;
 static class PlannerMenu
 {
     private static ReservationAccess reservationAccess = new ReservationAccess();
@@ -25,20 +26,20 @@ static class PlannerMenu
             ");
 
             Console.ResetColor();
-            Console.WriteLine("\n==== Planner Menu ====");
-            Console.WriteLine("1. View agenda");
-            Console.WriteLine("2. Create new appointment");
-            Console.WriteLine("3. View room status");
+            Console.WriteLine("\n==== Plannermenu ====");
+            Console.WriteLine("1. Agenda bekijken");
+            Console.WriteLine("2. Nieuwe afspraak aanmaken");
+            Console.WriteLine("3. Kamerstatus bekijken");
 
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("0. Log out");
+            Console.WriteLine("0. Uitloggen");
             Console.ResetColor();
 
             string? input = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(input))
             {
-                Console.WriteLine("Please enter a valid option.");
+                Console.WriteLine("Voer een geldige optie in.");
                 continue;
             }
 
@@ -61,13 +62,13 @@ static class PlannerMenu
                     break;
 
                 default:
-                    Console.WriteLine("Invalid input.");
+                    Console.WriteLine("Voer een geldige optie in.");
                     break;
             }
         }
 
         UserLogic.Logout();
-        Console.WriteLine("\nPress any key to continue...");
+        Console.WriteLine("\nDruk op een toets om door te gaan...");
         Console.ReadKey();
     }
 
@@ -82,14 +83,14 @@ static class PlannerMenu
 
         if (!string.IsNullOrWhiteSpace(dateInput) && !DateTime.TryParse(dateInput, out date))
         {
-            Console.WriteLine("Invalid date.");
+            Console.WriteLine("Voer een geldige datum in.");
             Console.ReadKey();
             return;
         }
 
         string[] slots = GenerateTimeSlots();
 
-        Console.WriteLine("\nSelect time slot:");
+        Console.WriteLine("\nSelecteer een tijdslot:");
         for (int i = 0; i < slots.Length; i++)
         {
             Console.WriteLine($"  {i + 1}. {slots[i]}");
@@ -102,7 +103,7 @@ static class PlannerMenu
 
         string selectedTime = slots[slotIdx];
 
-        Console.WriteLine($"\n-- Room status on {date:dd-MM-yyyy} at {selectedTime} --");
+        Console.WriteLine($"\n-- Kamer status van {date:dd-MM-yyyy} op {selectedTime} --");
 
         List<RoomModel> rooms = roomAccess.GetAllRooms();
         List<ReservationModel> todays = reservationAccess.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
@@ -136,7 +137,7 @@ static class PlannerMenu
             }
         }
 
-        Console.WriteLine("\nPress any key to go back...");
+        Console.WriteLine("\nDruk op een toets om door te gaan...");
         Console.ReadKey();
     }
 
@@ -150,8 +151,8 @@ static class PlannerMenu
         {
             DrawCalendar(viewMonth);
 
-            Console.WriteLine("\nN = next month | P = previous month | enter date (YYYY-MM-DD) | 0 = back");
-            Console.Write("Choice: ");
+            Console.WriteLine("\nN = volgende maand | P = vorige maand | voer datum in (JJJJ-MM-DD) | 0 = terug");
+            Console.Write("Keuze: ");
 
             string? input = Console.ReadLine()?.Trim();
 
@@ -178,7 +179,7 @@ static class PlannerMenu
             }
             else
             {
-                Console.WriteLine("Invalid input.");
+                Console.WriteLine("Ongeldige invoer.");
                 Console.ReadKey();
             }
         }
@@ -190,8 +191,8 @@ static class PlannerMenu
 
         List<string> reservedDates = reservationAccess.GetReservedDatesForMonth(month.ToString("yyyy-MM"));
 
-        Console.WriteLine($"\n========== {month:MMMM yyyy} ==========");
-        Console.WriteLine(" Mo   Tu   We   Th   Fr   Sa   Su");
+        Console.WriteLine($"\n========== {month.ToString("MMMM yyyy", new CultureInfo("nl-NL"))} ==========");
+        Console.WriteLine(" Ma   Di   Wo   Do   Vr   Sa   Su");
 
         int startDay = (int)new DateTime(month.Year, month.Month, 1).DayOfWeek;
 
@@ -230,7 +231,7 @@ static class PlannerMenu
         Console.WriteLine("\n");
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.Write("[Yellow=Has appointments]");
+        Console.Write("[Geel=Heeft afspraken]");
         Console.ResetColor();
 
         Console.WriteLine();
@@ -242,12 +243,12 @@ static class PlannerMenu
 
         List<ReservationModel> appointments = reservationAccess.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
 
-        Console.WriteLine($"\n-- Appointments on {date:dddd dd MMMM yyyy} --");
+        Console.WriteLine($"\n-- Afspraken op {date:dddd dd MMMM yyyy} --");
 
         if (appointments.Count == 0)
         {
-            Console.WriteLine("No appointments on this date.");
-            Console.WriteLine("\nPress any key to go back...");
+            Console.WriteLine("Geen afspraken op deze datum.");
+            Console.WriteLine("\nDruk op een willekeurige toets om terug te gaan...");
             Console.ReadKey();
             return;
         }
@@ -258,12 +259,12 @@ static class PlannerMenu
 
             string caregiver = string.IsNullOrEmpty(r.DoctorName) ? "-" : r.DoctorName;
 
-            Console.WriteLine($"  {r.Time} | {r.Type,-15} | Room: {r.RoomNumber,-10} | Patient: {r.PatientName,-20} | Caregiver: {caregiver,-20} | Status: {r.Status}");
+            Console.WriteLine($"  {r.Time} | {r.Type,-15} | Kamer: {r.RoomNumber,-10} | Patient: {r.PatientName,-20} | Zorgverlener: {caregiver,-20} | Status: {r.Status}");
 
             Console.ResetColor();
         }
 
-        Console.WriteLine("\nPress any key to go back...");
+         Console.WriteLine("\nDruk op een willekeurige toets om terug te gaan...");
         Console.ReadKey();
     }
 
@@ -386,7 +387,7 @@ static class PlannerMenu
 
                 if (!DateTime.TryParse(dateInput, out selectedDate) || selectedDate.Date < DateTime.Today)
                 {
-                    Console.WriteLine("Enter a valid future date (YYYY-MM-DD).");
+                    Console.WriteLine("Voer een geldige toekomstige jaartal in (YYYY-MM-DD).");
                     Console.ReadKey();
                     continue;
                 }

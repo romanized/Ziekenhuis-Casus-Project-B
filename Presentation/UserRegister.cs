@@ -42,7 +42,7 @@ static class UserRegister
     {
         while (true)
         {
-            Console.Write("Enter your Email or type 'back': ");
+            Console.Write("Voer uw e-mailadres in of typ 'back': ");
             string? input = Console.ReadLine();
 
             if (WantsBack(input)) return false;
@@ -53,7 +53,7 @@ static class UserRegister
                 return true;
             }
 
-            ShowError("Invalid email. A valid address contains '@' and '.' (e.g. name@mail.com).");
+            ShowError("Ongeldig e-mailadres. Een geldig adres bevat '@' en '.' (bijv. naam@mail.com).");
         }
     }
 
@@ -61,7 +61,7 @@ static class UserRegister
     {
         while (true)
         {
-            Console.Write("Enter your Password or type 'back' (min 6 chars, at least 1 digit): ");
+            Console.Write("Voer uw wachtwoord in of typ 'back' (minimaal 6 tekens, minstens 1 cijfer): ");
             string input = ReadMaskedPassword();
 
             if (WantsBack(input)) return false;
@@ -72,7 +72,7 @@ static class UserRegister
                 return true;
             }
 
-            ShowError("Password must be at least 6 characters and contain at least 1 digit.");
+            ShowError("Wachtwoord moet minimaal 6 tekens bevatten en minstens 1 cijfer.");
         }
     }
 
@@ -80,7 +80,7 @@ static class UserRegister
     {
         while (true)
         {
-            Console.Write("Enter your Full Name or type 'back': ");
+            Console.Write("Voer uw volledige naam in of typ 'back': ");
             string? input = Console.ReadLine();
 
             if (WantsBack(input)) return false;
@@ -91,7 +91,7 @@ static class UserRegister
                 return true;
             }
 
-            ShowError("Name cannot be empty.");
+            ShowError("Naam mag niet leeg zijn.");
         }
     }
 
@@ -118,7 +118,7 @@ static class UserRegister
     {
         while (true)
         {
-            Console.Write("Enter your Phone number or type 'back': ");
+            Console.Write("Voer uw telefoonnummer in of typ 'back': ");
             string? input = Console.ReadLine();
 
             if (WantsBack(input)) return false;
@@ -129,7 +129,7 @@ static class UserRegister
                 return true;
             }
 
-            ShowError("Invalid phone number. Use digits, spaces, '+' or '-' only. Example: 0612345678");
+            ShowError("Ongeldig telefoonnummer. Gebruik alleen cijfers, spaties, '+' of '-'. Voorbeeld: 0612345678");
         }
     }
 
@@ -137,7 +137,7 @@ static class UserRegister
     {
         while (true)
         {
-            Console.Write("Enter your Notes or type 'back': ");
+            Console.Write("Voer uw notities in of typ 'back': ");
             string? input = Console.ReadLine();
 
             if (WantsBack(input)) return false;
@@ -148,7 +148,7 @@ static class UserRegister
                 return true;
             }
 
-            ShowError("Notes cannot be only numbers. Please describe in words.");
+            ShowError("Notities mogen niet alleen uit cijfers bestaan. Beschrijf het in woorden.");
         }
     }
 
@@ -181,13 +181,13 @@ static class UserRegister
     private static void ShowHeader(int step)
     {
         Console.Clear();
-        Console.WriteLine("=== Patient registration ===");
+        Console.WriteLine("=== Patiëntenregistratie ===");
         Console.WriteLine();
-        Console.WriteLine("Welcome to the hospital registration.");
-        Console.WriteLine("Fill in your details so the hospital can prepare your care and appointments.");
+        Console.WriteLine("Welkom bij de ziekenhuisregistratie.");
+        Console.WriteLine("Vul uw gegevens in zodat het ziekenhuis uw zorg en afspraken kan voorbereiden.");
         Console.WriteLine();
-        Console.WriteLine($"Step {step + 1} of 7");
-        Console.WriteLine("Type 'back' or 'terug' to go one step back.");
+        Console.WriteLine($"Stap {step + 1} van 7");
+        Console.WriteLine("Typ 'back' of 'terug' om een stap terug te gaan.");
         Console.WriteLine();
     }
 
@@ -271,8 +271,8 @@ static class UserRegister
                     ShowHeader(step);
 
                     bool next = AskDate(
-                        "Enter your BirthDate (yyyy-mm-dd) or type 'back': ",
-                        "Invalid birthdate format.",
+                        "Voer uw geboortedatum in (yyyy-mm-dd) of typ 'back': ",
+                        "Ongeldig geboorteformat.",
                         ref birthdate
                     );
 
@@ -305,8 +305,8 @@ static class UserRegister
                     ShowHeader(step);
 
                     bool next = AskDate(
-                        "Enter your Pregnancy start date (yyyy-mm-dd) or type 'back': ",
-                        "Invalid start date.",
+                        "Voer uw zwangerschapsstartdatum in (yyyy-mm-dd) of typ 'back': ",
+                        "Ongeldige startdatum.",
                         ref startdate
                     );
 
@@ -351,18 +351,18 @@ static class UserRegister
                     if (ok)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Account created! You can now log in.");
+                        Console.WriteLine("Account aangemaakt! U kunt nu inloggen.");
                     }
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("An account with this email already exists.");
+                        Console.WriteLine("Er bestaat al een account met dit e-mailadres.");
                     }
 
                     Console.ResetColor();
 
                     Console.WriteLine();
-                    Console.WriteLine("Do you want to register another patient? (y/n)");
+                    Console.WriteLine("Wilt u nog een patiënt registreren? (y/n)");
                     string? choice = Console.ReadLine();
 
                     if (choice?.ToLower() != "y")

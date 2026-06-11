@@ -1,13 +1,16 @@
 static class UserLogin
 {
     static private UserLogic userLogic = new UserLogic();
+
     private static string ReadMaskedPassword()
     {
         string password = "";
         ConsoleKeyInfo key;
+
         do
         {
             key = Console.ReadKey(true);
+
             if (key.Key == ConsoleKey.Backspace && password.Length > 0)
             {
                 password = password[..^1];
@@ -18,7 +21,9 @@ static class UserLogin
                 password += key.KeyChar;
                 Console.Write("*");
             }
+
         } while (key.Key != ConsoleKey.Enter);
+
         Console.WriteLine();
         return password;
     }
@@ -26,18 +31,18 @@ static class UserLogin
     public static void Start()
     {
         Console.Clear();
-        Console.WriteLine("Welcome to the login page");
+        Console.WriteLine("Welkom op de inlogpagina");
 
-        Console.WriteLine("Please enter your email address");
+        Console.WriteLine("Voer uw e-mailadres in");
         string? email = Console.ReadLine();
 
-        Console.WriteLine("Please enter your password (input will be hidden)");
+        Console.WriteLine("Voer uw wachtwoord in (invoer wordt verborgen)");
         string password = ReadMaskedPassword();
 
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Email and password cannot be empty.");
+            Console.WriteLine("E-mail en wachtwoord mogen niet leeg zijn.");
             Console.ResetColor();
             Console.ReadKey();
             return;
@@ -48,13 +53,13 @@ static class UserLogin
         if (acc == null)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("No account found with that email and password");
+            Console.WriteLine("Geen account gevonden met dat e-mailadres en wachtwoord");
             Console.ResetColor();
             Console.ReadKey();
             return;
         }
 
-        Console.WriteLine("Welcome back " + acc.FullName);
+        Console.WriteLine("Welkom terug " + acc.FullName);
 
         switch (acc.Role.ToLower())
         {
@@ -75,7 +80,7 @@ static class UserLogin
                 ParentMenu.Start(acc);
                 break;
             default:
-                Console.WriteLine("Unknown role.");
+                Console.WriteLine("Onbekende rol.");
                 break;
         }
     }

@@ -1,6 +1,7 @@
 // tests voor TemplateAccess, gebruiken in-memory SQLite zodat de echte DB niet wordt aangeraakt
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+[TestClass]
 public class TemplateAccessTests
 {
     private TemplateAccess MakeAccess()
@@ -9,7 +10,7 @@ public class TemplateAccessTests
         return new TemplateAccess("Data Source=:memory:");
     }
 
-    [Fact]
+    [TestMethod]
     public void AddTemplate_ShouldSaveToDb()
     {
         var access = MakeAccess();
@@ -23,23 +24,23 @@ public class TemplateAccessTests
 
         List<TemplateModel> result = access.GetAll();
 
-        Assert.Single(result);
-        Assert.Equal("Zwangerschapscontrole", result[0].Name);
-        Assert.Equal("Controle", result[0].Type);
-        Assert.Equal("week 20", result[0].Notes);
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("Zwangerschapscontrole", result[0].Name);
+        Assert.AreEqual("Controle", result[0].Type);
+        Assert.AreEqual("week 20", result[0].Notes);
     }
 
-    [Fact]
+    [TestMethod]
     public void GetAll_EmptyDb_ReturnsEmptyList()
     {
         var access = MakeAccess();
 
         List<TemplateModel> result = access.GetAll();
 
-        Assert.Empty(result);
+        Assert.AreEqual(0, result.Count);
     }
 
-    [Fact]
+    [TestMethod]
     public void DeleteTemplate_ShouldRemoveFromDb()
     {
         var access = MakeAccess();
@@ -47,11 +48,11 @@ public class TemplateAccessTests
         access.AddTemplate(new TemplateModel { Name = "Te verwijderen", Type = "Consult", Notes = "" });
 
         List<TemplateModel> before = access.GetAll();
-        Assert.Single(before);
+        Assert.AreEqual(1, before.Count);
 
         access.Delete(before[0].Id);
 
         List<TemplateModel> after = access.GetAll();
-        Assert.Empty(after);
+        Assert.AreEqual(0, after.Count);
     }
 }

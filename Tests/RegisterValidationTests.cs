@@ -1,9 +1,10 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 // als email al bestaat mag register niet door
+[TestClass]
 public class RegisterValidationTests
 {
-    [Fact]
+    [TestMethod]
     public void Register_dubbele_email_false()
     {
         var access = new UserAccess("Data Source=:memory:");
@@ -14,7 +15,7 @@ public class RegisterValidationTests
         bool second = logic.Register("dub@test.nl", "anders2", "Tweede",
             "1991-01-01", "0622222222", "", "");
 
-        Assert.True(first);
-        Assert.False(second);
+        Assert.IsTrue(first);
+        Assert.IsFalse(second);
     }
 }

@@ -1,8 +1,7 @@
-using Xunit;
-
+[TestClass]
 public class DoctorAgendaTests
 {
-    [Fact]
+    [TestMethod]
     public void Dokter_ziet_alleen_eigen_afspraken_op_die_dag()
     {
         string conn = "Data Source=file:docagenda?mode=memory&cache=shared";
@@ -25,6 +24,6 @@ public class DoctorAgendaTests
 
         var result = docs.GetAllReservationsByDoctorIdByDate(doctorId, new DateTime(2026, 6, 15));
 
-        Assert.Equal(2, result.Count);
+        Assert.AreEqual(2, result.Count);
     }
 }

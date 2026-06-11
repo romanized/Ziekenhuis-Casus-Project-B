@@ -1,8 +1,9 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+[TestClass]
 public class LogoutTests
 {
-    [Fact]
+    [TestMethod]
     public void Logout_zet_currentaccount_op_null()
     {
         var access = new UserAccess("Data Source=:memory:");
@@ -19,6 +20,7 @@ public class LogoutTests
 
         UserLogic.Logout();
 
-        Assert.Null(UserLogic.CurrentAccount);
+        Assert.IsNull(UserLogic.CurrentAccount);
     }
 }
+

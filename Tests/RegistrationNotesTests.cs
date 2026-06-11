@@ -1,8 +1,9 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+[TestClass]
 public class RegistrationNotesTests
 {
-    [Fact]
+    [TestMethod]
     public void Notities_worden_opgeslagen_bij_register()
     {
         var access = new UserAccess("Data Source=:memory:");
@@ -13,6 +14,6 @@ public class RegistrationNotesTests
             "Allergisch voor penicilline");
 
         var saved = access.GetByEmail("notitie@test.nl");
-        Assert.Equal("Allergisch voor penicilline", saved.Notes);
+        Assert.AreEqual("Allergisch voor penicilline", saved.Notes);
     }
 }

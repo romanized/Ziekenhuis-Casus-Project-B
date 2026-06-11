@@ -1,8 +1,9 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+[TestClass]
 public class RegisterTests
 {
-    [Fact]
+    [TestMethod]
     public void Register_nieuwe_user_wordt_opgeslagen()
     {
         var access = new UserAccess("Data Source=:memory:");
@@ -11,9 +12,9 @@ public class RegisterTests
         bool ok = logic.Register("nieuw@test.nl", "wachtwoord1", "Nieuwe Ouder",
             "1990-01-01", "0612345678", "", "geen notities");
 
-        Assert.True(ok);
+        Assert.IsTrue(ok);
         var saved = access.GetByEmail("nieuw@test.nl");
-        Assert.NotNull(saved);
-        Assert.Equal("Nieuwe Ouder", saved.FullName);
+        Assert.IsNotNull(saved);
+        Assert.AreEqual("Nieuwe Ouder", saved.FullName);
     }
 }

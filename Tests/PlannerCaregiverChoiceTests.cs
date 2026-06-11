@@ -1,9 +1,10 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 // de planner moet per afspraak een hulpverlener kunnen kiezen
+[TestClass]
 public class PlannerCaregiverChoiceTests
 {
-    [Fact]
+    [TestMethod]
     public void Beschikbare_hulpverlener_verschijnt_in_keuzelijst()
     {
         var access = new UserAccess("Data Source=:memory:");
@@ -13,11 +14,11 @@ public class PlannerCaregiverChoiceTests
 
         var available = access.GetAvailableDoctors("2026-12-01 09:00");
 
-        Assert.Single(available);
-        Assert.Equal("Dr Anne", available[0].FullName);
+        Assert.AreEqual(1, available.Count);
+        Assert.AreEqual("Dr Anne", available[0].FullName);
     }
 
-    [Fact]
+    [TestMethod]
     public void Bezette_hulpverlener_valt_weg_op_dat_tijdstip()
     {
         // shared zodat user-, room- en reservation-access dezelfde db zien
@@ -45,7 +46,7 @@ public class PlannerCaregiverChoiceTests
         var bezet = users.GetAvailableDoctors("2026-12-01 09:00");
         var later = users.GetAvailableDoctors("2026-12-01 11:00");
 
-        Assert.Empty(bezet);
-        Assert.Single(later);
+        Assert.AreEqual(0, bezet.Count);
+        Assert.AreEqual(1, later.Count);
     }
 }

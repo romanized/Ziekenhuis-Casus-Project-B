@@ -1,8 +1,9 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+[TestClass]
 public class PlannerAgendaTests
 {
-    [Fact]
+    [TestMethod]
     public void Maand_geeft_distinct_dates_terug()
     {
         string conn = "Data Source=file:planagenda?mode=memory&cache=shared";
@@ -29,7 +30,7 @@ public class PlannerAgendaTests
 
         var dates = reservations.GetReservedDatesForMonth("2026-06");
 
-        Assert.Equal(2, dates.Count);
-        Assert.Contains("2026-06-15", dates);
+        Assert.AreEqual(2, dates.Count);
+        Assert.IsTrue(dates.Contains("2026-06-15"));
     }
 }

@@ -1,9 +1,10 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 // login test - ouder
+[TestClass]
 public class LoginTests
 {
-    [Fact]
+    [TestMethod]
     public void Login_juiste_wachtwoord()
     {
         var access = new UserAccess("Data Source=:memory:");
@@ -23,7 +24,8 @@ public class LoginTests
 
         var result = logic.CheckLogin("ouder@test.nl", "wachtwoord1");
 
-        Assert.NotNull(result);
-        Assert.Equal("ouder@test.nl", result.Email);
+        Assert.IsNotNull(result);
+        Assert.AreEqual("ouder@test.nl", result.Email);
     }
 }
+

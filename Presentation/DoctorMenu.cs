@@ -62,7 +62,7 @@ static class DoctorMenu
                     break;
 
                 default:
-                    Console.WriteLine("Ongeldige invoer.");
+                    Console.WriteLine("Ongeldige optie.");
                     break;
             }
         }

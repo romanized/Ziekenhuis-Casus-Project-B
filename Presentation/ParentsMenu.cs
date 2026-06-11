@@ -21,16 +21,16 @@ static class ParentMenu
 
         ");
             Console.ResetColor();
-            Console.WriteLine("\n==== Parent Main Menu ====");
-            Console.WriteLine("1. View appointment overview");
+            Console.WriteLine("\n==== Hoofdmenu ouder ====");
+            Console.WriteLine("1. Overzicht van afspraken bekijken");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("0. Log out");
+            Console.WriteLine("0. Uitloggen");
             Console.ResetColor();
 
             string? input = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(input))
             {
-                Console.WriteLine("Please enter a valid option.");
+                Console.WriteLine("Voer een geldige optie in.");
                 continue;
             }
 
@@ -43,13 +43,13 @@ static class ParentMenu
                     running = false;
                     break;
                 default:
-                    Console.WriteLine("Invalid input.");
+                    Console.WriteLine("Voer een geldige optie in.");
                     break;
             }
         }
 
         UserLogic.Logout();
-        Console.WriteLine("\nPress any key to continue...");
+        Console.WriteLine("\nDruk op een willekeurige toets om door te gaan...");
         Console.ReadKey();
     }
 
@@ -81,11 +81,11 @@ static class ParentMenu
 
             List<ReservationModel> combined = upcomingAppointments.Concat(pastAppointments).ToList();
 
-            Console.WriteLine("\n================ APPOINTMENT OVERVIEW ================");
+            Console.WriteLine("\n================ AFSPRAKENOVERZICHT ================");
             PrintSideBySideTables(upcomingAppointments, pastAppointments);
 
             Console.WriteLine();
-            Console.Write("Enter a number to view an appointment (or Enter to go back): ");
+            Console.Write("Voer een nummer in om een afspraak te bekijken (of druk op Enter om terug te gaan): ");
             string? input = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(input))
@@ -97,7 +97,7 @@ static class ParentMenu
             int choice;
             if (!int.TryParse(input.Trim(), out choice) || choice < 1 || choice > combined.Count)
             {
-                Console.WriteLine("Invalid number.");
+                Console.WriteLine("Voer een geldige nummer in.");
                 continue;
             }
 
@@ -112,13 +112,13 @@ static class ParentMenu
         string doctor = string.IsNullOrWhiteSpace(appointment.DoctorName) ? "Not assigned yet" : appointment.DoctorName;
 
         Console.WriteLine("\n================ APPOINTMENT DETAILS ================");
-        Console.WriteLine($"Date:             {appointment.Date}");
-        Console.WriteLine($"Time:             {appointment.Time}");
-        Console.WriteLine($"Appointment type: {appointment.Type}");
+        Console.WriteLine($"Datum:            {appointment.Date}");
+        Console.WriteLine($"Tijd:             {appointment.Time}");
+        Console.WriteLine($"Afspraaktype:     {appointment.Type}");
         Console.WriteLine($"Status:           {appointment.Status}");
-        Console.WriteLine($"Room:             {appointment.RoomNumber}");
-        Console.WriteLine($"Location:         {location}");
-        Console.WriteLine($"Doctor:           {doctor}");
+        Console.WriteLine($"Kamer:            {appointment.RoomNumber}");
+        Console.WriteLine($"Locatie:          {location}");
+        Console.WriteLine($"Arts:             {doctor}");
 
         // template die de planner koos; geen template gekozen = niets om te tonen
         if (appointment.TemplateId.HasValue && !string.IsNullOrWhiteSpace(appointment.TemplateName))
@@ -127,19 +127,19 @@ static class ParentMenu
             Console.WriteLine($"Template:         {appointment.TemplateName}");
             if (!string.IsNullOrWhiteSpace(appointment.TemplateNotes))
             {
-                Console.WriteLine($"Template info:    {appointment.TemplateNotes}");
+                Console.WriteLine($"Template informatie:    {appointment.TemplateNotes}");
             }
         }
 
         Console.WriteLine();
-        Console.WriteLine("Press Enter to go back...");
+        Console.WriteLine("Druk op Enter om terug te gaan...");
         Console.ReadLine();
     }
 
     private static void PrintSideBySideTables(List<ReservationModel> upcoming, List<ReservationModel> past)
     {
-        List<string> leftTable = BuildTableLines("Upcoming appointments", upcoming, 1);
-        List<string> rightTable = BuildTableLines("Past appointments", past, upcoming.Count + 1);
+        List<string> leftTable = BuildTableLines("Aankomende afspraken", upcoming, 1);
+        List<string> rightTable = BuildTableLines("Afgelopen afspraken", past, upcoming.Count + 1);
 
         int leftWidth = 50;
         int maxLines = Math.Max(leftTable.Count, rightTable.Count);
@@ -159,12 +159,12 @@ static class ParentMenu
 
         lines.Add(title);
         lines.Add("---------------------------------------------");
-        lines.Add(string.Format("{0,-4} {1,-12} {2,-6} {3,-12}", "#", "Date", "Time", "Room"));
+        lines.Add(string.Format("{0,-4} {1,-12} {2,-6} {3,-12}", "#", "Datum", "Tijd", "Kamer"));
         lines.Add("---------------------------------------------");
 
         if (appointments.Count == 0)
         {
-            lines.Add("No appointments");
+            lines.Add("Geen Afspraken");
             return lines;
         }
 

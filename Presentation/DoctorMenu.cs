@@ -1,5 +1,3 @@
-using System.Net.Mail;
-
 static class DoctorMenu
 {
     private static DoctorAccess doctorAccess = new DoctorAccess();

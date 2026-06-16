@@ -124,10 +124,10 @@ static class ParentMenu
         if (appointment.TemplateId.HasValue && !string.IsNullOrWhiteSpace(appointment.TemplateName))
         {
             Console.WriteLine();
-            Console.WriteLine($"Template:         {appointment.TemplateName}");
+            Console.WriteLine($"Afspraak naam:         {appointment.TemplateName}");
             if (!string.IsNullOrWhiteSpace(appointment.TemplateNotes))
             {
-                Console.WriteLine($"Template informatie:    {appointment.TemplateNotes}");
+                Console.WriteLine($"Afspraak informatie:    {appointment.TemplateNotes}");
             }
         }
 

@@ -334,6 +334,7 @@ static class UserRegister
                         step--;
                     }
                 }
+
                 else if (step == 7)
                 {
                     Console.Clear();
@@ -362,15 +363,9 @@ static class UserRegister
                     Console.ResetColor();
 
                     Console.WriteLine();
-                    Console.WriteLine("Wilt u nog een patiënt registreren? (y/n)");
-                    string? choice = Console.ReadLine();
-
-                    if (choice?.ToLower() != "y")
-                    {
-                        running = false;
-                    }
-
-                    registrationFinished = true;
+                    Console.WriteLine("Druk op een toets om terug te gaan naar het hoofdmenu...");
+                    Console.ReadKey();
+                    return;
                 }
             }
         }

@@ -60,7 +60,7 @@ static class AdminMenu
                     running = false;
                     break;
                 default:
-                Console.WriteLine("Voer een geldige optie in.");
+                    Console.WriteLine("Voer een geldige optie in.");
                     break;
             }
         }
@@ -156,7 +156,7 @@ static class AdminMenu
         });
 
         Console.WriteLine($"Kamer '{name}' succesvol toegevoegd.");
-        }
+    }
 
     // template management submenu, admin gets here via option 4
     private static void ManageTemplates()
@@ -186,7 +186,7 @@ static class AdminMenu
                     running = false;
                     break;
                 default:
-                Console.WriteLine("Voer een geldige optie in.");
+                    Console.WriteLine("Voer een geldige optie in.");
                     break;
             }
         }
@@ -220,7 +220,7 @@ static class AdminMenu
         }
         string selectedType = types[typeIdx - 1];
 
-        Console.WriteLine("Extra opmerkingen voor de planner (optioneel):");
+        Console.WriteLine("Template infortmatie over de afspraak (optioneel):");
         string notes = Console.ReadLine() ?? "";
 
         templateAccess.AddTemplate(new TemplateModel

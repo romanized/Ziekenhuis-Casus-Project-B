@@ -1,10 +1,10 @@
 using System.Globalization;
 static class PlannerMenu
 {
-    private static ReservationAccess reservationAccess = new ReservationAccess();
-    private static RoomAccess roomAccess = new RoomAccess();
-    private static UserAccess userAccess = new UserAccess();
-    private static TemplateAccess templateAccess = new TemplateAccess();
+    private static ReservationLogic reservationLogic = new ReservationLogic();
+    private static RoomLogic roomLogic = new RoomLogic();
+    private static UserLogic userLogic = new UserLogic();
+    private static TemplateLogic templateLogic = new TemplateLogic();
 
     public static void Start(UserModel planner)
     {
@@ -105,8 +105,8 @@ static class PlannerMenu
 
         Console.WriteLine($"\n-- Kamer status van {date:dd-MM-yyyy} op {selectedTime} --");
 
-        List<RoomModel> rooms = roomAccess.GetAllRooms();
-        List<ReservationModel> todays = reservationAccess.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
+        List<RoomModel> rooms = roomLogic.GetAllRooms();
+        List<ReservationModel> todays = reservationLogic.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
 
         foreach (RoomModel room in rooms)
         {
@@ -189,7 +189,7 @@ static class PlannerMenu
     {
         Console.Clear();
 
-        List<string> reservedDates = reservationAccess.GetReservedDatesForMonth(month.ToString("yyyy-MM"));
+        List<string> reservedDates = reservationLogic.GetReservedDatesForMonth(month.ToString("yyyy-MM"));
 
         Console.WriteLine($"\n========== {month.ToString("MMMM yyyy", new CultureInfo("nl-NL"))} ==========");
         Console.WriteLine(" Ma   Di   Wo   Do   Vr   Sa   Su");
@@ -241,7 +241,7 @@ static class PlannerMenu
     {
         Console.Clear();
 
-        List<ReservationModel> appointments = reservationAccess.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
+        List<ReservationModel> appointments = reservationLogic.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
 
         Console.WriteLine($"\n-- Afspraken op {date:dddd dd MMMM yyyy} --");
 
@@ -276,7 +276,7 @@ static class PlannerMenu
             Console.WriteLine("\n-- Nieuwe afspraak aanmaken --");
 
             // Stap 1 - patiënt zoeken
-            List<UserModel> patients = userAccess.GetAllByRole("ouder");
+            List<UserModel> patients = userLogic.GetAllByRole("ouder");
 
             if (patients.Count == 0)
             {
@@ -420,7 +420,7 @@ static class PlannerMenu
             }
 
             // Stap 5 - hulpverlener kiezen
-            List<UserModel> availableDoctors = userAccess.GetAvailableDoctors(dateTimeStr);
+            List<UserModel> availableDoctors = userLogic.GetAvailableDoctors(dateTimeStr);
             long? specialistId = null;
 
             if (availableDoctors.Count > 0)
@@ -473,7 +473,7 @@ static class PlannerMenu
                 return;
             }
 
-            reservationAccess.CreateReservation(selectedPatient.Id, selectedRoom.Id, specialistId, dateTimeStr, appointmentType, selectedTemplate?.Id);
+            reservationLogic.CreateReservation(selectedPatient.Id, selectedRoom.Id, specialistId, dateTimeStr, appointmentType, selectedTemplate?.Id);
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"\nAfspraak aangemaakt voor {selectedPatient.FullName} op {selectedDate:dd-MM-yyyy} om {selectedTime} in kamer {selectedRoom.Name}.");
@@ -488,8 +488,8 @@ static class PlannerMenu
     private static (string time, RoomModel room)? ShowDayGridAndPick(DateTime date)
     {
         string[] slots = GenerateTimeSlots();
-        List<RoomModel> rooms = roomAccess.GetAllRooms();
-        List<ReservationModel> dayReservations = reservationAccess.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
+        List<RoomModel> rooms = roomLogic.GetAllRooms();
+        List<ReservationModel> dayReservations = reservationLogic.GetReservationsForDate(date.ToString("yyyy-MM-dd"));
 
         while (true)
         {
@@ -553,7 +553,7 @@ static class PlannerMenu
             if (chosenRoom == null) { Console.WriteLine("Kamer niet gevonden."); Console.ReadKey(); continue; }
 
             string dateTimeStr = $"{date:yyyy-MM-dd} {timeInput}";
-            List<RoomModel> freeRooms = roomAccess.GetAvailableRooms(dateTimeStr);
+            List<RoomModel> freeRooms = roomLogic.GetAvailableRooms(dateTimeStr);
 
             if (!freeRooms.Any(r => r.Id == chosenRoom.Id))
             {
@@ -573,7 +573,7 @@ static class PlannerMenu
     {
         Console.Clear();
 
-        List<TemplateModel> templates = templateAccess.GetAll();
+        List<TemplateModel> templates = templateLogic.GetAll();
 
         if (templates.Count > 0)
         {

@@ -1,8 +1,8 @@
 static class AdminMenu
 {
     private static UserLogic userLogic = new UserLogic();
-    private static RoomAccess roomAccess = new RoomAccess();
-    private static TemplateAccess templateAccess = new TemplateAccess();
+    private static RoomLogic roomLogic = new RoomLogic();
+    private static TemplateLogic templateLogic = new TemplateLogic();
 
     public static void Start(UserModel admin)
     {
@@ -148,7 +148,7 @@ static class AdminMenu
             return;
         }
 
-        roomAccess.AddRoom(new RoomModel
+        roomLogic.AddRoom(new RoomModel
         {
             Name = name,
             Type = type ?? "",
@@ -223,7 +223,7 @@ static class AdminMenu
         Console.WriteLine("Extra opmerkingen voor de planner (optioneel):");
         string notes = Console.ReadLine() ?? "";
 
-        templateAccess.AddTemplate(new TemplateModel
+        templateLogic.AddTemplate(new TemplateModel
         {
             Name = name,
             Type = selectedType,
@@ -239,7 +239,7 @@ static class AdminMenu
     private static void ShowTemplates()
     {
         Console.Clear();
-        List<TemplateModel> templates = templateAccess.GetAll();
+        List<TemplateModel> templates = templateLogic.GetAll();
         Console.WriteLine("\n-- Alle Templates --");
 
         if (templates.Count == 0)
@@ -263,7 +263,7 @@ static class AdminMenu
     private static void DeleteTemplate()
     {
         Console.Clear();
-        List<TemplateModel> templates = templateAccess.GetAll();
+        List<TemplateModel> templates = templateLogic.GetAll();
         if (templates.Count == 0)
         {
             Console.WriteLine("Geen Templates om te verwijderen.");
@@ -285,7 +285,7 @@ static class AdminMenu
         }
 
         TemplateModel toDelete = templates[choice - 1];
-        templateAccess.Delete(toDelete.Id);
+        templateLogic.Delete(toDelete.Id);
         Console.WriteLine($"Template '{toDelete.Name}' verwijdererd.");
         Console.ReadKey();
     }

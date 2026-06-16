@@ -72,6 +72,21 @@
         _access.Write(newEmployee);
         return true;
     }
+
+    public List<UserModel> GetAllByRole(string role)
+    {
+        return _access.GetAllByRole(role);
+    }
+
+    public List<UserModel> GetAvailableDoctors(string dateTime)
+    {
+        return _access.GetAvailableDoctors(dateTime);
+    }
+
+    public string GetFullNameById(long id)
+    {
+        return _access.GetFullNameById(id);
+    }
 }
 
 

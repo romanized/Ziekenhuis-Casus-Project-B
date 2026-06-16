@@ -1,8 +1,8 @@
 static class DoctorMenu
 {
-    private static DoctorAccess doctorAccess = new DoctorAccess();
-    private static UserAccess userAccess = new UserAccess();
-    private static RoomAccess roomAccess = new RoomAccess();
+    private static DoctorLogic doctorLogic = new DoctorLogic();
+    private static UserLogic userLogic = new UserLogic();
+    private static RoomLogic roomLogic = new RoomLogic();
 
     public static void Start(UserModel doctor)
     {
@@ -75,7 +75,7 @@ static class DoctorMenu
     private static void ShowNextAppointment(UserModel doctor)
     {
         Console.Clear();
-        ReservationModel? next = doctorAccess.GetNextActiveReservationByDoctorId(doctor.Id);
+        ReservationModel? next = doctorLogic.GetNextActiveReservationByDoctorId(doctor.Id);
 
         Console.WriteLine("\n-- Volgende afspraak --");
 
@@ -98,7 +98,7 @@ static class DoctorMenu
     private static void ShowAllAppointments(UserModel doctor)
     {
         Console.Clear();
-        List<ReservationModel> list = doctorAccess.GetAllReservationsByDoctorId(doctor.Id);
+        List<ReservationModel> list = doctorLogic.GetAllReservationsByDoctorId(doctor.Id);
 
         Console.WriteLine("\n-- Alle afspraken --");
 
@@ -128,7 +128,7 @@ static class DoctorMenu
         while (true)
         {
             List<ReservationModel> list =
-                doctorAccess.GetAllReservationsByDoctorIdByDate(doctor.Id, date);
+                doctorLogic.GetAllReservationsByDoctorIdByDate(doctor.Id, date);
 
             AgendaTemplate(doctor, date, list);
 
@@ -184,7 +184,7 @@ static class DoctorMenu
                             Console.WriteLine($"Tijd: {selectedAppointment.Time}");
                             Console.WriteLine($"Kamer: {selectedAppointment.RoomNumber}");
 
-                            string patientName = userAccess.GetFullNameById(selectedAppointment.UserId);
+                            string patientName = userLogic.GetFullNameById(selectedAppointment.UserId);
 
                             if (patientName == null)
                             {
@@ -264,14 +264,14 @@ static class DoctorMenu
 
             if (found && appointment != null)
             {
-                string name = userAccess.GetFullNameById(appointment.UserId);
+                string name = userLogic.GetFullNameById(appointment.UserId);
 
                 if (name == null)
                 {
                     name = "Onbekend";
                 }
 
-                string roomname = roomAccess.GetRoomNameById(appointment.RoomId);
+                string roomname = roomLogic.GetRoomNameById(appointment.RoomId);
 
                 if (roomname == null)
                 {

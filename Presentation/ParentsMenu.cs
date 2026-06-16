@@ -1,7 +1,7 @@
 static class ParentMenu
 {
-    private static ReservationAccess reservationAccess = new ReservationAccess();
-    private static RoomAccess roomAccess = new RoomAccess();
+    private static ReservationLogic reservationLogic = new ReservationLogic();
+    private static RoomLogic roomLogic = new RoomLogic();
 
     public static void Start(UserModel user)
     {
@@ -59,7 +59,7 @@ static class ParentMenu
         while (viewing)
         {
             Console.Clear();
-            List<ReservationModel> allAppointments = reservationAccess.GetAllReservationsByUserId(user.Id);
+            List<ReservationModel> allAppointments = reservationLogic.GetAllReservationsByUserId(user.Id);
 
             List<ReservationModel> upcomingAppointments = new List<ReservationModel>();
             List<ReservationModel> pastAppointments = new List<ReservationModel>();
@@ -108,7 +108,7 @@ static class ParentMenu
     private static void ShowAppointmentDetail(ReservationModel appointment)
     {
         Console.Clear();
-        string location = roomAccess.GetRoomLocationById(appointment.RoomId) ?? "";
+        string location = roomLogic.GetRoomLocationById(appointment.RoomId) ?? "";
         string doctor = string.IsNullOrWhiteSpace(appointment.DoctorName) ? "Not assigned yet" : appointment.DoctorName;
 
         Console.WriteLine("\n================ APPOINTMENT DETAILS ================");
